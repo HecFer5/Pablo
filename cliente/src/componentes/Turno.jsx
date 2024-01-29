@@ -9,7 +9,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import axios from 'axios'
-
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
@@ -125,14 +126,11 @@ const Turno6 = () => {
 
     ////////////////////////////////////////////
 
-
-
-
     return (
         <div>
-            <div>
-                {`se dará un turno para ${datos.nombre} ${datos.apellido}`}
-            </div>
+
+           
+       
             <Formik
                 initialValues={task}
                 enableReinitialize={true}
@@ -164,6 +162,9 @@ const Turno6 = () => {
                                     // timeZone='America/Argentina/Buenos_Aires'
                                     />
                                     <div className=' container mx-auto p-4 w-88 mt-10 mb-10 flex gap-6'>
+                                    <div>
+                {params.idpaciente ? <div className='text-white bg-blue-500 w-fit px-3 pl-3 pt-1 pb-1 font-bold rounded-xl'>se dará un turno para {datos.nombre} {datos.apellido}</div> : <button className='text-black bg-red-500 w-fit px-3 pl-3 pt-1 pb-1 font-bold rounded-xl'><Link to={'/turnoDirecto/'}>Elija un paciente para dar un turno</Link></button>}
+            </div>
                                         <input className="px-10 py-1 rounded-sm w-min  mx-10 border-2" type="text"
                                             name='observac'
                                             onChange={handleChange}
@@ -171,7 +172,7 @@ const Turno6 = () => {
                                             placeholder='Ingresar observaciones'
                                         />
                                         <button type='submit' className="block bg-lime-700 px-2 py-1 text-white w-min rounded-md">Ingresar</button>
-                                        <button ><Link to={'/turno/' + params.idpaciente}>Borrar</Link></button>
+                                        <button className="block bg-red-700 px-2 py-1 text-white w-min rounded-md"><Link to={'/'}>Cancelar</Link></button>
                                     </div>
                                 </DemoItem>
                             </DemoContainer>

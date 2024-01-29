@@ -23,6 +23,7 @@ import Portada from './paginas/Portada'
 // import Turno6 from './componentes/Turno6.jsx'
 import Turno from './componentes/Turno.jsx'
 import NuevoTurno from './componentes/Alertas/NuevoTurno.jsx'
+import ModalTurnos from './componentes/Alertas/ModalTurnos.jsx'
 // import Turno2 from './componentes/Turno2.jsx'
 // import Sample from './componentes/turno2.jsx'
 // import SidpacienteeBar from './componentes/SidpacienteeBar'
@@ -39,7 +40,7 @@ function App() {
       <NavBar />
       <TareasContextProv>
         <Routes>
-          <Route path='/' element={<Portada />} />
+          <Route path='/' element={<Turno />} />
           <Route path='/turno/:idpaciente' Component={Turno} />
           <Route path='/tabla' element={<TablaNueva />} />
           <Route path='/tablainac' element={<TablaInactivos />} />
@@ -51,6 +52,8 @@ function App() {
           <Route path='/otroReg' Component={NuevoRegistro} />
           <Route path='/otroturno' Component={NuevoTurno} />
           <Route path='/turno' Component={Turno} />
+          <Route path='/turnodirecto' Component={ModalTurnos} />
+
 
           {/* <Route path='/menulateral' Component={<SidpacienteeBar/>} /> */}
           <Route path='*' Component={NotFound} />
