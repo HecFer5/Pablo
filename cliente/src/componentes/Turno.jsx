@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik'
 import { useTareas } from './context/hooks'
 import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
 import dayjs from 'dayjs';
-import 'dayjs/locale/es'; 
+import 'dayjs/locale/es';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -36,6 +36,7 @@ const messages = {
 
 const Turno6 = () => {
     const [events, setEvents] = useState([]);
+    const [datos, setDatos] = useState([])
 
 
 
@@ -43,6 +44,8 @@ const Turno6 = () => {
 
         <div >
             <span >{event.title}</span>
+            <span>{event.nombre}</span> {/* Muestra el parámetro 'nombre' */}
+
 
             <button className=" bg-red-700 p-1 ml-8 text-white w-min rounded-md" onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
             </button>
@@ -52,15 +55,18 @@ const Turno6 = () => {
     const localizer = dayjsLocalizer(dayjs)
     const [selectedDate, setSelectedDate] = useState(dayjs(Date()).toDate());
 
+    const params = useParams()
+    const nombre = params.nombre
 
     const { darTurno } = useTareas()
     const [task, setTask] = useState({
         "fecha": dayjs(Date()).toString(),
         "pacienteid": 0,
         "fechafin": dayjs(Date()).toString(),
-        "observac": ""
-    })
+        "observac": "",
 
+    })
+    console.log(task.fecha, task.observac)
     const navigate = useNavigate()
 
 
@@ -92,16 +98,41 @@ const Turno6 = () => {
     };
 
 
+    const traerDatos = async () => {
+        try {
+            const response = await axios.get("http://localhost:4001/tarea/" + params.idpaciente);
+            const data = response.data;
+
+            const datosPacientes = ({
+                nombre: data.nombre,
+                apellido: data.apellido
+
+            });
+
+            setDatos(datosPacientes);
+        } catch (error) {
+            console.error('Error al obtener los eventos del calendario:', error);
+        }
+    };
+
+
+
     useEffect(() => {
         fetchEvents();
+        traerDatos()
+
     }, []);
 
     ////////////////////////////////////////////
 
-    const params = useParams()
+
+
 
     return (
         <div>
+            <div>
+                {`se dará un turno para ${datos.nombre} ${datos.apellido}`}
+            </div>
             <Formik
                 initialValues={task}
                 enableReinitialize={true}
@@ -130,7 +161,7 @@ const Turno6 = () => {
                                         value={dayjs(task.fecha)}
                                         onChange={(date) => setSelectedDate(date)}
                                         format='ddd DD [de] MMMM [de] YYYY hh:mm '
-                                        // timeZone='America/Argentina/Buenos_Aires'
+                                    // timeZone='America/Argentina/Buenos_Aires'
                                     />
                                     <div className=' container mx-auto p-4 w-88 mt-10 mb-10 flex gap-6'>
                                         <input className="px-10 py-1 rounded-sm w-min  mx-10 border-2" type="text"
@@ -156,7 +187,7 @@ const Turno6 = () => {
                 }}
                 messages={messages}
                 selectable
-                localizer={dayjsLocalizer(dayjs, { weekStart: 0 })}                events={events}
+                localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
                 startAccessor="start"
                 endAccessor="end"
                 defaultView='week'
