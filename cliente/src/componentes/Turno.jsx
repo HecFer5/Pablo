@@ -128,15 +128,9 @@ const Turno6 = () => {
     ////////////////////////////////////////////
 
     return (
-        <div >
+      <>
 
-            {/* <div className="grid-container">
-  <div className="element1 bg-slate-300 flex justify-center">Elemento 1</div>
-  <div className="element2  bg-slate-300" >Elemento 2</div>
-  <div className="element3  bg-slate-300"              >Elemento 3</div>
-  <div className="element4  bg-slate-300">Elemento 4</div>
-</div> */}
-            <div className='container bg-slate-200 mx-auto mb-2 mt-2'>
+            <div className='container mx-auto mb-2 mt-1 p-8'>
                 <Formik
                     initialValues={task}
                     enableReinitialize={true}
@@ -159,38 +153,45 @@ const Turno6 = () => {
 
                                     ]}>
                                     <DemoItem >
-                                        <DateTimePicker
-                                        
-                                            defaultValue={dayjs(Date()).toDate()}
-                                            value={dayjs(task.fecha)}
-                                            onChange={(date) => setSelectedDate(date)}
-                                            format='ddd DD [de] MMMM [de] YYYY hh:mm '
-                                            className='selector'
-                                           
-                                        />
-                                        <div className="container mx-auto">
-                                            <div className="grid grid-cols-2 gap-4">
-                                                <div className="flex justify-center">
-                                                    {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-bold rounded-xl">se dará un turno para {datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 px-3 py-1 font-bold rounded-xl"><Link to={'/turnoDirecto/'}>Elija un paciente para dar un turno</Link></button>}
-                                                </div>
-                                                <div className="flex justify-center">
-                                                    <input className="px-10 py-1 rounded-sm border-2" type="text"
-                                                        name='observac'
-                                                        onChange={handleChange}
-                                                        value={values.observac}
-                                                        placeholder='Ingresar observaciones'
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div className="flex justify-center">
-                                                <div className="mr-2">
-                                                    {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>}
-                                                </div>
-                                                <div className="ml-2">
-                                                    <button className="bg-red-700 px-2 py-1 text-white rounded-md"><Link to={'/'}>Cancelar</Link></button>
-                                                </div>
-                                            </div>
+                                        {/* CAJA PARA LOS ELEMENTOS */}
+                                        <div className="flex flex-col sm:items-center sm:flex-row justify-around items-center justify-center p-5 gap-4">
+
+                                            {/* TITULO */}
+                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 px-3 py-1 font-semibold rounded-xl h-full "><Link to={'/turnoDirecto/'}>¿Paciente?</Link></button>}
+
+
+                                            {/* BOTON INGRESAR */}
+
+                                            {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md  ">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>}
+
+
+                                            {/* BOTON CANCELAR */}
+
+                                            <button className="bg-red-700 px-2 py-1 text-white rounded-md"><Link to={'/'}>Cancelar</Link></button>
+
+
+
+                                            {/* SELECTOR DE FECHA */}
+                                            <DateTimePicker
+
+                                                defaultValue={dayjs(Date()).toDate()}
+                                                value={dayjs(task.fecha)}
+                                                onChange={(date) => setSelectedDate(date)}
+                                                format='ddd DD [de] MMMM [de] YYYY hh:mm '
+                                                className='selector h-full mt-2'
+
+                                            />
                                         </div>
+
+                                        {/* OBSERVACIONES */}
+                                        <input className="px-10 py-1 rounded-sm border-2 h-10   " type="text"
+                                            onChange={handleChange}
+                                            value={values.observac}
+                                            placeholder='Ingresar observaciones'
+                                            name='observac'
+                                        />
+
+                                        {/* FIN DE LA CAJA PARA ELEMENTOS */}
 
                                     </DemoItem>
                                 </DemoContainer>
@@ -231,10 +232,8 @@ const Turno6 = () => {
                         return dayjs(date).format(" dddd  DD")
                     },
                 }}
-
             />
-        </div>
-
+      </>
     )
 }
 
