@@ -1,0 +1,36 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Cambia el número "3" por el número de columnas que desees */
+  }
+
+  .grid-container {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    grid-template-rows: auto;
+    gap: 5px;
+  }
+  
+  .element1 {
+    grid-column: 1 ;
+    width: 20vw;
+    
+  }
+  
+  .element2 {
+    grid-column: 1;
+  }
+  
+  .element3 {
+    grid-column: 2;
+  }
+  
+  .element4 {
+    grid-column:2;
+  }
+  
+  .selector {
+    width: 300px; /* Define el ancho deseado */
+    height: 100px; /* Define la altura deseada */
+    justify-content: center;
+    justify-items: end;
+}
