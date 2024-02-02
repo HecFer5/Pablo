@@ -14,7 +14,7 @@
         "dest": "/$1"
       },
       {
-        "root": "/Pablo/package.json"
+        "root": "../Pablo/package.json"
       }
     ]
   }
