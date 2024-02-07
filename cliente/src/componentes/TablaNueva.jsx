@@ -3,10 +3,6 @@ import { isPromise } from 'formik'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import {  Bars3BottomRightIcon, XMarkIcon} from '@heroicons/react/24/solid'
-import Turno6 from './Turno6'
-
-// import "primereact/resources/themes/lara-light-cyan/theme.css";
-// import 'primereact/resources/primereact.min.css'
 
 const TablaNueva = () => {
 
@@ -26,7 +22,6 @@ const TablaNueva = () => {
         ListarTareas()
     }, [])
 
-    // console.log(registros)
     return (
         <>
 
