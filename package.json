@@ -13,10 +13,11 @@
     "picocolors": "^1.0.0",
     "postcss": "^8.4.33",
     "rollup": "^4.9.6",
-    "source-map-js": "^1.0.2",
+    "source-map-js": "^1.0.2"
+  },
+  "devDependencies": {
     "vite": "^5.0.12"
   },
-  "devDependencies": {},
   "keywords": [],
   "description": ""
 }
