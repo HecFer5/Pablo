@@ -16,6 +16,9 @@ import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { AiTwotoneDelete } from "react-icons/ai";
 import './Turno.css'
+import ClickTurno from './Alertas/ClickTurno'
+// import NuevoReg from './Alertas/ClickTurno'
+
 
 
 dayjs.locale("es")
@@ -51,6 +54,8 @@ const Turno6 = () => {
 
             <button className=" bg-red-700 p-1 ml-8 text-white w-min rounded-md" onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
             </button>
+            {/* <NuevoReg idpaciente={params.idpaciente} nombre={event.nombre} apellido={event.apellido} />  */}
+
         </div>
     );
 
@@ -68,10 +73,26 @@ const Turno6 = () => {
         "observac": "",
 
     })
-    console.log(task.fecha, task.observac)
+    // console.log(task.fecha, task.observac)
     const navigate = useNavigate()
+    const [selectedDateTime, setSelectedDateTime] = useState(null);
 
 
+    
+
+//!  para seleccionar desde el calendario
+
+
+    const handleSelectSlot = (slotInfo) => {
+    const { start, end } = slotInfo;
+    navigate('/clickturno/' + params.idpaciente, params.nombre )
+    // Aquí puedes pasar la fecha y hora de la casilla seleccionada como parámetro a una función o componente externo
+    console.log('Fecha de inicio:', start);
+    console.log('Fecha de fin:', end);
+  };
+    //! fin 
+
+    
     const handleDeleteEvent = async (id) => {
         try {
 
@@ -209,7 +230,13 @@ const Turno6 = () => {
                     wide: '35vw'
                 }}
                 messages={messages}
-                selectable
+                selectable={true} // Establecer selectable en true
+                onSelectSlot ={handleSelectSlot}
+                step={60} 
+                timeslots={1}
+
+                
+
                 localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
                 startAccessor="start"
                 endAccessor="end"
@@ -220,6 +247,8 @@ const Turno6 = () => {
                 components={{
                     event: EventComponent,
                 }}
+
+
 
                 formats={{
                     dayHeaderFormat: date => {
