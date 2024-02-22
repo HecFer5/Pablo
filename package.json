@@ -4,11 +4,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "node server/server.js",
-    "start": "node server/server.js",
-    "build": "npm run dev:frontend && npm run dev:backend",
-    "build:frontend": "cd cliente && npm run dev",
-    "build:backend": "cd server && npm run dev",
-    "postbuild": "cd cliente && mv dev ../dev"
+    "start": "cd cliente/server && npm run dev",
+
+    "build": "npm run dev:frontend && npm run dev:backend"
+   
 
   },
   "author": "",

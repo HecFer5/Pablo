@@ -80,27 +80,21 @@ const Turno6 = () => {
 
     
 
-//!  para seleccionar desde el calendario
+// //!  para seleccionar desde el calendario
 
 
-    const handleSelectSlot = (slotInfo) => {
-    const { start, end } = slotInfo;
-    navigate('/clickturno/' + params.idpaciente, params.nombre )
-    // Aquí puedes pasar la fecha y hora de la casilla seleccionada como parámetro a una función o componente externo
-    console.log('Fecha de inicio:', start);
-    console.log('Fecha de fin:', end);
-  };
-    //! fin 
+//     const handleSelectSlot = (slotInfo) => {
+//     // const { start, end } = slotInfo;
+//     navigate('/clickturno'  )
+//     // Aquí puedes pasar la fecha y hora de la casilla seleccionada como parámetro a una función o componente externo
+//     console.log('Fecha de inicio:', start);
+//     console.log('Fecha de fin:', end);
+//   };
+//     //! fin 
 
     
     const handleDeleteEvent = async (id) => {
-        try {
-
-            await axios.delete(`http://localhost:4001/turno/${id}`);
-            fetchEvents();
-        } catch (error) {
-            console.error('Error al eliminar el evento:', error);
-        }
+        setEvents(events.filter(e => e.id !== id)); 
     };
     ////////////////////////////contesto you
     const fetchEvents = async () => {
@@ -142,9 +136,12 @@ const Turno6 = () => {
 
     useEffect(() => {
         fetchEvents();
-        traerDatos()
+        if(params.idpaciente){
+            traerDatos()
+        }
+        
 
-    }, []);
+    }, [params.idpaciente]);
 
     ////////////////////////////////////////////
 
@@ -231,7 +228,7 @@ const Turno6 = () => {
                 }}
                 messages={messages}
                 selectable={true} // Establecer selectable en true
-                onSelectSlot ={handleSelectSlot}
+                // onSelectSlot ={handleSelectSlot}
                 step={60} 
                 timeslots={1}
 
