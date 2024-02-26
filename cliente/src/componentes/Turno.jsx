@@ -17,6 +17,8 @@ import "react-big-calendar/lib/css/react-big-calendar.css"
 import { AiTwotoneDelete } from "react-icons/ai";
 import './Turno.css'
 import ClickTurno from './Alertas/ClickTurno'
+
+
 // import NuevoReg from './Alertas/ClickTurno'
 
 
@@ -78,23 +80,38 @@ const Turno6 = () => {
     const [selectedDateTime, setSelectedDateTime] = useState(null);
 
 
-    
-
-// //!  para seleccionar desde el calendario
 
 
-//     const handleSelectSlot = (slotInfo) => {
-//     // const { start, end } = slotInfo;
-//     navigate('/clickturno'  )
-//     // Aquí puedes pasar la fecha y hora de la casilla seleccionada como parámetro a una función o componente externo
-//     console.log('Fecha de inicio:', start);
-//     console.log('Fecha de fin:', end);
-//   };
-//     //! fin 
+    // //!  para seleccionar desde el calendario
 
-    
+
+    const Selector = (slotInfo) => {
+      
+        const { start} = slotInfo;
+        const formattedStart = dayjs(start).format('DD-MM-YYYY HH:mm:ss')
+
+
+        // ...
+      
+        // Pass the variable 'start' to the next component
+        // history.push('/next-component', { start });
+        // // console.log(params.idpaciente)
+        // navigate('/clickturno/' + params.idpaciente)
+    //    navigate('/clickturno/' + params.idpaciente);
+
+       navigate(`/clickturno/${params.idpaciente}`, { state: { start: formattedStart  } });
+
+        // setFechaSel({ start, end, slots });
+        dayjs(start).format('DD-MM-YYYY HH:mm:ss')
+        console.log('Fecha de inicio:', dayjs(start).format('DD-MM-YYYY HH:mm:ss'));
+        // console.log('Fecha de fin:', end);
+
+    };
+    //     //! fin 
+
+
     const handleDeleteEvent = async (id) => {
-        setEvents(events.filter(e => e.id !== id)); 
+        setEvents(events.filter(e => e.id !== id));
     };
     ////////////////////////////contesto you
     const fetchEvents = async () => {
@@ -136,17 +153,17 @@ const Turno6 = () => {
 
     useEffect(() => {
         fetchEvents();
-        if(params.idpaciente){
+        if (params.idpaciente) {
             traerDatos()
         }
-        
+
 
     }, [params.idpaciente]);
 
     ////////////////////////////////////////////
 
     return (
-      <>
+        <>
 
             <div className='container mx-auto mb-2 mt-1 p-8'>
                 <Formik
@@ -228,11 +245,11 @@ const Turno6 = () => {
                 }}
                 messages={messages}
                 selectable={true} // Establecer selectable en true
-                // onSelectSlot ={handleSelectSlot}
-                step={60} 
+                onSelectSlot={Selector}
+                step={60}
                 timeslots={1}
 
-                
+
 
                 localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
                 startAccessor="start"
@@ -258,8 +275,11 @@ const Turno6 = () => {
                         return dayjs(date).format(" dddd  DD")
                     },
                 }}
+
             />
-      </>
+
+
+        </>
     )
 }
 

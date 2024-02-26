@@ -1,6 +1,7 @@
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useState, useReducer } from 'react'
 import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ToogleTaskDoneRec, ListarInactivos, CrearTurnos, ListarTurnos } from '../../api/tareas.api'
 // import { Alert } from '@mui/material'
+import UserReducer from './UserReducer'
 
 
 
@@ -11,8 +12,14 @@ export const TareasContext = createContext()
 ////////////////////para traer todo el listado
 
 export const TareasContextProv = ({ children }) => {
+    const estadoInicial = {
+        registro: [],
+        registroSelec: null
+    }
+
     const [tareas, setTareas] = useState([])
     const [turnos, setTurnos] = useState([])
+    const [state, dispatch] = useReducer(UserReducer, estadoInicial)
 
     async function TraerTurnos() {
         const respuesta = await ListarTurnos()
@@ -22,36 +29,29 @@ export const TareasContextProv = ({ children }) => {
     async function TraerTareas() {
         const respuesta = await ListarTareas()
         setTareas(respuesta.data)
+
+
+
     }
 
+    const crearRegistro = async (tarea) => {
+        try {
+            const response = await CrearTareas(tarea)
 
-    // async function listarBorrados() {
-    //     const respuesta = await ListarInactivos()
-
-    //     setTareas(respuesta.data)
-    // }
-
- /////////////////////////////Crear un registro
- const crearRegistro = async (tarea) => {
-    try {
-        const response = await CrearTareas(tarea)
-        
-    } catch (error) {
-        console.error(error)
+        } catch (error) {
+            console.error(error)
+        }
     }
-}
 
     const darTurno = async (turno) => {
         try {
             const response = await CrearTurnos(turno)
-            
+
 
         } catch (error) {
-             console.error(error)
+            console.error(error)
         }
     }
-
-
 
     const listarBorrados = async () => {
         try {
@@ -62,8 +62,6 @@ export const TareasContextProv = ({ children }) => {
         }
     }
 
-
-    ///////////////para borrar un registro
     const borrarTarea = async (idpaciente) => {
         try {
 
@@ -76,33 +74,33 @@ export const TareasContextProv = ({ children }) => {
         }
     }
 
-
-    ///////////////Editar un registro
     const editarRegisto = async (idpaciente) => {
         try {
             const respuesta = await ListarUnaTarea(idpaciente)
+            setTareas(respuesta.data)           
             return respuesta.data
+
+
         } catch (error) {
             console.log(error)
         }
     }
 
-    ///////////////Editar tarea
-
     const modificaRegistro = async (idpaciente, nuevosCampos) => {
         try {
             const respuesta = await EditaTarea(idpaciente, nuevosCampos)
+
             // console.log(respuesta)
         } catch (error) {
             console.log(error)
         }
     }
 
-
-
-
-
-    return <TareasContext.Provider value={{ tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos }}>
+    return <TareasContext.Provider value={{
+        registro: state.registro,
+        registroSelec: state.registroSelec,
+        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos
+    }}>
         {children}
     </TareasContext.Provider>
 }

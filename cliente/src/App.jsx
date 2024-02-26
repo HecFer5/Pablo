@@ -40,7 +40,7 @@ function App() {
           <Route path='/otroturno' Component={NuevoTurno} />
           <Route path='/turno' Component={Turno} />
           <Route path='/turnodirecto' Component={ModalTurnos} />
-          {/* <Route path='/clickturno' Component={ClickTurno} /> */}
+          <Route path='/clickturno/:idpaciente' Component={ClickTurno} />
 
           {/* <Route path='*' Component={NotFound} /> */}
         </Routes>
