@@ -13,7 +13,8 @@ import NavBar from './componentes/Navbar.jsx'
 import Turno from './componentes/Turno.jsx'
 import NuevoTurno from './componentes/Alertas/NuevoTurno.jsx'
 import ModalTurnos from './componentes/Alertas/ModalTurnos.jsx'
-import ClickTurno from './componentes/Alertas/ClickTurno.jsx'
+import TurnoNuevoDirecto from './componentes/Alertas/ClickTurno.jsx'
+import Error from './componentes/Alertas/Error.jsx'
 
 
 
@@ -40,7 +41,9 @@ function App() {
           <Route path='/otroturno' Component={NuevoTurno} />
           <Route path='/turno' Component={Turno} />
           <Route path='/turnodirecto' Component={ModalTurnos} />
-          <Route path='/clickturno/:idpaciente' Component={ClickTurno} />
+          <Route path='/clickturno/:idpaciente' Component={TurnoNuevoDirecto} />
+
+          <Route path='/error' Component={Error} />
 
           {/* <Route path='*' Component={NotFound} /> */}
         </Routes>

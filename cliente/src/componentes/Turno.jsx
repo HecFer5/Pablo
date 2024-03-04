@@ -65,7 +65,7 @@ const Turno6 = () => {
     const [selectedDate, setSelectedDate] = useState(dayjs(Date()).toDate());
 
     const params = useParams()
-    const nombre = params.nombre
+    // const nombre = params.nombre
 
     const { darTurno } = useTareas()
     const [task, setTask] = useState({
@@ -86,32 +86,31 @@ const Turno6 = () => {
 
 
     const Selector = (slotInfo) => {
-      
-        const { start} = slotInfo;
-        const formattedStart = dayjs(start).format('DD-MM-YYYY HH:mm:ss')
 
-
-        // ...
-      
-        // Pass the variable 'start' to the next component
-        // history.push('/next-component', { start });
-        // // console.log(params.idpaciente)
-        // navigate('/clickturno/' + params.idpaciente)
-    //    navigate('/clickturno/' + params.idpaciente);
-
-       navigate(`/clickturno/${params.idpaciente}`, { state: { start: formattedStart  } });
-
-        // setFechaSel({ start, end, slots });
-        dayjs(start).format('DD-MM-YYYY HH:mm:ss')
-        console.log('Fecha de inicio:', dayjs(start).format('DD-MM-YYYY HH:mm:ss'));
-        // console.log('Fecha de fin:', end);
+        const { start } = slotInfo;
+        // const formattedStart = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
+        if (params.idpaciente) {
+            navigate(`/clickturno/${params.idpaciente}`, { state: { start } });
+        } else {
+            navigate('/error')
+        }
 
     };
     //     //! fin 
 
 
-    const handleDeleteEvent = async (id) => {
-        setEvents(events.filter(e => e.id !== id));
+    const handleDeleteEvent = async (idturnos) => {
+    
+        const response = await axios.delete("http://localhost:4000/turno/" + idturnos);
+
+        // Verificar la respuesta de la API
+        if (response.status === 200) {
+          // Los datos se enviaron correctamente
+          console.log('Los datos se enviaron correctamente', idpaciente);
+        } else {
+          // Hubo un error al enviar los datos
+          console.log('Hubo un error al enviar los datos');
+        }
     };
     ////////////////////////////contesto you
     const fetchEvents = async () => {
@@ -156,9 +155,19 @@ const Turno6 = () => {
         if (params.idpaciente) {
             traerDatos()
         }
-
-
     }, [params.idpaciente]);
+
+    const darElTurno = async (values, actions) => {
+        const originalDate = dayjs(selectedDate);
+        const newDate = originalDate.add(1, 'hour');
+
+        values.fecha = dayjs(selectedDate).format('YYYY-MM-DD HH:mm:ss');
+        values.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
+        values.pacienteid = params.idpaciente
+        navigate('/otroturno')
+        await darTurno(values)
+
+    }
 
     ////////////////////////////////////////////
 
@@ -169,14 +178,7 @@ const Turno6 = () => {
                 <Formik
                     initialValues={task}
                     enableReinitialize={true}
-                    onSubmit={async (values, actions) => {
-                        values.fecha = dayjs(selectedDate).format('YYYY-MM-DD HH:mm:ss');
-                        values.fechafin = dayjs(selectedDate).format('YYYY-MM-DD HH:mm:ss');
-                        values.pacienteid = params.idpaciente
-                        navigate('/otroturno')
-                        await darTurno(values)
-
-                    }}
+                    onSubmit={darElTurno}
                 >
 
                     {({ handleSubmit, handleChange, values }) => (
@@ -246,10 +248,8 @@ const Turno6 = () => {
                 messages={messages}
                 selectable={true} // Establecer selectable en true
                 onSelectSlot={Selector}
-                step={60}
+                step={15}
                 timeslots={1}
-
-
 
                 localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
                 startAccessor="start"
@@ -274,6 +274,8 @@ const Turno6 = () => {
                     dayFormat: date => {
                         return dayjs(date).format(" dddd  DD")
                     },
+                    
+                    
                 }}
 
             />
