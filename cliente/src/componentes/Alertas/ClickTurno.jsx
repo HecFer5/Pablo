@@ -3,12 +3,10 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { useState, useEffect } from 'react'
 import { Link, useParams, useLocation, useNavigate } from 'react-router-dom'
-// import React, { useContext } from 'react';
-// import { TareasContext } from '../context/TareasContext';
 import { useTareas } from '../context/hooks'
-// import {  } from 'react-router-dom';
 import dayjs from 'dayjs';
 import axios from "axios";
+
 
 
 
@@ -26,17 +24,26 @@ const style = {
 
 export default function TurnoNuevoDirecto() {
 
-  const { darTurno } = useTareas()
   const navigate = useNavigate()
-
-
+  const [valor, setValor] = useState('');
 
   const params = useParams()
 
   const location = useLocation();
   const start = location.state.start;
+  const { editarRegisto } = useTareas()
+
+  const [task, setTask] = useState({
+    nombre: "",
+    apellido: ""
+ 
+  })  
+  console.log(start)
 
   // const start = '2024:03:05 11:00:00'
+  const handleChange = (event) => {
+    setValor(event.target.value);
+  };
 
 
   const [valores, setValores] = useState({
@@ -50,48 +57,39 @@ export default function TurnoNuevoDirecto() {
 
   const handleEnviarDatos = async () => {
     const originalDate = dayjs(start);
-    const newDate = originalDate.add(1, 'hour');
+    const newDate = originalDate.add(30, 'minute');
 
+    console.log(originalDate, newDate)
     valores.fecha = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
     valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
     valores.pacienteid = params.idpaciente
-    valores.observac = ''
-    console.log('en clik', valores.fecha, params.idpaciente)
-    // try {
-      // Realizar la petición POST a la API de MySQL
-      const response = await axios.post("http://localhost:4000/turno/", valores);
+    valores.observac = valor
+    console.log('en clik', valores.fecha, valores.fechafin, params.idpaciente, valor)
+  
+    const response = await axios.post("http://localhost:4000/turno/", valores);
 
-      // Verificar la respuesta de la API
-      if (response.status === 200) {
-        // Los datos se enviaron correctamente
-        console.log('Los datos se enviaron correctamente');
-        navigate('/otroturno')
-      } else {
-        // Hubo un error al enviar los datos
-        console.log('Hubo un error al enviar los datos');
-      }
-    // } catch (error) {
-    //   // Manejar el error de la petición
-    //   console.log('Error al enviar los datos:', error);
-    // }
+    if (response.status === 200) {
+      console.log('Los datos se enviaron correctamente');
+      navigate('/otroturno')
+    } else {
+      console.log('Hubo un error al enviar los datos');
+    }
+ 
   };
 
 
-
-  // useEffect(() => {
-  //   const traerTarea = async () => {
-  //     if (params.idpaciente) {
-  //       const task = await editarRegisto(params.idpaciente)
-  //       setTask({
-  //         nombre: task.nombre,
-  //         apellido: task.apellido,
-  //         telefono: task.telefono,
-  //       })
-  //     }
-  //   }
-  //   traerTarea()
-  //   console.log('hola turno, ', start)
-  // }, [])
+  useEffect(() => {
+    const traerTarea = async () => {
+      if (params.idpaciente) {
+        const task = await editarRegisto(params.idpaciente)
+        setTask({
+          nombre: task.nombre,
+          apellido: task.apellido
+        })
+      }
+    }
+    traerTarea()
+  }, [])
 
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
@@ -108,11 +106,15 @@ export default function TurnoNuevoDirecto() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          {/* <div className='text-xl font-bold uppercase text-center '> {`${task.apellido}, ${task.nombre} `}</div> */}
-          {/* <div className="text-sm text-center font-bold mt-2 mb-3">{`El ${start}`}</div> */}
-
-          <button className="block bg-blue-700 px-2 py-1 text-white rounded-md w-full text-center" onClick={handleEnviarDatos}>Si</button>
-          <li className="block bg-red-700 px-2 py-1 text-white w-full text-center mt-3 rounded-md"><Link to={'/turno/'} >No</Link></li>
+           <div className='text-xl font-bold uppercase text-center '> {`¿turno para ${task.nombre} ${task.apellido} el ${dayjs(start).format('DD [de] MMMM [de ]YYYY [a las] HH:mm:ss')}?`}</div> 
+    
+          <button className="block bg-blue-700 px-2 py-1 mb-4 mt-4 text-white rounded-md w-full text-center" onClick={handleEnviarDatos}>Si</button>
+           <input className="px-16 py-1  rounded-sm w-full border-solid" type="text"
+              name='nombre'
+              onChange={handleChange}
+              placeholder='Ingrese un comentario'
+               /> 
+          <li className="block bg-red-700 px-2 py-1 mt-4 text-white w-full text-center mt-3 rounded-md"><Link to={'/turno/'} >No</Link></li>
         </Box>
       </Modal>
     </div>

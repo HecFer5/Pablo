@@ -12,6 +12,7 @@ import Ficha from './componentes/Ficha.jsx'
 import NavBar from './componentes/Navbar.jsx'
 import Turno from './componentes/Turno.jsx'
 import NuevoTurno from './componentes/Alertas/NuevoTurno.jsx'
+import confirmacion from './componentes/Alertas/confirmación.jsx'
 import ModalTurnos from './componentes/Alertas/ModalTurnos.jsx'
 import TurnoNuevoDirecto from './componentes/Alertas/ClickTurno.jsx'
 import Error from './componentes/Alertas/Error.jsx'
@@ -39,6 +40,7 @@ function App() {
           <Route path='/borrar/:idpaciente' Component={Alerta} />
           <Route path='/otroReg' Component={NuevoRegistro} />
           <Route path='/otroturno' Component={NuevoTurno} />
+          <Route path='/confirmacion' Component={confirmacion} />
           <Route path='/turno' Component={Turno} />
           <Route path='/turnodirecto' Component={ModalTurnos} />
           <Route path='/clickturno/:idpaciente' Component={TurnoNuevoDirecto} />

@@ -39,7 +39,7 @@ export default function NuevoReg({ values }) {
       >
         <Box sx={style}>
           
-            <div className='text-xl font-bold uppercase text-center '>El turno se ingresó correctamente</div>
+          <div className='text-xl font-bold uppercase text-center '>El turno fue eliminado</div>
  
         
           { <li className="block bg-blue-700 px-2 py-1 text-white w-full text-center mt-3 rounded-md"><Link to={'/turno'} >Ok</Link></li>}

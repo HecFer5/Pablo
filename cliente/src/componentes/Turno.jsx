@@ -1,7 +1,7 @@
-import { Component, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Formik, Form } from 'formik'
 import { useTareas } from './context/hooks'
-import { useParams, useNavigate, Link, Navigate } from 'react-router-dom'
+import { useParams, useNavigate, Link } from 'react-router-dom'
 import dayjs from 'dayjs';
 import 'dayjs/locale/es';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
@@ -9,18 +9,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import axios from 'axios'
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
 import { AiTwotoneDelete } from "react-icons/ai";
 import './Turno.css'
-import ClickTurno from './Alertas/ClickTurno'
-
-
-// import NuevoReg from './Alertas/ClickTurno'
-
 
 
 dayjs.locale("es")
@@ -41,6 +33,7 @@ const messages = {
     showMore: (total) => `+ (${total}) Eventos`,
 }
 
+
 const Turno6 = () => {
     const [events, setEvents] = useState([]);
     const [datos, setDatos] = useState([])
@@ -56,7 +49,6 @@ const Turno6 = () => {
 
             <button className=" bg-red-700 p-1 ml-8 text-white w-min rounded-md" onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
             </button>
-            {/* <NuevoReg idpaciente={params.idpaciente} nombre={event.nombre} apellido={event.apellido} />  */}
 
         </div>
     );
@@ -65,7 +57,6 @@ const Turno6 = () => {
     const [selectedDate, setSelectedDate] = useState(dayjs(Date()).toDate());
 
     const params = useParams()
-    // const nombre = params.nombre
 
     const { darTurno } = useTareas()
     const [task, setTask] = useState({
@@ -75,41 +66,44 @@ const Turno6 = () => {
         "observac": "",
 
     })
-    // console.log(task.fecha, task.observac)
     const navigate = useNavigate()
-    const [selectedDateTime, setSelectedDateTime] = useState(null);
+    // const [selectedDateTime, setSelectedDateTime] = useState(null);
 
 
 
 
     // //!  para seleccionar desde el calendario
-
-
     const Selector = (slotInfo) => {
 
         const { start } = slotInfo;
-        // const formattedStart = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
+
+        console.log(start, dayjs(Date()).toDate())
+
+        if (start < dayjs(Date()).toDate()) {
+            navigate('/error')
+        }else{
         if (params.idpaciente) {
             navigate(`/clickturno/${params.idpaciente}`, { state: { start } });
         } else {
             navigate('/error')
         }
-
+    }
     };
     //     //! fin 
 
 
     const handleDeleteEvent = async (idturnos) => {
-    
+
         const response = await axios.delete("http://localhost:4000/turno/" + idturnos);
 
         // Verificar la respuesta de la API
         if (response.status === 200) {
-          // Los datos se enviaron correctamente
-          console.log('Los datos se enviaron correctamente', idpaciente);
+            // Los datonis se enviaron correctamente
+            navigate('/confirmacion')
+            console.log('Los datos se enviaron correctamente', idpaciente);
         } else {
-          // Hubo un error al enviar los datos
-          console.log('Hubo un error al enviar los datos');
+            // Hubo un error al enviar los datos
+            console.log('Hubo un error al enviar los datos');
         }
     };
     ////////////////////////////contesto you
@@ -159,7 +153,8 @@ const Turno6 = () => {
 
     const darElTurno = async (values, actions) => {
         const originalDate = dayjs(selectedDate);
-        const newDate = originalDate.add(1, 'hour');
+        const newDate = originalDate.add(30, 'minute');
+
 
         values.fecha = dayjs(selectedDate).format('YYYY-MM-DD HH:mm:ss');
         values.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
@@ -251,6 +246,7 @@ const Turno6 = () => {
                 step={15}
                 timeslots={1}
 
+
                 localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
                 startAccessor="start"
                 endAccessor="end"
@@ -274,8 +270,8 @@ const Turno6 = () => {
                     dayFormat: date => {
                         return dayjs(date).format(" dddd  DD")
                     },
-                    
-                    
+
+
                 }}
 
             />
