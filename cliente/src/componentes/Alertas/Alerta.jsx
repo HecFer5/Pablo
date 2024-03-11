@@ -34,22 +34,22 @@ export default function Alerta() {
 
 
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description" >
-        <Box sx={style}>
-          <div className='text-xm text-red-700 font-bold uppercase text-center '>{`¡Se va a borrar el registro nº ${params.idpaciente}!`}</div>
-          <div className="text-sm text-center font-bold mt-2 mb-3">¿Está seguro de continuar?</div>
-         
-          <button onClick={() => { borrarTarea(params.idpaciente) }} className="block bg-blue-700 px-2 py-1 text-white rounded-md w-full text-center">Si</button>
 
-         { navigate('/tabla')}
-          { <li className="block bg-red-700 px-2 py-1 text-white w-full text-center mt-3 rounded-md"><Link to={'/tabla/'} >No</Link></li>}
-        </Box>
-      </Modal>
-    </>
+    <Modal
+      open={open}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description" >
+      <Box sx={style}>
+        <div className='text-xm text-red-700 font-bold uppercase text-center '>{`¡Se va a borrar el registro nº ${params.idpaciente}!`}</div>
+        <div className="text-sm text-center font-bold mt-2 mb-3">¿Está seguro de continuar?</div>
+
+        <button onClick={() => { borrarTarea(params.idpaciente) }} className="block bg-blue-700 px-2 py-1 text-white rounded-md w-full text-center">Si</button>
+
+        {navigate('/tabla')}
+        {<li className="block bg-red-700 px-2 py-1 text-white w-full text-center mt-3 rounded-md"><Link to={'/tabla/'} >No</Link></li>}
+      </Box>
+    </Modal>
+
   );
 }

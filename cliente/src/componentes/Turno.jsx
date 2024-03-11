@@ -3,7 +3,9 @@ import { Formik, Form } from 'formik'
 import { useTareas } from './context/hooks'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import dayjs from 'dayjs';
-import 'dayjs/locale/es';
+// import 'dayjs/locale/es';
+import esLocale from 'dayjs/locale/es'; // Importar el archivo de localización para español
+import updateLocale from 'dayjs/plugin/updateLocale'
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,9 +17,15 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import './Turno.css'
 
 
-dayjs.locale("es")
+dayjs.extend(updateLocale); // Extender Day.js con el plugin updateLocale
+dayjs.locale(esLocale); // Establecer la localización global en español
 
-const localizer = dayjsLocalizer(dayjs)
+dayjs.updateLocale('es', {
+  weekStart: 0, // Establecer el domingo como el primer día de la semana
+});
+
+
+const localizer = dayjsLocalizer(dayjs, { weekStart: 0 });
 const messages = {
     allDay: 'Dia Entero',
     previous: 'Atrás',
@@ -180,8 +188,44 @@ const Turno6 = () => {
 
     return (
         <>
+                <Calendar
+                    style={{
+                        height: '65vh',
+                        wide: '35vw',
+                        marginTop: '5vh',
+                        marginLeft: '3vw',
+                        marginRight: '3vw'
+                    }}
+                    messages={messages}
+                    selectable={true} // Establecer selectable en true
+                    onSelectSlot={Selector}
+                    step={15}
+                    timeslots={1}
+                    localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
+                    startAccessor="start"
+                    endAccessor="end"
+                    defaultView='week'
+                    min={dayjs('2024-01-22T08:00:00').toDate()}
+                    max={dayjs('2024-01-22T18:00:00').toDate()}
 
-            <div className='container mx-auto mb-2 mt-1 p-8'>
+
+                    components={{
+                        event: EventComponent,
+                    }}
+                    formats={{
+                        dayHeaderFormat: date => {
+                            return dayjs(date).format('dddd DD [de] MMMM [de] YYYY')
+                        },
+                        monthHeaderFormat: date => {
+                            return dayjs(date).format('dddd DD [de] MMMM [de] YYYY')
+                        },
+                        dayFormat: date => {
+                            return dayjs(date).format(" dddd  DD")
+                        },
+                    }}
+                />
+
+            <div className='container mx-auto mb-2 p-1'>
                 <Formik
                     initialValues={task}
                     enableReinitialize={true}
@@ -198,22 +242,10 @@ const Turno6 = () => {
                                     ]}>
                                     <DemoItem >
                                         {/* CAJA PARA LOS ELEMENTOS */}
-                                        <div className="flex flex-col sm:items-center sm:flex-row justify-around items-center justify-center p-5 gap-4">
+                                        <div className="flex flex-col sm:items-center sm:flex-row justify-around items-center p-5 gap-4">
 
                                             {/* TITULO */}
                                             {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 px-3 py-1 font-semibold rounded-xl h-full "><Link to={'/turnoDirecto/'}>¿Paciente?</Link></button>}
-
-
-                                            {/* BOTON INGRESAR */}
-
-                                            {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md  ">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>}
-
-
-                                            {/* BOTON CANCELAR */}
-
-                                            <button className="bg-red-700 px-2 py-1 text-white rounded-md"><Link to={'/'}>Cancelar</Link></button>
-
-
 
                                             {/* SELECTOR DE FECHA */}
                                             <DateTimePicker
@@ -225,6 +257,18 @@ const Turno6 = () => {
                                                 className='selector h-full mt-2'
 
                                             />
+                                            {/* BOTON INGRESAR */}
+
+                                            {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md  ">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>}
+
+
+                                            {/* BOTON CANCELAR */}
+
+                                            <button className="bg-red-700 px-2 py-1 text-white rounded-md"><Link to={'/'}>Cancelar</Link></button>
+
+
+
+
                                         </div>
 
                                         {/* OBSERVACIONES */}
@@ -247,48 +291,6 @@ const Turno6 = () => {
 
 
             </div>
-            <Calendar
-                style={{
-                    height: '65vh',
-                    wide: '35vw'
-                }}
-                messages={messages}
-                selectable={true} // Establecer selectable en true
-                onSelectSlot={Selector}
-                step={15}
-                timeslots={1}
-
-
-                localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
-                startAccessor="start"
-                endAccessor="end"
-                defaultView='week'
-                min={dayjs('2024-01-22T08:00:00').toDate()}
-                max={dayjs('2024-01-22T18:00:00').toDate()}
-
-                components={{
-                    event: EventComponent,
-                }}
-
-
-
-                formats={{
-                    dayHeaderFormat: date => {
-                        return dayjs(date).format('dddd DD [de] MMMM [de] YYYY')
-                    },
-                    monthHeaderFormat: date => {
-                        return dayjs(date).format('dddd DD [de] MMMM [de] YYYY')
-                    },
-                    dayFormat: date => {
-                        return dayjs(date).format(" dddd  DD")
-                    },
-
-
-                }}
-
-            />
-
-
         </>
     )
 }

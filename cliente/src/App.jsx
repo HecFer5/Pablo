@@ -48,6 +48,7 @@ function App() {
 
           <Route path='/error' Component={Error} />
           <Route path='/turnopasado/:idpaciente' Component={TurnoPasado} />
+          <Route path='/eliminarregistro/:idpaciente' Component={TurnoPasado} />
 
           {/* <Route path='*' Component={NotFound} /> */}
         </Routes>
