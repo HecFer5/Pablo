@@ -79,15 +79,26 @@ const Turno6 = () => {
 
         console.log(start, dayjs(Date()).toDate())
 
-        if (start < dayjs(Date()).toDate()) {
-            navigate('/error')
-        }else{
         if (params.idpaciente) {
-            navigate(`/clickturno/${params.idpaciente}`, { state: { start } });
+            if (start < dayjs(Date()).toDate()) {
+
+                navigate(`/turnopasado/${params.idpaciente}`)
+            } else {
+                navigate(`/clickturno/${params.idpaciente}`, { state: { start } });
+            }
         } else {
-            navigate('/error')
+            navigate(`/error`)
         }
-    }
+
+        // if () {
+
+        // } else {
+        //     if (params.idpaciente) {
+
+        //     } else {
+
+        //     }
+        // }
     };
     //     //! fin 
 
@@ -106,13 +117,14 @@ const Turno6 = () => {
             console.log('Hubo un error al enviar los datos');
         }
     };
+
     ////////////////////////////contesto you
     const fetchEvents = async () => {
         try {
             const response = await axios.get('http://localhost:4001/turno');
             const data = response.data;
             const formattedEvents = data.map((turno) => ({
-                title: turno.nombre + ' ' + turno.apellido + ' / ' + turno.observac,
+                title: `${turno.nombre} ${turno.apellido}${turno.observac ? ` (${turno.observac})` : ''}`,
                 start: dayjs(turno.fecha).toDate(),
                 end: dayjs(turno.fechafin).toDate(),
                 id: turno.idturnos

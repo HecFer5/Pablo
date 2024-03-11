@@ -16,6 +16,7 @@ import confirmacion from './componentes/Alertas/confirmación.jsx'
 import ModalTurnos from './componentes/Alertas/ModalTurnos.jsx'
 import TurnoNuevoDirecto from './componentes/Alertas/ClickTurno.jsx'
 import Error from './componentes/Alertas/Error.jsx'
+import TurnoPasado from './componentes/Alertas/TurnoPasado.jsx'
 
 
 
@@ -46,6 +47,7 @@ function App() {
           <Route path='/clickturno/:idpaciente' Component={TurnoNuevoDirecto} />
 
           <Route path='/error' Component={Error} />
+          <Route path='/turnopasado/:idpaciente' Component={TurnoPasado} />
 
           {/* <Route path='*' Component={NotFound} /> */}
         </Routes>
