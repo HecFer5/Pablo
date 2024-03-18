@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useReducer } from 'react'
-import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro
-} from '../../api/tareas.api'
+import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ToogleTaskDoneRec, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, VuelveRegistro } from '../../api/tareas.api'
 // import { Alert } from '@mui/material'
 import UserReducer from './UserReducer'
 
@@ -48,6 +47,7 @@ export const TareasContextProv = ({ children }) => {
         try {
             const response = await CrearTurnos(turno)
 
+
         } catch (error) {
             console.error(error)
         }
@@ -64,17 +64,23 @@ export const TareasContextProv = ({ children }) => {
 
     const borrarTarea = async (idpaciente) => {
         try {
-
             const respuesta = await BorrarTareas(idpaciente)
-
-            setTareas(tareas.filter(tarea => tarea.idpaciente !== idpaciente))
-
+            // setTareas(tareas.filter(tarea => tarea.idpaciente !== idpaciente))
         } catch (error) {
             console.log(error)
         }
     }
 
-    const EliminarDelTodo = async (idpaciente) => {
+    const RegistroRehabilitado = async (idpaciente) => {
+        try {
+            const respuesta = await VuelveRegistro(idpaciente)
+            // setTareas(tareas.filter(tarea => tarea.idpaciente !== idpaciente))
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const ElimiarDelTodo = async (idpaciente) => {
         try {
 
             const respuesta = await EliminarRegistro(idpaciente)
@@ -108,9 +114,9 @@ export const TareasContextProv = ({ children }) => {
     }
 
     return <TareasContext.Provider value={{
-        // registro: state.registro,
-        // registroSelec: state.registroSelec,
-        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, EliminarDelTodo
+        registro: state.registro,
+        registroSelec: state.registroSelec,
+        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, ElimiarDelTodo, RegistroRehabilitado
     }}>
         {children}
     </TareasContext.Provider>

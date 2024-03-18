@@ -1,8 +1,8 @@
 import axios from 'axios'
 import { isPromise } from 'formik'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import {  Bars3BottomRightIcon, XMarkIcon} from '@heroicons/react/24/solid'
+import { Link, useNavigate } from 'react-router-dom'
+import { Bars3BottomRightIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
 const TablaNueva = () => {
 
@@ -10,8 +10,8 @@ const TablaNueva = () => {
     const [open, setOpen] = useState(false)
     const [abierto, setAbierto] = useState(false)
     const xLink = 'md:ml-8 md:my-0 my-7 font-semibold'
+    const navigate = useNavigate()
 
-   
     const ListarTareas = async () =>
         await axios.get('http://localhost:4001/tarea').then((response) => {
             const data = response.data
@@ -22,12 +22,17 @@ const TablaNueva = () => {
         ListarTareas()
     }, [])
 
+    const refEstatus = 1
+    const irAlerta = (idpaciente) => {
+        navigate('/borrar/' + idpaciente, { state: { refEstatus } })
+    }
+
     return (
         <>
 
-        <div className='text-sm text-orange-700 text-center bg-orange-100 mt-2'>Haga click sobre el número para ver la ficha completa y click en "Editar" para correcciones</div>
+            <div className='text-sm text-orange-700 text-center bg-orange-100 mt-2'>Haga click sobre el número para ver la ficha completa y click en "Editar" para correcciones</div>
 
-    
+
             <div className="flex flex-col">
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -45,19 +50,22 @@ const TablaNueva = () => {
                                 <tbody className="table-group-divider">
                                     {registros.map(registro => (
                                         <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
-                                             <td >
+                                            <td >
                                                 <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/ficha/' + registro.idpaciente} >{registro.idpaciente}</Link></li>
                                             </td>
                                             <td >
                                                 <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/turno/' + registro.idpaciente} >Turno</Link></li>
                                             </td>
-                                            <td className="whitespace-nowrap px-6 py-4">{`${registro.apellido}, ${registro.nombre}` }</td>
+                                            <td className="whitespace-nowrap px-6 py-4">{`${registro.apellido}, ${registro.nombre}`}</td>
                                             <td className="whitespace-nowrap px-6 py-4">{registro.telefono}</td>
-                                            <td>                                              
-                                               <li className="block bg-lime-700 px-2 py-1 text-white w-min rounded-md"><Link to={'/edit/' + registro.idpaciente} >Editar</Link></li>
+                                            <td>
+                                                <li className="block bg-lime-700 px-2 py-1 text-white w-min rounded-md"><Link to={'/edit/' + registro.idpaciente} >Editar</Link></li>
                                             </td>
                                             <td>
-                                                <li className="block bg-red-700 px-2 py-1 text-white w-min rounded-md"><Link to={'/borrar/' + registro.idpaciente} >Borrar</Link></li>
+                                                <button className="block bg-red-700 px-2 py-1 text-white w-min rounded-md" onClick={() => irAlerta(registro.idpaciente)}>Borrar</button>
+
+
+
                                             </td>
                                         </tr>
                                     ))}
@@ -70,7 +78,7 @@ const TablaNueva = () => {
                 </div>
 
             </div>
-           
+
         </>
     )
 }

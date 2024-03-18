@@ -6,8 +6,8 @@ export const ListarTareas = async () =>
 export const ListarTurnos = async () =>
   await axios.get("http://localhost:4000/turno");
 
- export const BorrarUnTurno = async (idturnos) =>
-   await axios.delete("http://localhost:4000/turno" + idturnos);
+export const BorrarUnTurno = async (idturnos) =>
+  await axios.delete("http://localhost:4000/turno" + idturnos);
 
 export const ListarInactivos = async () =>
   await axios.get("http://localhost:4001/inac");
@@ -20,6 +20,12 @@ export const CrearTurnos = async (turno) =>
 
 export const BorrarTareas = async (idpaciente) =>
   await axios.delete("http://localhost:4001/tarea/" + idpaciente);
+
+export const EliminarRegistro = async (idpaciente) =>
+  await axios.delete("http://localhost:4001/inac/" + idpaciente);
+
+export const VuelveRegistro = async (idpaciente) =>
+  await axios.put("http://localhost:4001/tarea/" + idpaciente);
 
 export const ListarUnaTarea = async (idpaciente) =>
   await axios.get("http://localhost:4001/tarea/" + idpaciente);

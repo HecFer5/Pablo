@@ -1,7 +1,9 @@
 import { pool } from "../db.js";
 
 
-///! LISTADO COMPLETO ACTIVOS
+                          ///!PACIENTES///////
+
+//! LISTADO COMPLETO DE PACIENTES ACTIVOS
 
 export const getTareas = async (req, res) => {
   
@@ -11,11 +13,12 @@ export const getTareas = async (req, res) => {
     );
     res.json(result);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });23
   }
 };
 
-///////LISTADO DE PACIENTES NO ACTIVOS
+///! LISTADO COMPLETO DE PACIENTES INACTIVOS
+
 export const getPacInac = async (req, res) => {
   
   try {
@@ -29,36 +32,7 @@ export const getPacInac = async (req, res) => {
 };
 
 
-////!listado de turnos
-
-export const getTurnos = async (req, res) => {
-  
-  try {
-    const [result] = await pool.query(
-      "SELECT * FROM pacientes  INNER JOIN turnos ON pacientes.idpaciente=turnos.pacienteid"
-    );
-    res.json(result);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-
-// //! combinar turno con nombre
-// export const getTurnoNombre = async (req, res) => {
-  
-//   try {
-//     const [result] = await pool.query(
-//       "SELECT nombre, apellido FROM pacientes INNER JOIN turnos ON pacientes.idpaciente=turnos.pacienteid WHERE pacienteid=?"
-//     );
-//     res.json(result);
-//   } catch (error) {
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
-
-
-///!TRAER UNA SOLO PACIENTE
+///!LLAMAR UN SOLO PACIENTE
 export const getTarea = async (req, res) => {
   try {
     const [result] = await pool.query("SELECT * FROM pacientes WHERE idpaciente= ?", [
@@ -74,6 +48,7 @@ export const getTarea = async (req, res) => {
   }
 };
 
+
 //! ingresar un paciente
 export const crearTarea = async (req, res) => {
   try {
@@ -88,21 +63,7 @@ export const crearTarea = async (req, res) => {
   }
 };
 
-// ! crear un turno
-
-export const crearTurno = async (req, res) => {
-  try {
-    const { fecha, pacienteid, fechafin, observac } = req.body;
-    const result = await pool.query(
-      "INSERT INTO turnos  (fecha, pacienteid, fechafin, observac) VALUES (?,?,?,?)",
-      [fecha, pacienteid, fechafin, observac]
-    );
-    res.send("creando turno");
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-///////E!DITAR PACIENTE PARA CORRECCIONES
+//!EDITAR PACIENTE PARA CORRECCIONES
 
 export const editarTarea = async (req, res) => {
   try {
@@ -117,10 +78,8 @@ export const editarTarea = async (req, res) => {
   }
 };
 
-
-
-
-export const borrarTarea = async (req, res) => {
+///! BORRAR UN PACIENTE PARCIALMENTE
+export const borrarRegistro = async (req, res) => {
   try {
    
     const [result] = await pool.query("UPDATE pacientes SET estatus=0 WHERE idpaciente= ?", 
@@ -129,6 +88,68 @@ export const borrarTarea = async (req, res) => {
     ]
     );
     res.send(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+///! REHABILITAR UN PACIENTE 
+export const volverRegistro = async (req, res) => {
+  try {
+   
+    const [result] = await pool.query("UPDATE pacientes SET estatus=1 WHERE idpaciente= ?", 
+    [
+      req.params.idpaciente,
+    ]
+    );
+    res.send(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+///!BORRAR UN PACIENTE DEFINITIVAMENTE
+export const eliminarUnRegistro = async (req, res) => {
+  try {
+    const [result] = await pool.query("DELETE FROM pacientes WHERE idpaciente= ?", 
+    [
+      req.params.idpaciente,
+    ]
+    );
+    res.send(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+                                ///!TURNOS
+////!listado de turnos
+
+export const getTurnos = async (req, res) => {
+  
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM pacientes  INNER JOIN turnos ON pacientes.idpaciente=turnos.pacienteid"
+    );
+    res.json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+// ! crear un turno
+
+export const crearTurno = async (req, res) => {
+  try {
+    const { fecha, pacienteid, fechafin, observac } = req.body;
+    const result = await pool.query(
+      "INSERT INTO turnos  (fecha, pacienteid, fechafin, observac) VALUES (?,?,?,?)",
+      [fecha, pacienteid, fechafin, observac]
+    );
+    res.send("creando turno");
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -149,3 +170,5 @@ export const borrarTurno = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+

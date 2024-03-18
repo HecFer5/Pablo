@@ -17,11 +17,11 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import './Turno.css'
 
 
-dayjs.extend(updateLocale); // Extender Day.js con el plugin updateLocale
-dayjs.locale(esLocale); // Establecer la localización global en español
+dayjs.extend(updateLocale); 
+dayjs.locale(esLocale); 
 
 dayjs.updateLocale('es', {
-  weekStart: 0, // Establecer el domingo como el primer día de la semana
+  weekStart: 0,
 });
 
 
@@ -55,7 +55,7 @@ const Turno6 = () => {
             <span>{event.nombre}</span> {/* Muestra el parámetro 'nombre' */}
 
 
-            <button className=" bg-red-700 p-1 ml-8 text-white w-min rounded-md" onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
+            <button className=" bg-blue-500 p-2 ml-16 mt-1 text-black w-min rounded-md " onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
             </button>
 
         </div>
@@ -75,7 +75,6 @@ const Turno6 = () => {
 
     })
     const navigate = useNavigate()
-    // const [selectedDateTime, setSelectedDateTime] = useState(null);
 
 
 
@@ -98,15 +97,6 @@ const Turno6 = () => {
             navigate(`/error`)
         }
 
-        // if () {
-
-        // } else {
-        //     if (params.idpaciente) {
-
-        //     } else {
-
-        //     }
-        // }
     };
     //     //! fin 
 

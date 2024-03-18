@@ -3,12 +3,14 @@ import {
   getTarea,
   getTareas,
   crearTarea,
-  borrarTarea,
+  borrarRegistro,
   editarTarea,
   getPacInac,
   crearTurno,
   getTurnos,
-  borrarTurno
+  borrarTurno,
+  eliminarUnRegistro,
+  volverRegistro
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
@@ -20,8 +22,6 @@ router.get("/turno", getTurnos);
 router.get("/inac", getPacInac);
 
 
-// router.get("/turno/:idpaciente", getTurnoNombre)
-
 router.get("/tarea/:idpaciente", getTarea);
 
 router.post("/tarea", crearTarea);
@@ -30,8 +30,10 @@ router.post("/turno", crearTurno)
 
 router.put("/tarea/:idpaciente", editarTarea);
 
-router.delete("/tarea/:idpaciente", borrarTarea);
+router.delete("/tarea/:idpaciente", borrarRegistro);
 router.delete("/turno/:idturnos", borrarTurno)
+router.delete("/inac/:idpaciente", eliminarUnRegistro)
+router.delete("/inac/:idpaciente", volverRegistro)
 
 
 export default router;

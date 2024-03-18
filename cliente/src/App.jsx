@@ -2,7 +2,6 @@
 import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import TareasForm from './paginas/TareasForm'
-// import NotFound from './paginas/NotFound'
 import { TareasContextProv } from './componentes/context/TareasContext'
 import Alerta from './componentes/Alertas/Alerta'
 import NuevoRegistro from './componentes/Alertas/NuevoRegistro'
@@ -26,7 +25,7 @@ function App() {
 
   return (
     // className='container bg-orange-200 pt-20'
-    <div>
+    <>
       
       <NavBar />
       <TareasContextProv>
@@ -38,22 +37,20 @@ function App() {
           <Route path='/ficha/:idpaciente' Component={Ficha} />
           <Route path='/new' element={<TareasForm />} />
           <Route path='/edit/:idpaciente' element={<TareasForm />} />
-          <Route path='/borrar/:idpaciente' Component={Alerta} />
           <Route path='/otroReg' Component={NuevoRegistro} />
           <Route path='/otroturno' Component={NuevoTurno} />
           <Route path='/confirmacion' Component={confirmacion} />
           <Route path='/turno' Component={Turno} />
           <Route path='/turnodirecto' Component={ModalTurnos} />
           <Route path='/clickturno/:idpaciente' Component={TurnoNuevoDirecto} />
-
           <Route path='/error' Component={Error} />
           <Route path='/turnopasado/:idpaciente' Component={TurnoPasado} />
-          <Route path='/eliminarregistro/:idpaciente' Component={TurnoPasado} />
+          <Route path='/eliminarregistro/:idpaciente' Component={Alerta} />
+          <Route path='/borrar/:idpaciente' Component={Alerta} />
 
-          {/* <Route path='*' Component={NotFound} /> */}
         </Routes>
       </TareasContextProv>
-    </div>
+    </>
 
   )
 }
