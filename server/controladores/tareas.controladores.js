@@ -1,26 +1,24 @@
 import { pool } from "../db.js";
 
-
-                          ///!PACIENTES///////
+///!PACIENTES///////
 
 //! LISTADO COMPLETO DE PACIENTES ACTIVOS
 
 export const getTareas = async (req, res) => {
-  
   try {
     const [result] = await pool.query(
-      `SELECT * FROM pacientes WHERE estatus= 1 ORDER BY apellido, nombre`    
+      `SELECT * FROM pacientes WHERE estatus= 1 ORDER BY apellido, nombre`
     );
     res.json(result);
   } catch (error) {
-    return res.status(500).json({ message: error.message });23
+    return res.status(500).json({ message: error.message });
+    23;
   }
 };
 
 ///! LISTADO COMPLETO DE PACIENTES INACTIVOS
 
 export const getPacInac = async (req, res) => {
-  
   try {
     const [result] = await pool.query(
       "SELECT * FROM pacientes WHERE estatus= 0 ORDER BY apellido, nombre "
@@ -31,13 +29,13 @@ export const getPacInac = async (req, res) => {
   }
 };
 
-
 ///!LLAMAR UN SOLO PACIENTE
 export const getTarea = async (req, res) => {
   try {
-    const [result] = await pool.query("SELECT * FROM pacientes WHERE idpaciente= ?", [
-      req.params.idpaciente,
-    ]);
+    const [result] = await pool.query(
+      "SELECT * FROM pacientes WHERE idpaciente= ?",
+      [req.params.idpaciente]
+    );
 
     if (result.length === 0) {
       return res.status(404).json("No existe el id");
@@ -48,14 +46,31 @@ export const getTarea = async (req, res) => {
   }
 };
 
-
 //! ingresar un paciente
 export const crearTarea = async (req, res) => {
   try {
-    const { nombre, apellido, telefono } = req.body;
+    const {
+      nombre,
+      apellido,
+      telefono,
+      calle,
+      numero,
+      patologia,
+      patasosc,
+      fechacirugia,
+    } = req.body;
     const result = await pool.query(
-      "INSERT INTO pacientes  (nombre, apellido, telefono) VALUES (?,?,?)",
-      [nombre, apellido, telefono]
+      "INSERT INTO pacientes  (nombre, apellido, telefono, calle, numero, patologia, patasoc,fechacirugia) VALUES (?,?,?,?,?,?,?,?)",
+      [
+        nombre,
+        apellido,
+        telefono,
+        calle,
+        numero,
+        patologia,
+        patasosc,
+        fechacirugia,
+      ]
     );
     res.send("creando tareas");
   } catch (error) {
@@ -67,11 +82,20 @@ export const crearTarea = async (req, res) => {
 
 export const editarTarea = async (req, res) => {
   try {
-    const { nombre, apellido, telefono } = req.body;
-    const [result] = await pool.query("UPDATE pacientes SET ? WHERE idpaciente= ?", [
-      req.body,
-      req.params.idpaciente,
-    ]);
+    const {
+      nombre,
+      apellido,
+      telefono,
+      calle,
+      numero,
+      patologia,
+      patasosc,
+      fechacirugia,
+    } = req.body;
+    const [result] = await pool.query(
+      "UPDATE pacientes SET ? WHERE idpaciente= ?",
+      [req.body, req.params.idpaciente]
+    );
     res.send(result);
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -81,43 +105,35 @@ export const editarTarea = async (req, res) => {
 ///! BORRAR UN PACIENTE PARCIALMENTE
 export const borrarRegistro = async (req, res) => {
   try {
-   
-    const [result] = await pool.query("UPDATE pacientes SET estatus=0 WHERE idpaciente= ?", 
-    [
-      req.params.idpaciente,
-    ]
+    const [result] = await pool.query(
+      "UPDATE pacientes SET estatus=0 WHERE idpaciente= ?",
+      [req.params.idpaciente]
     );
     res.send(result);
-   
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
-///! REHABILITAR UN PACIENTE 
+///! REHABILITAR UN PACIENTE
 export const volverRegistro = async (req, res) => {
   try {
-   
-    const [result] = await pool.query("UPDATE pacientes SET estatus=1 WHERE idpaciente= ?", 
-    [
-      req.params.idpaciente,
-    ]
+    const [result] = await pool.query(
+      "UPDATE pacientes SET estatus=1 WHERE idpaciente= ?",
+      [req.params.idpaciente]
     );
     res.send(result);
-   
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
-
 
 ///!BORRAR UN PACIENTE DEFINITIVAMENTE
 export const eliminarUnRegistro = async (req, res) => {
   try {
-    const [result] = await pool.query("DELETE FROM pacientes WHERE idpaciente= ?", 
-    [
-      req.params.idpaciente,
-    ]
+    const [result] = await pool.query(
+      "DELETE FROM pacientes WHERE idpaciente= ?",
+      [req.params.idpaciente]
     );
     res.send(result);
   } catch (error) {
@@ -125,12 +141,10 @@ export const eliminarUnRegistro = async (req, res) => {
   }
 };
 
-
-                                ///!TURNOS
+///!TURNOS
 ////!listado de turnos
 
 export const getTurnos = async (req, res) => {
-  
   try {
     const [result] = await pool.query(
       "SELECT * FROM pacientes  INNER JOIN turnos ON pacientes.idpaciente=turnos.pacienteid"
@@ -140,7 +154,6 @@ export const getTurnos = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 
 // ! crear un turno
 
@@ -157,20 +170,15 @@ export const crearTurno = async (req, res) => {
   }
 };
 
-
 //! borrar un turno
 
 export const borrarTurno = async (req, res) => {
   try {
-    const [result] = await pool.query("DELETE FROM turnos WHERE idturnos= ?", 
-    [
+    const [result] = await pool.query("DELETE FROM turnos WHERE idturnos= ?", [
       req.params.idturnos,
-    ]
-    );
+    ]);
     res.send(result);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
-
-

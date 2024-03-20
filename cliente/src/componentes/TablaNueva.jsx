@@ -6,6 +6,18 @@ import { Bars3BottomRightIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
 const TablaNueva = () => {
 
+    const llamar = (telefono) => {
+        // Lógica para activar la llamada telefónica
+        window.location.href = `tel:${telefono}`;
+
+        console.log(`Llamando a ${telefono}`);
+    };
+
+    const enviarMensaje = (telefono) => {
+        // Lógica para abrir la aplicación de WhatsApp con el número de teléfono
+        console.log(`Enviando mensaje a ${telefono}`);
+    };
+
     const [registros, setRegistros] = useState([])
     const [open, setOpen] = useState(false)
     const [abierto, setAbierto] = useState(false)
@@ -29,7 +41,7 @@ const TablaNueva = () => {
 
     return (
         <>
-           <div className='text-sm text-black text-center bg-blue-100 mt-2'>LISTADO DE PACIENTES EN ACTIVIDAD</div>
+            <div className='text-sm text-black text-center bg-blue-100 mt-2'>LISTADO DE PACIENTES EN ACTIVIDAD</div>
 
 
             <div className='text-sm text-orange-700 text-center bg-orange-100 mt-2'>Haga click sobre el número para ver la ficha completa y click en "Editar" para correcciones</div>
@@ -46,6 +58,8 @@ const TablaNueva = () => {
                                         <th scope="col" className="px-6 py-4">Nº</th>
                                         <th scope="col" className="px-6 py-4"></th>
                                         <th scope="col" className="px-6 py-4">NOMBRE</th>
+                                        <th scope="col" className="px-6 py-4">NOMBRE</th>
+
                                         <th scope="col" className="px-6 py-4">TELEFONO</th>
                                     </tr>
                                 </thead>
@@ -59,15 +73,21 @@ const TablaNueva = () => {
                                                 <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/turno/' + registro.idpaciente} >Turno</Link></li>
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4">{`${registro.apellido}, ${registro.nombre}`}</td>
+                                            <td>
+                                                <button
+                                                    className="ml-2 text-blue-500"
+                                                    onClick={() => llamar(registro.telefono)} 
+                                                >
+                                                    Llamar
+                                                </button>
+                                            </td>
+                                     
                                             <td className="whitespace-nowrap px-6 py-4">{registro.telefono}</td>
                                             <td>
                                                 <li className="block bg-lime-700 px-2 py-1 text-white w-min rounded-md"><Link to={'/edit/' + registro.idpaciente} >Editar</Link></li>
                                             </td>
                                             <td>
                                                 <button className="block bg-red-700 px-2 py-1 text-white w-min rounded-md" onClick={() => irAlerta(registro.idpaciente)}>Borrar</button>
-
-
-
                                             </td>
                                         </tr>
                                     ))}

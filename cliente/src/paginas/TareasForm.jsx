@@ -9,7 +9,12 @@ const TareasForm = () => {
   const [task, setTask] = useState({
     nombre: "",
     apellido: "",
-    telefono: ""
+    telefono: "",
+    calle: "",
+    numero: 0,
+    patologia: "",
+    patasoc: "",
+    fechacirugia: "",
   })
 
   const params = useParams()
@@ -27,7 +32,13 @@ const TareasForm = () => {
         setTask({
           nombre: task.nombre,
           apellido: task.apellido,
-          telefono: task.telefono
+          telefono: task.telefono,
+          imagen: task.imagen,
+          calle: task.calle,
+          numero: task.numero,
+          patologia: task.patologia,
+          patasoc: task.patasoc,
+          fechacirugia: task.fechacirugia,
         })
       }
     }
@@ -51,9 +62,14 @@ const TareasForm = () => {
             await crearRegistro(values)
           }
           setTask({
-            nombre: '',
-            apellido: '',
-            telefono: ''
+            nombre: "",
+            apellido: "",
+            telefono: "",
+            calle: "",
+            numero: 0,
+            patologia: "",
+            patasoc: "",
+            fechacirugia: "",
           })
         }}
       >
@@ -73,10 +89,36 @@ const TareasForm = () => {
               placeholder='Obligatorio'
               value={values.apellido} />
             <label className="block">Teléfono</label>
-            <textarea className="px-2 py-1 rounded-sm w-full" type="text"
+            <input className="px-2 py-1 rounded-sm w-full" type="text"
               name='telefono'
               onChange={handleChange}
               value={values.telefono} placeholder='Opcional' />
+
+            <label className="block">Calle</label>
+            <input className="px-2 py-1 rounded-sm w-full" type="text"
+              name='calle'
+              onChange={handleChange}
+              value={values.calle} placeholder='Opcional' />
+            <label className="block">Número</label>
+            <input className="px-2 py-1 rounded-sm w-full" type="text"
+              name='numero'
+              onChange={handleChange}
+              value={values.numero} placeholder='Opcional' />
+            <label className="block">Patologías</label>
+            <input className="px-2 py-1 rounded-sm w-full" type="text"
+              name='patologia'
+              onChange={handleChange}
+              value={values.patologia} placeholder='Opcional' />
+            <label className="block">Patologías asociadas</label>
+            <input className="px-2 py-1 rounded-sm w-full" type="text"
+              name='patasoc'
+              onChange={handleChange}
+              value={values.patasoc} placeholder='Opcional' />
+            <label className="block">Fecha de cirugía</label>
+            <input className="px-2 py-1 rounded-sm w-full" type="text"
+              name='fechasirugia'
+              onChange={handleChange}
+              value={values.fechasirugia} placeholder='Opcional' />
 
             <button type='submit' disabled={isSubmitting} className="block bg-indigo-500 px-2 py-1 text-white w-full rounded-md">
               {isSubmitting ? "Guardando" : "Guardar"}</button>
