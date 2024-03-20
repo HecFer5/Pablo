@@ -67,7 +67,7 @@ export const TareasContextProv = ({ children }) => {
 
             const respuesta = await BorrarTareas(idpaciente)
 
-            setTareas(tareas.filter(tarea => tarea.idpaciente !== idpaciente))
+            // setTareas(tareas.filter(tarea => tarea.idpaciente !== idpaciente))
 
         } catch (error) {
             console.log(error)

@@ -39,6 +39,8 @@ const TablaInactivos = () => {
     // console.log(registros)
     return (
         <>
+         <div className='text-sm text-white text-center bg-red-400 mt-2'>LISTADO DE PACIENTES DADOS DE BAJA</div>
+
             <div className='text-sm text-orange-700 text-center bg-orange-100'>Haga click sobre el número para ver la ficha completa y click en "Editar" para correcciones</div>
             <div className="flex flex-col">
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">

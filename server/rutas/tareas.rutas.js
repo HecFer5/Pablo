@@ -33,7 +33,7 @@ router.put("/tarea/:idpaciente", editarTarea);
 router.delete("/tarea/:idpaciente", borrarRegistro);
 router.delete("/turno/:idturnos", borrarTurno)
 router.delete("/inac/:idpaciente", eliminarUnRegistro)
-router.delete("/inac/:idpaciente", volverRegistro)
+router.put("/inac/:idpaciente", volverRegistro)
 
 
 export default router;

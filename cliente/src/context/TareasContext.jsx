@@ -71,7 +71,7 @@ export const TareasContextProv = ({ children }) => {
         }
     }
 
-    const RegistroRehabilitado = async (idpaciente) => {
+    const Volvio = async (idpaciente) => {
         try {
             const respuesta = await VuelveRegistro(idpaciente)
             // setTareas(tareas.filter(tarea => tarea.idpaciente !== idpaciente))
@@ -116,7 +116,7 @@ export const TareasContextProv = ({ children }) => {
     return <TareasContext.Provider value={{
         registro: state.registro,
         registroSelec: state.registroSelec,
-        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, ElimiarDelTodo, RegistroRehabilitado
+        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, ElimiarDelTodo, Volvio,
     }}>
         {children}
     </TareasContext.Provider>

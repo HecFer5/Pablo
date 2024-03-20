@@ -88,6 +88,7 @@ export const borrarRegistro = async (req, res) => {
     ]
     );
     res.send(result);
+   
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -103,6 +104,7 @@ export const volverRegistro = async (req, res) => {
     ]
     );
     res.send(result);
+   
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

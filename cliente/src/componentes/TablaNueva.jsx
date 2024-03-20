@@ -29,6 +29,8 @@ const TablaNueva = () => {
 
     return (
         <>
+           <div className='text-sm text-black text-center bg-blue-100 mt-2'>LISTADO DE PACIENTES EN ACTIVIDAD</div>
+
 
             <div className='text-sm text-orange-700 text-center bg-orange-100 mt-2'>Haga click sobre el número para ver la ficha completa y click en "Editar" para correcciones</div>
 
