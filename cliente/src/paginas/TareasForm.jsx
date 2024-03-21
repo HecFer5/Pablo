@@ -69,7 +69,7 @@ const TareasForm = () => {
             numero: 0,
             patologia: "",
             patasoc: "",
-            fechacirugia: "",
+            fechacirugia: values.fechacirugia,
           })
         }}
       >
@@ -115,10 +115,10 @@ const TareasForm = () => {
               onChange={handleChange}
               value={values.patasoc} placeholder='Opcional' />
             <label className="block">Fecha de cirugía</label>
-            <input className="px-2 py-1 rounded-sm w-full" type="text"
-              name='fechasirugia'
+            <input className="px-2 py-1 rounded-sm w-full" type="date"
+              name='fechacirugia'
               onChange={handleChange}
-              value={values.fechasirugia} placeholder='Opcional' />
+              value={values.fechacirugia} placeholder='Opcional' onClick={console.log(values.fechacirugia)} />
 
             <button type='submit' disabled={isSubmitting} className="block bg-indigo-500 px-2 py-1 text-white w-full rounded-md">
               {isSubmitting ? "Guardando" : "Guardar"}</button>

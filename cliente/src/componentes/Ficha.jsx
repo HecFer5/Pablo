@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useTareas } from '../componentes/context/hooks'
 import { useParams, Link } from 'react-router-dom'
+import dayjs from 'dayjs';
+import esLocale from 'dayjs/locale/es';
+import updateLocale from 'dayjs/plugin/updateLocale'
 
 const Ficha = () => {
 
@@ -15,7 +18,7 @@ const Ficha = () => {
     patasoc: "",
     fechacirugia: "",
   })
-  // console.log(task.imagen)
+
   const params = useParams()
 
   useEffect(() => {
@@ -33,6 +36,19 @@ const Ficha = () => {
           patasoc: task.patasoc,
           fechacirugia: task.fechacirugia,
         })
+
+        let formatoFecha = '';
+
+        if (task.fechacirugia < '1900-11-30T04:16:48.000') {
+        } else {
+          formatoFecha = dayjs(task.fechacirugia).format('DD-MM-YYYY');
+        }
+
+        // Actualizar el estado de formatoFecha
+        setTask(prevTask => ({
+          ...prevTask,
+          formatoFecha: formatoFecha
+        }));
       }
     }
     traerTarea()
@@ -51,8 +67,7 @@ const Ficha = () => {
         <div className="col border mt-1 bg-orange-200 p-1 rounded-md">{`telefonos: ${task.telefono}`}</div>
         <div className="col border mt-1">{`Patologías: ${task.patologia}`}</div>
         <div className="col border mt-1">{`Patologías Asociadas: ${task.patasoc}`}</div>
-        <div className="col border mt-1">{`Fecha cirugía: ${task.fechacirugia}`}</div>
-
+        <div className="col border mt-1">{`Fecha cirugía: ${task.formatoFecha}`}</div>
         <li className="block bg-blue-700 mt-3 px-2 py-1 text-white text-center rounded-md w-full"><Link to={'/tabla/'} >Volver</Link></li>
       </div>
     </div>
