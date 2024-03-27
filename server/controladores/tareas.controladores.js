@@ -182,3 +182,49 @@ export const borrarTurno = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
+///!ACTIVIDADES
+////!listado de ACTIVIDADES
+
+export const getActividades = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      `SELECT * FROM actividades `
+    );
+    res.json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+    23;
+  }
+};
+
+
+// ! crear una actividad
+
+export const crearActividad = async (req, res) => {
+  try {
+    const { fecha, fechafin, observac } = req.body;
+    const result = await pool.query(
+      "INSERT INTO actividades  (fecha, fechafin, observac) VALUES (?,?,?)",
+      [fecha, fechafin, observac]
+    );
+    res.send("creando actividad");
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+//! borrar una actividad
+
+export const borrarActividad = async (req, res) => {
+  try {
+    const [result] = await pool.query("DELETE FROM actividades WHERE idactividad= ?", [
+      req.params.idactividad,
+    ]);
+    res.send(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+

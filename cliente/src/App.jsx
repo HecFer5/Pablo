@@ -13,6 +13,7 @@ import Turno from './componentes/Turno.jsx'
 import NuevoTurno from './componentes/Alertas/NuevoTurno.jsx'
 import confirmacion from './componentes/Alertas/confirmación.jsx'
 import ModalTurnos from './componentes/Alertas/ModalTurnos.jsx'
+import ModalActividad from './componentes/Alertas/ModalActividad.jsx'
 import TurnoNuevoDirecto from './componentes/Alertas/ClickTurno.jsx'
 import Error from './componentes/Alertas/Error.jsx'
 import TurnoPasado from './componentes/Alertas/TurnoPasado.jsx'
@@ -42,7 +43,9 @@ function App() {
           <Route path='/confirmacion' Component={confirmacion} />
           <Route path='/turno' Component={Turno} />
           <Route path='/turnodirecto' Component={ModalTurnos} />
+          <Route path='/actividad' Component={ModalActividad} />
           <Route path='/clickturno/:idpaciente' Component={TurnoNuevoDirecto} />
+          <Route path='/clickturno' Component={TurnoNuevoDirecto} />
           <Route path='/error' Component={Error} />
           <Route path='/turnopasado/:idpaciente' Component={TurnoPasado} />
           <Route path='/eliminarregistro/:idpaciente' Component={Alerta} />

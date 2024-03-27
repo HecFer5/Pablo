@@ -17,11 +17,11 @@ import { AiTwotoneDelete } from "react-icons/ai";
 import './Turno.css'
 
 
-dayjs.extend(updateLocale); 
-dayjs.locale(esLocale); 
+dayjs.extend(updateLocale);
+dayjs.locale(esLocale);
 
 dayjs.updateLocale('es', {
-  weekStart: 0,
+    weekStart: 0,
 });
 
 
@@ -81,21 +81,27 @@ const Turno6 = () => {
 
     // //!  para seleccionar desde el calendario
     const Selector = (slotInfo) => {
-
         const { start } = slotInfo;
+        console.log(start, 'en selector')
 
         console.log(start, dayjs(Date()).toDate())
 
-        if (params.idpaciente) {
-            if (start < dayjs(Date()).toDate()) {
+        if (start < dayjs(Date()).toDate()) {
 
-                navigate(`/turnopasado/${params.idpaciente}`)
-            } else {
-                navigate(`/clickturno/${params.idpaciente}`, { state: { start } });
-            }
+            navigate(`/turnopasado/${params.idpaciente}`)
         } else {
-            navigate(`/error`)
+            if (params.idpaciente) {
+                navigate(`/clickturno/${params.idpaciente}`, { state: { start } });
+                console.log(params.idpaciente, 'entrantdo')
+
+            }else{
+                navigate(`/clickturno`, { state: { start } });
+                console.log(start, 'entrantdo')
+            }
         }
+
+
+
 
     };
     //     //! fin 
@@ -174,46 +180,58 @@ const Turno6 = () => {
 
     }
 
+
+    const irActividad = () => {
+        const irFuncion = 1
+        console.log(irFuncion)
+        // Selector()
+    }
+
+    const irPaciente = () => {
+        const irFuncion = 2
+        console.log(irFuncion)
+    }
+
     ////////////////////////////////////////////
 
     return (
         <>
-                <Calendar
-                    style={{
-                        height: '65vh',
-                        wide: '35vw',
-                        marginTop: '5vh',
-                        marginLeft: '3vw',
-                        marginRight: '3vw'
-                    }}
-                    messages={messages}
-                    selectable={true} // Establecer selectable en true
-                    onSelectSlot={Selector}
-                    step={15}
-                    timeslots={1}
-                    localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
-                    startAccessor="start"
-                    endAccessor="end"
-                    defaultView='week'
-                    min={dayjs('2024-01-22T08:00:00').toDate()}
-                    max={dayjs('2024-01-22T18:00:00').toDate()}
+            <Calendar
+                style={{
+                    height: '65vh',
+                    wide: '35vw',
+                    marginTop: '5vh',
+                    marginLeft: '3vw',
+                    marginRight: '3vw'
+                }}
+                messages={messages}
+                selectable={true} // Establecer selectable en true
+                onSelectSlot={Selector}
+                step={15}
+                timeslots={1}
+                localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
+                startAccessor="start"
+                endAccessor="end"
+                defaultView='week'
+                min={dayjs('2024-01-22T08:00:00').toDate()}
+                max={dayjs('2024-01-22T18:00:00').toDate()}
 
 
-                    components={{
-                        event: EventComponent,
-                    }}
-                    formats={{
-                        dayHeaderFormat: date => {
-                            return dayjs(date).format('dddd DD [de] MMMM [de] YYYY')
-                        },
-                        monthHeaderFormat: date => {
-                            return dayjs(date).format('dddd DD [de] MMMM [de] YYYY')
-                        },
-                        dayFormat: date => {
-                            return dayjs(date).format(" dddd  DD")
-                        },
-                    }}
-                />
+                components={{
+                    event: EventComponent,
+                }}
+                formats={{
+                    dayHeaderFormat: date => {
+                        return dayjs(date).format('dddd DD [de] MMMM [de] YYYY')
+                    },
+                    monthHeaderFormat: date => {
+                        return dayjs(date).format('dddd DD [de] MMMM [de] YYYY')
+                    },
+                    dayFormat: date => {
+                        return dayjs(date).format(" dddd  DD")
+                    },
+                }}
+            />
 
             <div className='container mx-auto mb-2 p-1'>
                 <Formik
@@ -235,8 +253,10 @@ const Turno6 = () => {
                                         <div className="flex flex-col sm:items-center sm:flex-row justify-around items-center p-5 gap-4">
 
                                             {/* TITULO */}
-                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 px-3 py-1 font-semibold rounded-xl h-full "><Link to={'/turnoDirecto/'}>¿Paciente?</Link></button>}
+                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 px-3 py-1 font-semibold rounded-xl h-full " onClick={irPaciente}><Link to={'/turnoDirecto/'}>¿PACIENTE?</Link></button>}
 
+
+                                            <button className="text-black bg-green-500 px-3 py-1 font-semibold rounded-xl h-full " onClick={irActividad}><Link to={'/turno'}>ACTIVIDAD?</Link></button>
                                             {/* SELECTOR DE FECHA */}
                                             <DateTimePicker
 

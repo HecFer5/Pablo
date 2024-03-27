@@ -58,6 +58,7 @@ const TablaInactivos = () => {
                                 </thead>
                                 <tbody className="table-group-divider">
                                     {registros.map(registro => (
+                                        registro.idpaciente !== 33 && (
                                         <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
                                             <td >
                                                 <button className="block bg-red-700 px-2 py-1 text-white w-min rounded-md" onClick={() => Rehabilita(registro.idpaciente)}>Rehabilitar</button>
@@ -78,6 +79,7 @@ const TablaInactivos = () => {
                                                 <button className="block bg-red-700 px-2 py-1 text-white w-min rounded-md" onClick={() => irAlerta(registro.idpaciente)}>Borrar</button>
                                             </td>
                                         </tr>
+                                        )
                                     ))}
 
                                 </tbody>

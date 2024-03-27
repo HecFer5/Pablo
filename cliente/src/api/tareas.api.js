@@ -18,6 +18,12 @@ export const CrearTareas = async (registro) =>
 export const CrearTurnos = async (turno) =>
   await axios.post("http://localhost:4000/turno/", turno);
 
+export const CrearActividades = async (actividad) =>
+  await axios.post("http://localhost:4000/actividad/", actividad);
+
+export const BorrarActividades = async (idactividad) =>
+  await axios.delete("http://localhost:4001/actividad/" + idactividad);
+
 export const BorrarTareas = async (idpaciente) =>
   await axios.delete("http://localhost:4001/tarea/" + idpaciente);
 
