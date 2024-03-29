@@ -81,7 +81,7 @@ export default function TurnoNuevoDirecto() {
 
     if (response.status === 200) {
       console.log('Los datos se enviaron correctamente');
-      navigate('/otroturno')
+      navigate('/turno')
     } else {
       console.log('Hubo un error al enviar los datos');
     }
@@ -106,7 +106,7 @@ export default function TurnoNuevoDirecto() {
 
     if (response.status === 200) {
       console.log('Los datos se enviaron correctamente');
-      navigate('/otroturno')
+      navigate('/turno')
     } else {
       console.log('Hubo un error al enviar los datos');
     }

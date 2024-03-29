@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 
@@ -45,7 +45,7 @@ export default function HacerActividad() {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description" >
       <Box sx={style}>
-        {<li className="block bg-blue-700 px-2 py-1 text-white w-full text-center mt-3 rounded-md"><Link to={'/turno'} >INDIQUE FECHA Y HORA EN EL CALENDARIO</Link></li>}
+        {<li className="block bg-blue-700 px-2 py-1 text-white w-full text-center mt-3 rounded-md">INDIQUE FECHA Y HORA EN EL CALENDARIO</li>}
       </Box>
     </Modal>
   );

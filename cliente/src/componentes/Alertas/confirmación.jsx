@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react'
-import { Link, useParams} from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useParams, useNavigate} from 'react-router-dom'
 
 
 
@@ -26,6 +26,19 @@ export default function NuevoReg({ values }) {
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const duration = 400;
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setOpen(false);
+      navigate('/turno')
+
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, []);
   
 
   return (
@@ -39,10 +52,7 @@ export default function NuevoReg({ values }) {
       >
         <Box sx={style}>
           
-          <div className='text-xl font-bold uppercase text-center '>El turno fue eliminado</div>
- 
-        
-          { <li className="block bg-blue-700 px-2 py-1 text-white w-full text-center mt-3 rounded-md"><Link to={'/turno'} >Ok</Link></li>}
+          <div className='text-xl font-bold uppercase text-center '>El registro fue eliminado</div>
         </Box>
       </Modal>
     </div>

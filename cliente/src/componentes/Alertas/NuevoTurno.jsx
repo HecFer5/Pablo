@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useParams} from 'react-router-dom'
 
 
@@ -22,15 +22,25 @@ const style = {
 };
 
 export default function NuevoReg({ values }) {
-  const params = useParams()
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+  const duration = 400; // Duración en milisegundos (3 segundos en este ejemplo)
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setOpen(false);
+      navigate('/turno')
+
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, []);
+
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      {/* <Button onClick={handleOpen}>Open modal</Button> */}
       <Modal
         open={open}
         onClose={handleClose}
