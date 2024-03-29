@@ -13,7 +13,9 @@ import {
   volverRegistro,
   crearActividad,
   borrarActividad,
-  getActividades
+  getActividades,
+  getMutuales,
+  getMutual
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
@@ -44,6 +46,11 @@ router.delete("/actividad/:idactividad", borrarActividad)
 
 router.delete("/inac/:idpaciente", eliminarUnRegistro)
 router.put("/inac/:idpaciente", volverRegistro)
+
+router.get("/mutual", getMutuales);
+router.get("/mutual/:idmutual", getMutual);
+
+
 
 
 export default router;

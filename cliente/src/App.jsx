@@ -18,6 +18,7 @@ import TurnoNuevoDirecto from './componentes/Alertas/ClickTurno.jsx'
 import Error from './componentes/Alertas/Error.jsx'
 import TurnoPasado from './componentes/Alertas/TurnoPasado.jsx'
 import HacerActividad from './componentes/Alertas/indicaActividad.jsx'
+import TablaMutuales from './componentes/TablaMutuales.jsx'
 
 
 
@@ -52,6 +53,7 @@ function App() {
           <Route path='/eliminarregistro/:idpaciente' Component={Alerta} />
           <Route path='/borrar/:idpaciente' Component={Alerta} />
           <Route path='/haceractividad' Component={HacerActividad} />
+          <Route path='/tablamutuales' Component={TablaMutuales} />
 
         </Routes>
       </TareasContextProv>

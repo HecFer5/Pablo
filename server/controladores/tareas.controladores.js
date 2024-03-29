@@ -228,3 +228,33 @@ export const borrarActividad = async (req, res) => {
   }
 };
 
+//! LISTADO COMPLETO DE MUTUALES
+
+export const getMutuales = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      `SELECT * FROM mutual  ORDER BY  nombre`
+    );
+    res.json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+    23;
+  }
+};
+
+//!LLAMAR UN SOLO MUTUAL
+export const getMutual = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM mutual WHERE idmutual= ?",
+      [req.params.idmutual]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json("No existe el id");
+    }
+    res.json(result[0]);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};

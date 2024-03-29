@@ -65,7 +65,7 @@ const Turno6 = () => {
 //  const xTitulo = event.xTitulo
     const EventComponent = ({ event }) => (
         <div  className={event.color}>
-            <span className=' block ml-5 -mt-2 pt-3 pb-3' >{event.title} <button className=" bg-transparent  ml-1  mt-1 text-red-500 w-min rounded-md " onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
+            <span className=' block ml-5 -mt-2 pt-3 pb-3' >{event.title} <button className=" bg-transparent  ml-1  mt-1 text-red-500 w-min rounded-md icon-large " onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
             </button></span>
             {/* <span style={{ textAlign: 'center' }}>{event.nombre}</span> Muestra el parámetro 'nombre' */}
 
