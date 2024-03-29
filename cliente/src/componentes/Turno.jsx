@@ -13,6 +13,8 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import axios from 'axios'
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
+// import 'react-big-calendar/lib/sass/styles';
+
 import { AiTwotoneDelete } from "react-icons/ai";
 import './Turno.css'
 
@@ -45,22 +47,6 @@ const messages = {
 const Turno6 = () => {
     const [events, setEvents] = useState([]);
     const [datos, setDatos] = useState([])
-
-
-
-    const EventComponent = ({ event }) => (
-
-        <div >
-            <span >{event.title}</span>
-            <span>{event.nombre}</span> {/* Muestra el parámetro 'nombre' */}
-
-
-            <button className=" bg-blue-500 p-2 ml-16 mt-1 text-black w-min rounded-md " onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
-            </button>
-
-        </div>
-    );
-
     const localizer = dayjsLocalizer(dayjs)
     const [selectedDate, setSelectedDate] = useState(dayjs(Date()).toDate());
 
@@ -76,6 +62,21 @@ const Turno6 = () => {
     })
     const navigate = useNavigate()
 
+//  const xTitulo = event.xTitulo
+    const EventComponent = ({ event }) => (
+        <div  className={event.color}>
+            <span className=' block ml-5 -mt-2 pt-3 pb-3' >{event.title} <button className=" bg-transparent  ml-1  mt-1 text-red-500 w-min rounded-md " onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
+            </button></span>
+            {/* <span style={{ textAlign: 'center' }}>{event.nombre}</span> Muestra el parámetro 'nombre' */}
+
+
+           
+
+        </div>
+    
+    );
+
+ 
 
 
 
@@ -97,6 +98,8 @@ const Turno6 = () => {
             }else{
                 navigate(`/clickturno`, { state: { start } });
                 console.log(start, 'entrantdo')
+
+
             }
         }
 
@@ -128,16 +131,20 @@ const Turno6 = () => {
             const response = await axios.get('http://localhost:4001/turno');
             const data = response.data;
             const formattedEvents = data.map((turno) => ({
-                title: `${turno.nombre} ${turno.apellido}${turno.observac ? ` (${turno.observac})` : ''}`,
+                title: `${turno.nombre ? turno.nombre : 'ACTIVIDAD'} ${turno.apellido}${turno.observac ? ` (${turno.observac})` : ''}`,
                 start: dayjs(turno.fecha).toDate(),
                 end: dayjs(turno.fechafin).toDate(),
-                id: turno.idturnos
+                id: turno.idturnos,
+                color:`${turno.nombre ? 'bg-blue-300 text-black font-semibold':  'bg-green-300 text-black font-semibold'}`
+                
             }));
 
             setEvents(formattedEvents);
         } catch (error) {
             console.error('Error al obtener los eventos del calendario:', error);
         }
+
+       
     };
 
 
@@ -180,7 +187,6 @@ const Turno6 = () => {
 
     }
 
-
     const irActividad = () => {
         const irFuncion = 1
         console.log(irFuncion)
@@ -194,6 +200,9 @@ const Turno6 = () => {
 
     ////////////////////////////////////////////
 
+   
+    
+
     return (
         <>
             <Calendar
@@ -202,8 +211,10 @@ const Turno6 = () => {
                     wide: '35vw',
                     marginTop: '5vh',
                     marginLeft: '3vw',
-                    marginRight: '3vw'
+                    marginRight: '3vw',
+                    
                 }}
+
                 messages={messages}
                 selectable={true} // Establecer selectable en true
                 onSelectSlot={Selector}
@@ -253,10 +264,10 @@ const Turno6 = () => {
                                         <div className="flex flex-col sm:items-center sm:flex-row justify-around items-center p-5 gap-4">
 
                                             {/* TITULO */}
-                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 px-3 py-1 font-semibold rounded-xl h-full " onClick={irPaciente}><Link to={'/turnoDirecto/'}>¿PACIENTE?</Link></button>}
+                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 hover:bg-red-900 px-3 py-1 font-semibold rounded-xl h-full " onClick={irPaciente}><Link to={'/turnoDirecto/'}>¿PACIENTE?</Link></button>}
 
 
-                                            <button className="text-black bg-green-500 px-3 py-1 font-semibold rounded-xl h-full " onClick={irActividad}><Link to={'/turno'}>ACTIVIDAD?</Link></button>
+                                            <button className="text-black bg-green-500 hover:bg-blue-700 px-3 py-1 font-semibold rounded-xl h-full " onClick={irActividad}><Link to={'/haceractividad'}>ACTIVIDAD</Link></button>
                                             {/* SELECTOR DE FECHA */}
                                             <DateTimePicker
 

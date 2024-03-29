@@ -30,22 +30,22 @@ export default function TurnoNuevoDirecto() {
   // console.log(irFuncion, 'aqui')
   const navigate = useNavigate()
   const [valor, setValor] = useState('');
-
   const params = useParams()
+  const start = location.state.start;
+  const titulo = ''
 
-
-  
-    const start = location.state.start;
-    console.log(start)
- 
-
+  if (params.idpaciente){
+    console.log('con id')
+  }else{
+    console.log('NO id')
+  }
+  console.log(start)
 
   const { editarRegisto } = useTareas()
-
   const [task, setTask] = useState({
     nombre: "",
     apellido: "",
-    observac:""
+    observac: ""
 
   })
 
@@ -63,55 +63,55 @@ export default function TurnoNuevoDirecto() {
   });
 
 
-  
-const handleEnviarDatos = async () => {
 
-  console.log('DA UN TURNO', params.idpaciente)
-  const originalDate = dayjs(start);
-  const newDate = originalDate.add(30, 'minute');
+  const handleEnviarDatos = async () => {
 
-  console.log(originalDate, newDate)
-  valores.fecha = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
-  valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
-  valores.pacienteid = params.idpaciente
-  valores.observac = valor
-  console.log('en clik', valores.fecha, valores.fechafin, params.idpaciente, valor)
+    console.log('DA UN TURNO', params.idpaciente)
+    const originalDate = dayjs(start);
+    const newDate = originalDate.add(30, 'minute');
 
-  const response = await axios.post("http://localhost:4000/turno/", valores);
+    console.log(originalDate, newDate)
+    valores.fecha = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
+    valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
+    valores.pacienteid = params.idpaciente
+    valores.observac = valor
+    console.log('en clik', valores.fecha, valores.fechafin, params.idpaciente, valor)
 
-  if (response.status === 200) {
-    console.log('Los datos se enviaron correctamente');
-    navigate('/otroturno')
-  } else {
-    console.log('Hubo un error al enviar los datos');
-  }
+    const response = await axios.post("http://localhost:4000/turno/", valores);
 
-};
- 
+    if (response.status === 200) {
+      console.log('Los datos se enviaron correctamente');
+      navigate('/otroturno')
+    } else {
+      console.log('Hubo un error al enviar los datos');
+    }
 
-const handleEnviActividad = async () => {
+  };
 
-  console.log('DA UNA ACTIVIDAD')
- 
-  const originalDate = dayjs(start);
-  const newDate = originalDate.add(30, 'minute');
-  valores.fecha = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
-  valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
-  valores.pacienteid = '33'
-  valores.observac = valor
-  // console.log('en clik', valores.fecha, valores.fechafin, params.idpaciente, valor)
-  console.log(originalDate, newDate, valores.fechafin, valores.observac, valores.pacienteid)
 
-  const response = await axios.post("http://localhost:4000/turno/", valores);
+  const handleEnviActividad = async () => {
 
-  if (response.status === 200) {
-    console.log('Los datos se enviaron correctamente');
-    navigate('/otroturno')
-  } else {
-    console.log('Hubo un error al enviar los datos');
-  }
+    console.log('DA UNA ACTIVIDAD')
 
-};
+    const originalDate = dayjs(start);
+    const newDate = originalDate.add(30, 'minute');
+    valores.fecha = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
+    valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
+    valores.pacienteid = '33'
+    valores.observac = valor
+    // console.log('en clik', valores.fecha, valores.fechafin, params.idpaciente, valor)
+    console.log(originalDate, newDate, valores.fechafin, valores.observac, valores.pacienteid)
+
+    const response = await axios.post("http://localhost:4000/turno/", valores);
+
+    if (response.status === 200) {
+      console.log('Los datos se enviaron correctamente');
+      navigate('/otroturno')
+    } else {
+      console.log('Hubo un error al enviar los datos');
+    }
+
+  };
 
 
   useEffect(() => {
@@ -141,17 +141,29 @@ const handleEnviActividad = async () => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
+        
         <Box sx={style}>
-          <div className='text-xl font-bold uppercase text-center '> {`¿turno para ${task.nombre} ${task.apellido} el ${dayjs(start).format('DD [de] MMMM [de ]YYYY [a las] HH:mm:ss')}?`}</div>
+  <div className='text-xl font-bold uppercase text-center '>
+    {params.idpaciente ? `¿turno para ${task.nombre} ${task.apellido} el ${dayjs(start).format('DD [de] MMMM [de ]YYYY [a las] HH:mm:ss')}?` : 'INGRESE LA ACTIVIDAD A REALIZAR'}
+  </div>
 
-          <button className="block bg-blue-700 px-2 py-1 mb-4 mt-4 text-white rounded-md w-full text-center" onClick={params.idpaciente ? handleEnviarDatos : handleEnviActividad}>Si</button>
-          <input className="px-16 py-1  rounded-sm w-full border-solid" type="text"
-            name='nombre'
-            onChange={handleChange}
-            placeholder='Ingrese un comentario'
-          />
-          <li className="block bg-red-700 px-2 py-1 mt-4 text-white w-full text-center mt-3 rounded-md"><Link to={'/turno/'} >No</Link></li>
-        </Box>
+  <input
+    className="px-16 py-1 rounded-sm w-full border-solid mt-8"
+    type="text"
+    name='nombre'
+    onChange={handleChange}
+    placeholder='Ingrese un comentario'
+    autoFocus
+  />
+
+<div>
+    <div style={{ display: 'flex', marginTop: 22 }}>
+      <button className="block bg-blue-700 px-2 py-1 mb-4 mt-4 mr-8 text-white rounded-md w-full text-center"  onClick={params.idpaciente ? handleEnviarDatos : handleEnviActividad}>Si</button>
+      <button className="block bg-red-700 px-2 py-1 mb-4 mt-4 ml-8 text-white rounded-md w-full text-center "><Link to={'/turno/'} >No</Link></button>
+    </div>
+  </div>
+</Box>
+
       </Modal>
     </div>
   );

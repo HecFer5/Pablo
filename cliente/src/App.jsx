@@ -17,6 +17,7 @@ import ModalActividad from './componentes/Alertas/ModalActividad.jsx'
 import TurnoNuevoDirecto from './componentes/Alertas/ClickTurno.jsx'
 import Error from './componentes/Alertas/Error.jsx'
 import TurnoPasado from './componentes/Alertas/TurnoPasado.jsx'
+import HacerActividad from './componentes/Alertas/indicaActividad.jsx'
 
 
 
@@ -50,6 +51,7 @@ function App() {
           <Route path='/turnopasado/:idpaciente' Component={TurnoPasado} />
           <Route path='/eliminarregistro/:idpaciente' Component={Alerta} />
           <Route path='/borrar/:idpaciente' Component={Alerta} />
+          <Route path='/haceractividad' Component={HacerActividad} />
 
         </Routes>
       </TareasContextProv>
