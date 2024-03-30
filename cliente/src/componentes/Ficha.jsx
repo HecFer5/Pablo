@@ -17,6 +17,7 @@ const Ficha = () => {
     patologia: "",
     patasoc: "",
     fechacirugia: "",
+    mutual:""
   })
 
   const params = useParams()
@@ -35,6 +36,7 @@ const Ficha = () => {
           patologia: task.patologia,
           patasoc: task.patasoc,
           fechacirugia: task.fechacirugia,
+          mutual: task.mutual
         })
 
         let formatoFecha = '';
@@ -68,6 +70,7 @@ const Ficha = () => {
         <div className="col border mt-1">{`Patologías: ${task.patologia}`}</div>
         <div className="col border mt-1">{`Patologías Asociadas: ${task.patasoc}`}</div>
         <div className="col border mt-1">{`Fecha cirugía: ${task.formatoFecha}`}</div>
+        <div className="col border mt-1">{`Mutual: ${task.mutual}`}</div>
         <li className="block bg-blue-700 mt-3 px-2 py-1 text-white text-center rounded-md w-full"><Link to={'/tabla/'} >Volver</Link></li>
       </div>
     </div>

@@ -15,6 +15,7 @@ const TareasForm = () => {
     patologia: "",
     patasoc: "",
     fechacirugia: "",
+    mutual: ""
   })
 
   const params = useParams()
@@ -39,12 +40,16 @@ const TareasForm = () => {
           patologia: task.patologia,
           patasoc: task.patasoc,
           fechacirugia: task.fechacirugia,
+          mutual: task.mutual
         })
       }
     }
     traerTarea()
   }, [])
 
+  const Salir = () => {
+    navigate('/tabla')
+  }
   return (
     <div>
 
@@ -69,41 +74,46 @@ const TareasForm = () => {
             numero: 0,
             patologia: "",
             patasoc: "",
-            fechacirugia: values.fechacirugia,
+            fechacirugia: "",
+            mutual: ""
           })
         }}
       >
 
         {({ handleChange, handleSubmit, values, isSubmitting }) => (
-          <Form onSubmit={handleSubmit} className="bg-slate-300 max-w-xl rounded-md p-4 mx-auto mt-10">
-            <label className="block">Nombre</label>
-            <input className="px-2 py-1 rounded-sm w-full" type="text"
-              name='nombre'
-              onChange={handleChange}
-              placeholder='Campo obligatorio'
-              value={values.nombre} />
-            <label className="block">Apellido</label>
-            <input className="px-2 py-1 rounded-sm w-full" type="text"
-              name='apellido'
-              onChange={handleChange}
-              placeholder='Obligatorio'
-              value={values.apellido} />
+          <Form onSubmit={handleSubmit} className="bg-slate-300 max-w-xl rounded-md p-4 mx-auto  mt-10">
+            <div className='flex'>
+              <label className="block">Nombre</label>
+              <input className="px-2 py-1 rounded-sm w-full ml-5" required type="text"
+                name='nombre'
+                onChange={handleChange}
+                placeholder='Campo obligatorio'
+                value={values.nombre} />
+              <label className="block ml-5">Apellido</label>
+              <input className="px-2 py-1 rounded-sm w-full ml-5" required type="text"
+                name='apellido'
+                onChange={handleChange}
+                placeholder='Obligatorio'
+                value={values.apellido} />
+            </div>
+
             <label className="block">Teléfono</label>
             <input className="px-2 py-1 rounded-sm w-full" type="text"
               name='telefono'
               onChange={handleChange}
               value={values.telefono} placeholder='Opcional' />
-
+ <div className='flex mt-5'>
             <label className="block">Calle</label>
-            <input className="px-2 py-1 rounded-sm w-full" type="text"
+            <input className="px-2 py-1 rounded-sm w-full ml-5" type="text"
               name='calle'
               onChange={handleChange}
               value={values.calle} placeholder='Opcional' />
-            <label className="block">Número</label>
-            <input className="px-2 py-1 rounded-sm w-full" type="text"
+            <label className="block ml-5">Número</label>
+            <input className="px-2 py-1 rounded-sm w-full ml-5" type="text"
               name='numero'
               onChange={handleChange}
               value={values.numero} placeholder='Opcional' />
+              </div>
             <label className="block">Patologías</label>
             <input className="px-2 py-1 rounded-sm w-full" type="text"
               name='patologia'
@@ -114,14 +124,27 @@ const TareasForm = () => {
               name='patasoc'
               onChange={handleChange}
               value={values.patasoc} placeholder='Opcional' />
+
+
             <label className="block">Fecha de cirugía</label>
             <input className="px-2 py-1 rounded-sm w-full" type="date"
               name='fechacirugia'
               onChange={handleChange}
               value={values.fechacirugia} placeholder='Opcional' onClick={console.log(values.fechacirugia)} />
 
-            <button type='submit' disabled={isSubmitting} className="block bg-indigo-500 px-2 py-1 text-white w-full rounded-md">
-              {isSubmitting ? "Guardando" : "Guardar"}</button>
+            <label className="block">Mutual</label>
+
+            <input className="px-2 py-1 rounded-sm w-full" type="text"
+              name='mutual'
+              onChange={handleChange}
+              value={values.mutual} />
+
+            <div className='flex'>
+
+              <button type='submit' disabled={isSubmitting} className="block bg-indigo-500 px-2 py-1 text-white w-full rounded-md mt-4">
+                {isSubmitting ? "Guardando" : "Guardar"}</button>
+              <button className="block bg-red-500 px-2 py-1 text-white w-full rounded-md mt-4 ml-6" onClick={Salir}>Cancelar</button>
+            </div>
           </Form>
         )}
       </Formik>
