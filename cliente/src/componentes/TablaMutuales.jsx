@@ -56,7 +56,7 @@ const TablaMutuales = () => {
                                                 <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/ficha/' + mutual.idmutual} >{mutual.idmutual}</Link></li>
                                             </td>
 
-                                            <td className="whitespace-nowrap px-6 py-4">{`${mutual.nombre}`}</td>
+                                            <td className="whitespace-nowrap px-6 py-4">{`${mutual.nombremutual}`}</td>
                                             <td>
                                                 <li className="block bg-lime-700 px-2 py-1 text-white w-min rounded-md"><Link to={'/edit/' + mutual.idmutual} >Editar</Link></li>
                                             </td>

@@ -15,8 +15,9 @@ const TareasForm = () => {
     patologia: "",
     patasoc: "",
     fechacirugia: "",
-    mutual: ""
+    mutualid: 0
   })
+
 
   const params = useParams()
 
@@ -40,12 +41,32 @@ const TareasForm = () => {
           patologia: task.patologia,
           patasoc: task.patasoc,
           fechacirugia: task.fechacirugia,
-          mutual: task.mutual
+          mutualid: task.mutualid
         })
       }
     }
     traerTarea()
   }, [])
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Make a request to the backend API to fetch the data from the MySQL database
+        const response = await fetch('http://localhost:4001/mutual/');
+        const data = await response.json();
+        // Update the state with the fetched data
+        setDropdownOptions(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const [dropdownOptions, setDropdownOptions] = useState([]);
+
 
   const Salir = () => {
     navigate('/tabla')
@@ -75,7 +96,7 @@ const TareasForm = () => {
             patologia: "",
             patasoc: "",
             fechacirugia: "",
-            mutual: ""
+            mutualid: 0
           })
         }}
       >
@@ -102,18 +123,18 @@ const TareasForm = () => {
               name='telefono'
               onChange={handleChange}
               value={values.telefono} placeholder='Opcional' />
- <div className='flex mt-5'>
-            <label className="block">Calle</label>
-            <input className="px-2 py-1 rounded-sm w-full ml-5" type="text"
-              name='calle'
-              onChange={handleChange}
-              value={values.calle} placeholder='Opcional' />
-            <label className="block ml-5">Número</label>
-            <input className="px-2 py-1 rounded-sm w-full ml-5" type="text"
-              name='numero'
-              onChange={handleChange}
-              value={values.numero} placeholder='Opcional' />
-              </div>
+            <div className='flex mt-5'>
+              <label className="block">Calle</label>
+              <input className="px-2 py-1 rounded-sm w-full ml-5" type="text"
+                name='calle'
+                onChange={handleChange}
+                value={values.calle} placeholder='Opcional' />
+              <label className="block ml-5">Número</label>
+              <input className="px-2 py-1 rounded-sm w-full ml-5" type="text"
+                name='numero'
+                onChange={handleChange}
+                value={values.numero} placeholder='Opcional' />
+            </div>
             <label className="block">Patologías</label>
             <input className="px-2 py-1 rounded-sm w-full" type="text"
               name='patologia'
@@ -130,15 +151,29 @@ const TareasForm = () => {
             <input className="px-2 py-1 rounded-sm w-full" type="date"
               name='fechacirugia'
               onChange={handleChange}
-              value={values.fechacirugia} placeholder='Opcional' onClick={console.log(values.fechacirugia)} />
+              value={values.fechacirugia} placeholder='Opcional' />
 
-            <label className="block">Mutual</label>
 
-            <input className="px-2 py-1 rounded-sm w-full" type="text"
-              name='mutual'
-              onChange={handleChange}
-              value={values.mutual} />
+            <div className='flex mt-4' style={{ justifyContent: 'space-between' }}>
+              <label className="block">Mutual</label>
 
+              <input className="px-2 py-1 rounded-sm w-full" style={{ maxWidth: '50px' }} type="text"
+                name='mutualid'
+                onChange={handleChange}
+                value={values.mutualid} />
+
+              <label className="block">Elija el nombre de la mutual</label>
+              <select
+                name='mutualid'
+                onChange={handleChange}
+                value={values.mutualid}
+              >
+                {dropdownOptions.map(option => (
+                  <option key={option.idmutual} value={option.idmutual}>{option.nombremutual}</option>
+                ))}
+              </select>
+
+            </div>
             <div className='flex'>
 
               <button type='submit' disabled={isSubmitting} className="block bg-indigo-500 px-2 py-1 text-white w-full rounded-md mt-4">

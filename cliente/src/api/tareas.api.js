@@ -41,4 +41,4 @@ export const ListarMutuales = async () =>
   await axios.get("http://localhost:4001/mutual");
   
   export const ListarUnaMutual = async (idmutual) =>
-  await axios.get("http://localhost:4001/tarea/" + idmutual);
+  await axios.get("http://localhost:4001/mutual/" + idmutual);
