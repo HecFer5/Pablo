@@ -39,6 +39,9 @@ const TablaNueva = () => {
         navigate('/borrar/' + idpaciente, { state: { refEstatus } })
     }
 
+    const registrosFiltrados = registros.filter(registro => registro.idpaciente !== 33);
+
+
     return (
         <>
             <div className='text-sm text-black text-center bg-blue-100 mt-2'>LISTADO DE PACIENTES EN ACTIVIDAD</div>
@@ -64,9 +67,11 @@ const TablaNueva = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="table-group-divider">
-                                    {registros.map(registro => (
+                                    {registrosFiltrados.map(registro => (
                                         <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
+                                            
                                             <td >
+                                                
                                                 <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/ficha/' + registro.idpaciente} >{registro.idpaciente}</Link></li>
                                             </td>
                                             <td >

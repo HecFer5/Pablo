@@ -42,3 +42,9 @@ export const ListarMutuales = async () =>
   
   export const ListarUnaMutual = async (idmutual) =>
   await axios.get("http://localhost:4001/mutual/" + idmutual);
+
+  export const CrearMutuales = async (mutual) =>
+  await axios.post("http://localhost:4001/mutual", mutual);
+
+  export const BorrarUnaMutual = async (idmutual) =>
+  await axios.delete("http://localhost:4000/mutual" + idmutual);

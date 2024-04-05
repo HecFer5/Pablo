@@ -97,10 +97,10 @@ export default function TurnoNuevoDirecto() {
     const newDate = originalDate.add(30, 'minute');
     valores.fecha = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
     valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
-    valores.pacienteid = '33'
+    valores.pacienteid = 33
     valores.observac = valor
     // console.log('en clik', valores.fecha, valores.fechafin, params.idpaciente, valor)
-    console.log(originalDate, newDate, valores.fechafin, valores.observac, valores.pacienteid)
+    console.log('en dar ac', valores)
 
     const response = await axios.post("http://localhost:4000/turno/", valores);
 

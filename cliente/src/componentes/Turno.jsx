@@ -62,10 +62,10 @@ const Turno6 = () => {
     })
     const navigate = useNavigate()
 
-//  const xTitulo = event.xTitulo
+ const xTitulo = event.xTitulo
     const EventComponent = ({ event }) => (
         <div  className={event.color}>
-            <span className=' block ml-5 -mt-2 pt-3 pb-3' >{event.title} <button className=" bg-transparent  ml-1  mt-1 text-red-500 w-min rounded-md icon-large " onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
+            <span className=' block ml-5 -mt-2 pt-3 pb-3' >{event.title} <button className=" bg-transparent  ml-1  mt-1 text-red-500 w-min rounded-md " onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
             </button></span>
             {/* <span style={{ textAlign: 'center' }}>{event.nombre}</span> Muestra el parámetro 'nombre' */}
 
@@ -83,7 +83,7 @@ const Turno6 = () => {
     // //!  para seleccionar desde el calendario
     const Selector = (slotInfo) => {
         const { start } = slotInfo;
-        console.log(start, 'en selector')
+        // console.log(start, 'en selector')
 
         console.log(start, dayjs(Date()).toDate())
 
@@ -135,7 +135,7 @@ const Turno6 = () => {
                 start: dayjs(turno.fecha).toDate(),
                 end: dayjs(turno.fechafin).toDate(),
                 id: turno.idturnos,
-                color:`${turno.nombre ? 'bg-blue-300 text-black font-semibold':  'bg-green-300 text-black font-semibold'}`
+                color:`${turno.nombre != 'ACTIVIDAD' ? 'bg-blue-300 text-black font-semibold':  'bg-green-300 text-black font-semibold'}`
                 
             }));
 

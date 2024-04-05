@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useReducer } from 'react'
-import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ToogleTaskDoneRec, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, VuelveRegistro, CrearActividades } from '../../api/tareas.api'
+import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ToogleTaskDoneRec, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, VuelveRegistro, CrearActividades,BorrarUnaMutual } from '../../api/tareas.api'
 // import { Alert } from '@mui/material'
 import UserReducer from './UserReducer'
 
@@ -12,10 +12,10 @@ export const TareasContext = createContext()
 ////////////////////para traer todo el listado
 
 export const TareasContextProv = ({ children }) => {
-    const estadoInicial = {
-        registro: [],
-        registroSelec: null
-    }
+    // const estadoInicial = {
+    //     registro: [],
+    //     registroSelec: null
+    // }
 
     const [tareas, setTareas] = useState([])
     const [turnos, setTurnos] = useState([])
