@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useReducer } from 'react'
-import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro,ListarMutuales,CrearMutuales
+import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro,ListarMutuales,CrearMutuales, ListarPacientesMutual
 } from '../../api/tareas.api'
 // import { Alert } from '@mui/material'
 import UserReducer from './UserReducer'
@@ -118,11 +118,22 @@ export const TareasContextProv = ({ children }) => {
         }
     }
 
+
+    const TraerPacientesMutual = async (tarea) => {
+        try {
+            const response = await ListarPacientesMutual(tarea)
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+
     return <TareasContext.Provider value={{
         // registro: state.registro,
         // registroSelec: state.registroSelec,
         tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, EliminarDelTodo,TraerMutuales, nuevaMutual
-    }}>
+, TraerPacientesMutual    }}>
         {children}
     </TareasContext.Provider>
 }

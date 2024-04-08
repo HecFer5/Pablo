@@ -1,7 +1,5 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import { Typography, Alert, AlertTitle } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import { useState } from 'react'
 import { useNavigate, useParams, Link, useLocation } from 'react-router-dom'
@@ -21,8 +19,6 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4
-
-
 };
 
 const eliminar = async (idpaciente) => {

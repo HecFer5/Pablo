@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useReducer } from 'react'
-import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ToogleTaskDoneRec, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, VuelveRegistro, CrearActividades,BorrarUnaMutual } from '../../api/tareas.api'
+import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro,ListarMutuales,CrearMutuales, ListarPacientesMutual
+} from '../../api/tareas.api'
 // import { Alert } from '@mui/material'
 import UserReducer from './UserReducer'
 
@@ -12,13 +13,14 @@ export const TareasContext = createContext()
 ////////////////////para traer todo el listado
 
 export const TareasContextProv = ({ children }) => {
-    // const estadoInicial = {
-    //     registro: [],
-    //     registroSelec: null
-    // }
+    const estadoInicial = {
+        registro: [],
+        registroSelec: null
+    }
 
     const [tareas, setTareas] = useState([])
     const [turnos, setTurnos] = useState([])
+    const [mutuales, setMutuales] = useState([])
     const [state, dispatch] = useReducer(UserReducer, estadoInicial)
 
     async function TraerTurnos() {
@@ -29,11 +31,12 @@ export const TareasContextProv = ({ children }) => {
     async function TraerTareas() {
         const respuesta = await ListarTareas()
         setTareas(respuesta.data)
-
-
-
     }
 
+    async function TraerMutuales() {
+        const respuesta = await ListarMutuales()
+        setMutuales(respuesta.data)
+    }
     const crearRegistro = async (tarea) => {
         try {
             const response = await CrearTareas(tarea)
@@ -46,17 +49,6 @@ export const TareasContextProv = ({ children }) => {
     const darTurno = async (turno) => {
         try {
             const response = await CrearTurnos(turno)
-
-
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
-    const darActividad = async (actividad) => {
-        try {
-            const response = await CrearActividades(actividad)
-
 
         } catch (error) {
             console.error(error)
@@ -74,23 +66,17 @@ export const TareasContextProv = ({ children }) => {
 
     const borrarTarea = async (idpaciente) => {
         try {
+
             const respuesta = await BorrarTareas(idpaciente)
+
             // setTareas(tareas.filter(tarea => tarea.idpaciente !== idpaciente))
+
         } catch (error) {
             console.log(error)
         }
     }
 
-    const Volvio = async (idpaciente) => {
-        try {
-            const respuesta = await VuelveRegistro(idpaciente)
-            // setTareas(tareas.filter(tarea => tarea.idpaciente !== idpaciente))
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    const ElimiarDelTodo = async (idpaciente) => {
+    const EliminarDelTodo = async (idpaciente) => {
         try {
 
             const respuesta = await EliminarRegistro(idpaciente)
@@ -104,7 +90,7 @@ export const TareasContextProv = ({ children }) => {
     const editarRegisto = async (idpaciente) => {
         try {
             const respuesta = await ListarUnaTarea(idpaciente)
-            setTareas(respuesta.data)
+            setTareas(respuesta.data)           
             return respuesta.data
 
 
@@ -123,11 +109,31 @@ export const TareasContextProv = ({ children }) => {
         }
     }
 
+    const nuevaMutual= async (tarea) => {
+        try {
+            const response = await CrearMutuales(tarea)
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+
+    const TraerPacientesMutual = async (tarea) => {
+        try {
+            const response = await ListarPacientesMutual(tarea)
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+
     return <TareasContext.Provider value={{
-        registro: state.registro,
-        registroSelec: state.registroSelec,
-        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, ElimiarDelTodo, Volvio, darActividad
-    }}>
+        // registro: state.registro,
+        // registroSelec: state.registroSelec,
+        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, EliminarDelTodo,TraerMutuales, nuevaMutual
+, TraerPacientesMutual    }}>
         {children}
     </TareasContext.Provider>
 }

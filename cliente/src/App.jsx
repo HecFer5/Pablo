@@ -19,6 +19,7 @@ import Error from './componentes/Alertas/Error.jsx'
 import TurnoPasado from './componentes/Alertas/TurnoPasado.jsx'
 import HacerActividad from './componentes/Alertas/indicaActividad.jsx'
 import TablaMutuales from './componentes/TablaMutuales.jsx'
+import TablaMutualesPacientes from './componentes/tablMutualesPacientes.jsx'
 
 
 
@@ -54,6 +55,7 @@ function App() {
           <Route path='/borrar/:idpaciente' Component={Alerta} />
           <Route path='/haceractividad' Component={HacerActividad} />
           <Route path='/tablamutuales' Component={TablaMutuales} />
+          <Route path='/mutualespacientes/:idmutual' Component={TablaMutualesPacientes} />
 
         </Routes>
       </TareasContextProv>
