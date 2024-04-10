@@ -61,7 +61,9 @@ const TablaNueva = () => {
                                         <th scope="col" className="px-6 py-4">Nº</th>
                                         <th scope="col" className="px-6 py-4"></th>
                                         <th scope="col" className="px-6 py-4">NOMBRE</th>
-                                        <th scope="col" className="px-6 py-4">NOMBRE</th>
+                                        <th scope="col" className="px-6 py-4"></th>
+                                        <th scope="col" className="px-6 py-4"></th>
+
 
                                         <th scope="col" className="px-6 py-4">TELEFONO</th>
                                     </tr>
@@ -69,24 +71,29 @@ const TablaNueva = () => {
                                 <tbody className="table-group-divider">
                                     {registrosFiltrados.map(registro => (
                                         <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
-                                            
+
                                             <td >
-                                                
+
                                                 <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/ficha/' + registro.idpaciente} >{registro.idpaciente}</Link></li>
                                             </td>
                                             <td >
                                                 <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/turno/' + registro.idpaciente} >Turno</Link></li>
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4">{`${registro.apellido}, ${registro.nombre}`}</td>
+                                           
+                                            <td >
+                                                <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/tablahistorialturnos/' + registro.idpaciente} > HISTORIAL</Link></li>
+                                            </td>
+
                                             <td>
                                                 <button
                                                     className="ml-2 text-blue-500"
-                                                    onClick={() => llamar(registro.telefono)} 
+                                                    onClick={() => llamar(registro.telefono)}
                                                 >
                                                     Llamar
                                                 </button>
                                             </td>
-                                     
+
                                             <td className="whitespace-nowrap px-6 py-4">{registro.telefono}</td>
                                             <td>
                                                 <li className="block bg-lime-700 px-2 py-1 text-white w-min rounded-md"><Link to={'/edit/' + registro.idpaciente} >Editar</Link></li>

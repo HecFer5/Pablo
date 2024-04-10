@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useReducer } from 'react'
-import { ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro,ListarMutuales,CrearMutuales, ListarPacientesMutual
+import {
+    ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, ListarMutuales, CrearMutuales, ListarPacientesMutual, CrearHistorialTurnos
 } from '../../api/tareas.api'
 // import { Alert } from '@mui/material'
 import UserReducer from './UserReducer'
@@ -90,7 +91,7 @@ export const TareasContextProv = ({ children }) => {
     const editarRegisto = async (idpaciente) => {
         try {
             const respuesta = await ListarUnaTarea(idpaciente)
-            setTareas(respuesta.data)           
+            setTareas(respuesta.data)
             return respuesta.data
 
 
@@ -109,7 +110,7 @@ export const TareasContextProv = ({ children }) => {
         }
     }
 
-    const nuevaMutual= async (tarea) => {
+    const nuevaMutual = async (tarea) => {
         try {
             const response = await CrearMutuales(tarea)
 
@@ -129,11 +130,21 @@ export const TareasContextProv = ({ children }) => {
     }
 
 
+    const TraerHistorialTurnos = async (tarea) => {
+        try {
+            const response = await CrearHistorialTurnos(tarea)
+
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return <TareasContext.Provider value={{
         // registro: state.registro,
         // registroSelec: state.registroSelec,
-        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, EliminarDelTodo,TraerMutuales, nuevaMutual
-, TraerPacientesMutual    }}>
+        tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, EliminarDelTodo, TraerMutuales, nuevaMutual
+        , TraerPacientesMutual, TraerHistorialTurnos
+    }}>
         {children}
     </TareasContext.Provider>
 }

@@ -20,6 +20,7 @@ import TurnoPasado from './componentes/Alertas/TurnoPasado.jsx'
 import HacerActividad from './componentes/Alertas/indicaActividad.jsx'
 import TablaMutuales from './componentes/TablaMutuales.jsx'
 import TablaMutualesPacientes from './componentes/tablMutualesPacientes.jsx'
+import TablaHisotiralTurnos from './componentes/TablaHistorialTurnos.jsx'
 
 
 
@@ -30,7 +31,7 @@ function App() {
   return (
     // className='container bg-orange-200 pt-20'
     <>
-      
+
       <NavBar />
       <TareasContextProv>
         <Routes>
@@ -56,6 +57,7 @@ function App() {
           <Route path='/haceractividad' Component={HacerActividad} />
           <Route path='/tablamutuales' Component={TablaMutuales} />
           <Route path='/mutualespacientes/:idmutual' Component={TablaMutualesPacientes} />
+          <Route path='/tablahistorialturnos/:idpaciente' Component={TablaHisotiralTurnos} />
 
         </Routes>
       </TareasContextProv>

@@ -36,6 +36,9 @@ export const BorrarUnTurno = async (idturnos) =>
 export const CrearTurnos = async (turno) =>
   await axios.post("http://localhost:4000/turno/", turno);
 
+  export const CrearHistorialTurnos = async (idpaciente) =>
+  await axios.post("http://localhost:4000/historialturnos/1", idpaciente);
+
 //! MUTUALES
 export const ListarMutuales = async () =>
   await axios.get("http://localhost:4001/mutual/");

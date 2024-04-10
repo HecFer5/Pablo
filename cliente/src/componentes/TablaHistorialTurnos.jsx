@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
+import dayjs from 'dayjs';
+import esLocale from 'dayjs/locale/es'; // Importar el archivo de localización para español
+import updateLocale from 'dayjs/plugin/updateLocale'
 
 
 const style = {
@@ -17,19 +20,28 @@ const style = {
   p: 4
 };
 
-const PacientesPorMutual = () => {
+dayjs.extend(updateLocale);
+dayjs.locale(esLocale);
+
+dayjs.updateLocale('es', {
+    weekStart: 0,
+});
+
+const TablaHisotiralTurnos = () => {
+    
   const [registros, setRegistros] = useState([]);
   const [selectedPaciente, setSelectedPaciente] = useState({ nombre: '', apellido: '', nombremutual:" " });
   const params = useParams();
   const [open, setOpen] = useState(true);
   const handleClose = () => setOpen(false);
 
-  const mutualid = params.idmutual
+  const mutualid = params.idpaciente
   const Navigate = useNavigate()
+  console.log(params.idpaciente)
 
-  const TraerPacientesMutual = async () => {
+  const TraerHistorialTurnos = async () => {
     try {
-      const response = await axios.get("http://localhost:4001/pacientesmutuales/" + mutualid);
+      const response = await axios.get("http://localhost:4000/historialturnos/" + params.idpaciente);
 
       const data = response.data;
       setRegistros(data);
@@ -39,13 +51,12 @@ const PacientesPorMutual = () => {
   };
 
   useEffect(() => {
-    TraerPacientesMutual();
-    console.log(params.idmutual)
+    TraerHistorialTurnos();
+    console.log(params.idpaciente)
 
-  }, [params.idmutual]);
+  }, [params.idpaciente]);
 
-  console.log(registros.nombremutual)
-  const registrosFiltrados = registros.filter(registro => registro.idpaciente !== 33);
+ const registrosFiltrados = registros.filter(registro => registro.idpaciente !== 33);
 
   return (
 
@@ -59,20 +70,19 @@ const PacientesPorMutual = () => {
 
       <Box sx={style}>
         <table className="min-w-full text-left text-sm font-light">
-  <caption className="text-xl font-bold mb-4">{registrosFiltrados.length > 0 ? `LISTADO DE PACIENTES DE ${registrosFiltrados[0].nombremutual}` : ''}</caption>
+  <caption className="text-xl font-bold mb-4 uppercase">{registrosFiltrados.length > 0 ? `TURNOS DE ${registrosFiltrados[0].nombre} ${registrosFiltrados[0].apellido}` : 'AUN NO TIENE TURNOS ASIGNADOS'}</caption>
+
   <thead className="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
     <tr>
-      <th scope="col" className="px-6 py-4">Nº</th>
-      <th scope="col" className="px-6 py-4">NOMBRE</th>
+      <th scope="col" className="px-6 py-4"></th>
     </tr>
   </thead>
   <tbody className="table-group-divider">
-    {registrosFiltrados.map(registro => (
+    {registros.map(registro => (
       <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
-        <td>
-          <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/ficha/' + registro.idpaciente}>{registro.idpaciente}</Link></li>
-        </td>
-        <td className="whitespace-nowrap px-6 py-4">{`${registro.nombre} ${registro.apellido}`}</td>
+  
+        <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
+        {/* dayjs(selectedDate).format('YYYY-MM-DD HH:mm:ss') */}
       
       </tr>
     ))}
@@ -80,7 +90,7 @@ const PacientesPorMutual = () => {
 </table>
 
         <div className='mt-5 flex justify-center'>
-          <button className="block bg-blue-700 px-2 py-1 text-white w-min rounded-md" onClick={() => Navigate('/tablamutuales')}>Cancelar</button>
+          <button className="block bg-blue-700 px-2 py-1 text-white w-min rounded-md" onClick={() => Navigate('/tabla')}>CERRAR</button>
         </div>
       </Box>
     </Modal>
@@ -88,4 +98,4 @@ const PacientesPorMutual = () => {
   );
 };
 
-export default PacientesPorMutual;
+export default TablaHisotiralTurnos;
