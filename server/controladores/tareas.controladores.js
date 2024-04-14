@@ -328,3 +328,24 @@ export const borrarMutual= async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
+//!LLAMAR imagenes de un paciente
+export const getImagenes = async (req, res) => {
+  try {
+    const [results] = await pool.query(
+       "SELECT pacientes.*, imagenes.imagen, imagenes.descripcion FROM pacientes JOIN imagenes ON pacientes.idpaciente = imagenes.pacienteid WHERE imagenes.pacienteid = ?;",
+      [req.params.idpaciente]
+    );
+
+    if (results.length === 0) {
+      return res.status(404).json("No existen imágenes para el ID de paciente proporcionado");
+    }
+    res.json(results); // Devolver todos los resultados en lugar del primer resultado solamente
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+// "SELECT  pacientes.*, mutual.nombremutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual WHERE mutual.idmutual = ?", [

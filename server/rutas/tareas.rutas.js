@@ -19,7 +19,8 @@ import {
   crearMutual,
   borrarMutual,
   getPacientesMutuales,
-  historialTurnos
+  historialTurnos,
+  getImagenes
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
@@ -72,6 +73,7 @@ router.post("/mutual", crearMutual)
 router.delete("/mutual/:idmutual", borrarMutual)
 router.get("/tarea/:mutualid", getPacientesMutuales);
 router.get('/pacientesmutuales/:mutualid', getPacientesMutuales);
+router.get('/imagenes/:idpaciente', getImagenes);
 
 
 

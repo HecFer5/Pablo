@@ -21,6 +21,8 @@ import HacerActividad from './componentes/Alertas/indicaActividad.jsx'
 import TablaMutuales from './componentes/TablaMutuales.jsx'
 import TablaMutualesPacientes from './componentes/tablMutualesPacientes.jsx'
 import TablaHisotiralTurnos from './componentes/TablaHistorialTurnos.jsx'
+import Historia from './componentes/vistaHistoria.jsx'
+import VisorImagenes from './componentes/Alertas/VisorIMagenes.jsx'
 
 
 
@@ -58,7 +60,8 @@ function App() {
           <Route path='/tablamutuales' Component={TablaMutuales} />
           <Route path='/mutualespacientes/:idmutual' Component={TablaMutualesPacientes} />
           <Route path='/tablahistorialturnos/:idpaciente' Component={TablaHisotiralTurnos} />
-
+          <Route path='/vistahistoria/:idpaciente' Component={Historia} />
+          <Route path='/visorimagenes' Component={VisorImagenes} />
         </Routes>
       </TareasContextProv>
     </>

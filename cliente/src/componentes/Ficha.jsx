@@ -17,7 +17,7 @@ const Ficha = () => {
     patologia: "",
     patasoc: "",
     fechacirugia: "",
-    nombremutual:""
+    nombremutual: ""
   })
 
   const params = useParams()
@@ -58,22 +58,23 @@ const Ficha = () => {
 
   return (
     <div className='justify-center flex'>
-      <div className="max-w-sm bg-white border border-gray-400 rounded shadow p-3">
-        <div className="col  text-left mb-2 ">{`Número de orden: ${params.idpaciente}`}</div>
-        <a href="#">
-          <img src={task.imagen} alt="imagen" className='rounded-t-lg' />
-        </a>
-        <div className="col border mt-1">{`Nombre: ${task.nombre}`}</div>
-        <div className="col border mt-1">{`Apellido: ${task.apellido}`}</div>
+      <div className="w-96 md:max-w-sm bg-white border border-gray-700 rounded shadow p-5 mt-14">
+        <div className=" ">{`Número de orden: ${params.idpaciente}`}</div>
+        <div className=" ">{`Nombre: ${task.nombre}`}</div>
+        <div className="">{`Apellido: ${task.apellido}`}</div>
         <div className="col border mt-1">{`Dirección: ${task.calle} ${task.numero}`}</div>
         <div className="col border mt-1 bg-orange-200 p-1 rounded-md">{`telefonos: ${task.telefono}`}</div>
         <div className="col border mt-1">{`Patologías: ${task.patologia}`}</div>
         <div className="col border mt-1">{`Patologías Asociadas: ${task.patasoc}`}</div>
         <div className="col border mt-1">{`Fecha cirugía: ${task.formatoFecha}`}</div>
         <div className="col border mt-1">{`Mutual: ${task.nombremutual}`}</div>
+        <div className='flex'>
+        <li className="block bg-green-700 mt-3 px-2 py-1 text-white text-center rounded-md w-full mr-14"><Link to={'/vistahistoria/' + params.idpaciente } >Ver historia</Link></li>
         <li className="block bg-blue-700 mt-3 px-2 py-1 text-white text-center rounded-md w-full"><Link to={'/tabla/'} >Volver</Link></li>
+        </div>
       </div>
     </div>
+
   )
 }
 
