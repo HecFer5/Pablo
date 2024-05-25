@@ -16,7 +16,7 @@ const TablaInactivos = () => {
     const { RegistroRehabilitado } = useTareas()
 
     const ListarInactivos = async () =>
-        await axios.get('http://localhost:4001/inac').then((response) => {
+        await axios.get('http://localhost:4000/inac').then((response) => {
             const data = response.data
             setRegistros(data)
         })

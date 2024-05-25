@@ -26,6 +26,8 @@ import VisorImagenes from './componentes/Alertas/VisorIMagenes.jsx'
 import IngresoHistorias  from './componentes/IngresoHistoria.jsx'
 // import pruebaSesion from './componentes/Alertas/pruebaCsesion.jsx'
 import sinTurno from './componentes/Alertas/sinTurno.jsx'
+//  import AsignarCantidad from './componentes/Alertas/AsignarCantidad.jsx'
+
 
 
 function App() {
@@ -66,6 +68,7 @@ function App() {
           <Route path='/ingresohistorias/:idpaciente' Component={IngresoHistorias} />
           {/* <Route path='/pruebasesion' Component={pruebaSesion} /> */}
           <Route path='/sinturno/:idpaciente' Component={sinTurno} />
+          {/* <Route path='/asignarcantidad' Component={AsignarCantidad} /> */}
 
         </Routes>
       </TareasContextProv>

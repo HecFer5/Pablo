@@ -13,7 +13,7 @@ const ImageUpload = () => {
   const params = useParams()
   const { CreandoHistoria } = useTareas()
   const [comentario, setComentario] = useState('');
-  const [pacienteid, setPacienteid] = useState(params.idpaciente)
+  const [idpaciente, setPacienteid] = useState(params.idpaciente)
 
 
 
@@ -21,7 +21,7 @@ const ImageUpload = () => {
     imagen: `../../../public/${""}`,
     descripcion: "",
     comentario: "",
-    pacienteid: params.idpaciente
+    idpaciente: params.idpaciente
 
   })
 
@@ -38,7 +38,7 @@ const ImageUpload = () => {
     formData.append('nombre', nombre);
 
     formData.append('description', description);
-    formData.append('pacienteid', params.idpaciente)
+    formData.append('idpaciente', params.idpaciente)
 
     try {
       // Guardar la imagen localmente
@@ -58,7 +58,7 @@ const ImageUpload = () => {
       console.log('Imagen guardada localmente');
 
       // Subir la imagen al servidor
-      const response = await axios.post('http://localhost:4001/historias', formData, {
+      const response = await axios.post('http://localhost:4000/historias', formData, {
         headers: {
           imagen: image,
           idpaciente: params.idpaciente
@@ -96,7 +96,7 @@ const ImageUpload = () => {
             imagen: `../../../public/${""}`,
             descripcion: "",
             comentario: "",
-            pacienteid: params.idpaciente
+            idpaciente: params.idpaciente
 
           })
         }}

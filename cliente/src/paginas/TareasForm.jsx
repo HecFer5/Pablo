@@ -20,7 +20,6 @@ const TareasForm = () => {
     mutualid: 0,
     afiliado: "",
     imagen: "",
-    cantidad: 0
   })
 
 
@@ -49,7 +48,6 @@ const TareasForm = () => {
           mutualid: task.mutualid,
           afiliado: task.afiliado,
           idpaciente: task.idepaciente,
-          cantidad: task.cantidad
         })
       }
     }
@@ -61,7 +59,7 @@ const TareasForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:4001/mutual/');
+        const response = await fetch('http://localhost:4000/mutual/');
         const data = await response.json();
         setDropdownOptions(data);
       } catch (error) {
@@ -127,6 +125,7 @@ const TareasForm = () => {
               navigate('/turno')
             }           
             await crearRegistro(values)
+            console.log(values)
           }
           setTask({
             nombre: "",
@@ -140,7 +139,6 @@ const TareasForm = () => {
             mutualid: 0,
             afiliado: "",
             imagen:"",
-            cantidad: 0
           })
         }}
       >
@@ -200,7 +198,7 @@ const TareasForm = () => {
               <div className='flex mt-4' style={{ justifyContent: 'space-between' }}>
                 <label className="block">Mutual</label>
                 <label className={` ${values.mutualid !== '2' && values.mutualid !== 0 ? '' : 'hidden'}`}>Nº afiliado: </label>
-                <label className={` ${values.mutualid !== '2' && values.mutualid !== 0 ? '' : 'hidden'}`}>Sesiones asignadas: </label>
+              
               </div>
 
               <div className='flex mt-1' style={{ justifyContent: 'space-between' }}>
@@ -224,21 +222,6 @@ const TareasForm = () => {
   onChange={handleChange}
   value={values.afiliado}
 />
-<input
-  className={`px-2 py-1 rounded-sm w-full ${values.mutualid !== '2' && values.mutualid !== 0 ? '' : 'hidden'}`}
-  style={{ maxWidth: '150px' }}
-  type="text"
-  name="cantidad"
-  onChange={handleChange}
-  value={values.cantidad}
-/>
-
-                {/* <input className="px-2 py-1 rounded-sm w-full" style={{ maxWidth: '100px' }}
-                  type="text"
-                  name='cantidad'
-                  onChange={handleChange}
-                  value={values.cantidad} /> */}
-
               </div>
             </div>
             <div className='flex'>

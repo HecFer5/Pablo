@@ -1,8 +1,13 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
-import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useParams, useNavigate } from 'react-router-dom'
+import { useTareas } from '../context/hooks';
+import axios from 'axios';
+import dayjs from 'dayjs';
+
+
 
 
 
@@ -26,7 +31,114 @@ export default function NuevoReg({ values }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const params = useParams()
-  console.log(params.idpaciente)
+  const [task, setTask] = useState(null)
+  const { TraerUltimoPaciente } = useTareas()
+  const [cantidad, setCantidad] = useState('');
+  const navigate = useNavigate()
+
+
+
+  const [valores, setValores] = useState({
+    idpaciente: 0,
+    cantidad: 0,
+    tanda: 0,
+    usadas: 0
+  });
+  const [data, setData] = useState(null);
+
+  const handleSubmit = async (isTurnoDirecto) => {
+    event.preventDefault();
+
+    // console.log('DA UN TURNO', data.idpaciente)
+    valores.idpaciente = data.idpaciente
+    if (cantidad > 0) {
+      valores.cantidad = cantidad
+      valores.tanda = 1
+      valores.usadas = 0
+      valores.estado = 0
+    } else {
+      valores.cantidad = 0
+      valores.tanda = 0
+      valores.usadas = 0
+      valores.estado = 0
+
+    }
+
+
+    const response = await axios.post("http://localhost:4000/turno/", valores);
+
+    if (response.status === 200) {
+      console.log('Los datos se enviaron correctamente');
+      navigate('/turno')
+    } else {
+      console.log('Hubo un error al enviar los datos');
+    }
+
+    // console.log('Cantidad:', data);
+    if (isTurnoDirecto === true) {
+      navigate('/turnoDirecto/');
+    } else {
+      navigate('/turno');
+    }
+
+  };
+
+
+
+  const atenderAhora = async (event) => {
+    event.preventDefault();
+
+    // console.log('DA UN TURNO', params.idpaciente, task)
+
+    const originalDate = dayjs();
+    const newDate = originalDate.add(30, 'minute');
+
+    valores.fecha = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
+    valores.idpaciente = data.idpaciente
+
+    if (cantidad > 0) {
+      valores.cantidad = cantidad
+      valores.tanda = 1
+      valores.usadas = 1
+    } else {
+      valores.cantidad = 0
+      valores.tanda = 0
+      valores.usadas = 1
+    }
+
+
+    const response = await axios.post("http://localhost:4000/turno/", valores);
+
+    if (response.status === 200) {
+      console.log('Los datos se enviaron correctamente');
+      navigate('/turno')
+    } else {
+      console.log('Hubo un error al enviar los datos');
+    }
+
+    // console.log('Cantidad:', data);
+
+    navigate(`/turno`)
+
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/ultimo");
+        setData(response.data);
+      } catch (error) {
+        console.error('Error fetching data: ', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // console.log('ddd', valores.idpaciente)
+
+
 
   return (
     <div>
@@ -37,12 +149,31 @@ export default function NuevoReg({ values }) {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <div className='text-xl font-bold uppercase text-center '>Se ha ingresado un nuevo paciente</div>
-          <div className="text-sm text-center font-bold mt-2 mb-3">¿Qiuere dar un turno ahora? </div>
+        <Box sx={style} className="text-center">
+          <div>
+            <div className='text-xl font-bold uppercase text-center '>Se ha ingresado un nuevo paciente </div>
+            <div className="text-sm text-center font-bold mt-2 mb-3 uppercase">¿Tiene sesiones asignadas? </div>
 
-          {<li className="block bg-blue-700 px-2 py-1 text-white rounded-md w-full text-center"><Link to={'/new/'} >Si</Link></li>}
-          {<li className="block bg-red-700 px-2 py-1 text-white w-full text-center mt-3 rounded-md"><Link to={'/tabla/'} >No</Link></li>}
+            <form onSubmit={handleSubmit}>
+              {/* <label htmlFor="cantidad">Cantidad:</label> */}
+              <input
+                type="number"
+                id="cantidad"
+                name="cantidad"
+                value={cantidad}
+                onChange={(e) => setCantidad(e.target.value)}
+                autoFocus
+
+              />
+
+
+
+
+              <button className="block bg-blue-500 px-2 py-1 text-white w-full rounded-md mt-8 ml-22" onClick={atenderAhora}>Atender ahora</button>
+              <button className="block bg-green-500 px-2 py-1 text-white w-full rounded-md mt-8 ml-22" onClick={() => handleSubmit(true)}>Dar un turno</button>
+              <button className="block bg-red-500 px-2 py-1 text-white w-full rounded-md mt-8 ml-22" onClick={() => handleSubmit(false)}>Sólo ingreso</button>
+            </form>
+          </div>
         </Box>
       </Modal>
     </div>

@@ -24,7 +24,10 @@ import {
   crearHistoria,
   getSesiones,
   getTareaSesion,
-  getPacientes
+  getPacientes,
+  turnosPaciente,
+  ultimoPaciente,
+  getPermiso
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
@@ -33,6 +36,9 @@ const router = Router();
 router.get("/tarea", getTareas);
 
 router.get("/pacientes", getPacientes);
+
+
+router.get("/ultimo", ultimoPaciente);
 
 // router.get("/actividad", getActividades)
 
@@ -54,13 +60,15 @@ router.get("/inac", getPacInac);
 
 router.get("/turno", getTurnos);
 
+router.get("/turno/:idpaciente", turnosPaciente);
+
 router.post("/turno", crearTurno);
 
 router.delete("/turno/:idturnos", borrarTurno);
 
-router.get("/historialturnos/:pacienteid", historialTurnos);
+router.get("/historialturnos/:idpaciente", historialTurnos);
 
-// router.get("/sesiones/:idpaciente", getSesiones);
+ router.put("/permiso/:idturnos", getPermiso);
 
 router.get("/sesiones/:idpaciente", getTareaSesion);
 // router.post("/actividad", crearActividad)

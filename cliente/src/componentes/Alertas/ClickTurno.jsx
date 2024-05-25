@@ -24,27 +24,26 @@ const style = {
 
 export default function TurnoNuevoDirecto() {
 
-  const location = useLocation();
-
 
   const navigate = useNavigate()
   const [valor, setValor] = useState('');
   const params = useParams()
+  const location = useLocation();
+  const taskData = location.state;
   const start = location.state.start;
 
+  // console.log(location.state, 'comienzo')
 
+  // const [task, setTask] = useState({
+  //   nombre: "",
+  //   apellido: "",
+  //   observac: "",
+  //   tanda: "",
+  //   usadas: "",
+  //   cantidad: 0,
+  //   estado: 0
 
-  const { editarRegisto, traerTareaSesion, modificaRegistro } = useTareas()
-  const [task, setTask] = useState({
-    nombre: "",
-    apellido: "",
-    observac: "",
-    maxTanda: "",
-    maxUsadas: "",
-    cantidad: 0,
-    estado: 0
-
-  })
+  // })
 
 
   // const start = '2024:03:05 11:00:00'
@@ -56,8 +55,11 @@ export default function TurnoNuevoDirecto() {
   const [valores, setValores] = useState({
     fecha: '',
     fechafin: '',
-    pacienteid: '',
+    idpaciente: '',
     observac: '',
+    cantidad: 0,
+    usadas: 0,
+    tanda: 0
 
   });
 
@@ -67,12 +69,13 @@ export default function TurnoNuevoDirecto() {
   })
 
 
+
+
+
   const handleEnviarDatos = async () => {
 
-    console.log('DA UN TURNO', params.idpaciente)
-
-    // console.log('ver', task.nombre)
-
+    // console.log('DA UN TURNO', params.idpaciente, taskData)
+    console.log('taskdata',taskData, 'valores', valores)
 
     const originalDate = dayjs(start);
     const newDate = originalDate.add(30, 'minute');
@@ -80,34 +83,11 @@ export default function TurnoNuevoDirecto() {
     valores.fecha = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
     valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
 
-    valores.pacienteid = params.idpaciente
+    valores.idpaciente = params.idpaciente
     valores.observac = valor
-    // console.log(task.nombre, 'en click', task.cantidad)
-
-    if (task.cantidad === 0) {
-      console.log('advertencia', task.cantidad, params.idpaciente )
-      navigate(`/sinturno/${params.idepaciente}`); // Redirige a otro componente
-      return
-    }else{
-      console.log('no hay',  task.cantidad )
-
-    }
-
-    // if (task.cantidad > 0) {
-    //   console.log('pasando', task.cantidad)
-    //   valores.cantidad = task.cantidad
-    // } else {
-    //   tabla.cantidad = 0
-    // }
-
-
-    valores.tanda = task.maxTanda
-    valores.usadas = task.maxUsadas + 1
-
-    if (valores.usadas = task.cantidad) {
-      tabla.cantidad = 0
-      await axios.put(`http://localhost:4001/tarea/${params.idpaciente}`, tabla);
-    }
+    valores.tanda = taskData.tanda
+    valores.usadas = taskData.usadas + 1
+    valores.cantidad = taskData.cantidad
 
     const response = await axios.post("http://localhost:4000/turno/", valores);
 
@@ -123,13 +103,13 @@ export default function TurnoNuevoDirecto() {
 
   const handleEnviActividad = async () => {
 
-    console.log('DA UNA ACTIVIDAD')
+    // console.log('DA UNA ACTIVIDAD')
 
     const originalDate = dayjs(start);
     const newDate = originalDate.add(30, 'minute');
     valores.fecha = dayjs(start).format('YYYY-MM-DD HH:mm:ss');
     valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
-    valores.pacienteid = 33
+    valores.idpaciente = 33
     valores.observac = valor
 
     const response = await axios.post("http://localhost:4000/turno/", valores);
@@ -142,42 +122,6 @@ export default function TurnoNuevoDirecto() {
     }
 
   };
-
-
-  useEffect(() => {
-    const traerTarea = async () => {
-      if (params.idpaciente) {
-        const task = await traerTareaSesion(params.idpaciente);
-        setTask({
-          nombre: task.nombre,
-          apellido: task.apellido,
-          telefono: task.telefono,
-          imagen: task.imagen,
-          calle: task.calle,
-          numero: task.numero,
-          patologia: task.patologia,
-          patasoc: task.patasoc,
-          fechacirugia: task.fechacirugia,
-          mutualid: task.mutualid,
-          afiliado: task.afiliado,
-          idpaciente: task.idepaciente,
-          cantidad: task.cantidad,
-          maxUsadas: task.maxUsadas,
-          maxTanda: task.maxTanda,
-          estado: task.estado,
-        })
-      }
-
-    }
-    traerTarea()
-    // if (task.cantidad==0){
-    //   console.log('advertencia', task.nombre ? task.nombre : 'no hat nada')
-    //   navigate('/sinturno/' + params.idepaciente)
-    // }
-
-
-  }, [])
-
 
   const [open, setOpen] = useState(true);
   const handleOpen = () => setOpen(true);
@@ -196,7 +140,7 @@ export default function TurnoNuevoDirecto() {
 
         <Box sx={style}>
           <div className='text-xl font-bold uppercase text-center '>
-            {params.idpaciente ? `¿turno para ${task.nombre} ${task.apellido} el ${dayjs(start).format('DD [de] MMMM [de ]YYYY [a las] HH:mm:ss')}?` : 'INGRESE LA ACTIVIDAD A REALIZAR'}
+            {params.idpaciente ? `¿turno para ${location.state.nombre} ${location.state.apellido} el ${dayjs(start).format('DD [de] MMMM [de ]YYYY [a las] HH:mm:ss')}?` : 'INGRESE LA ACTIVIDAD A REALIZAR'}
           </div>
 
           <input

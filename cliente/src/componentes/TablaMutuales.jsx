@@ -21,7 +21,7 @@ const TablaMutuales = () => {
     const navigate = useNavigate()
 
     const ListarMutuales = async () =>
-        await axios.get('http://localhost:4001/mutual').then((response) => {
+        await axios.get('http://localhost:4000/mutual').then((response) => {
             const data = response.data
             setMutuales(data)
         })

@@ -48,9 +48,28 @@ export const getTarea = async (req, res) => {
   try {
     const [result] = await pool.query(
       
-    //  "SELECT pacientes.*, mutual.nombremutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.pacienteid  WHERE pacientes.idpaciente = ?", [req.params.idpaciente]
+    //  "SELECT pacientes.*, mutual.nombremutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente  WHERE pacientes.idpaciente = ?", [req.params.idpaciente]
 
     "SELECT pacientes.*, mutual.nombremutual  FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual  WHERE pacientes.idpaciente = ?", [req.params.idpaciente]
+    );
+
+    if (result.length === 0) {
+     
+      return res.status(404).json("No hay el id");
+    }
+    res.json(result[0]);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+//!LLAMAR ultimo PACIENTE
+export const ultimoPaciente = async (req, res) => {
+  try {
+    const [result] = await pool.query( 
+    "SELECT * FROM pacientes ORDER BY idpaciente DESC LIMIT 1 "
+    
     );
 
     if (result.length === 0) {
@@ -77,11 +96,10 @@ export const crearTarea = async (req, res) => {
       fechacirugia,
       mutualid,
       afiliado,
-      cantidad
-      
     } = req.body;
+
     const result = await pool.query(
-      "INSERT INTO pacientes (nombre, apellido, telefono, calle, numero, patologia, patasoc, fechacirugia, mutualid, afiliado, cantidad) VALUES (?,?,?,?,?,?,?,?,?,?, ?)",
+      "INSERT INTO pacientes (nombre, apellido, telefono, calle, numero, patologia, patasoc, fechacirugia, mutualid, afiliado) VALUES (?,?,?,?,?,?,?,?,?,?)",
       [
         nombre,
         apellido,
@@ -93,17 +111,27 @@ export const crearTarea = async (req, res) => {
         fechacirugia,
         mutualid,
         afiliado,
-        cantidad     
       ]
     );
 
-  
+    // Check if the query was successful
+    if (result.affectedRows === 1) {
+      // Get the ID of the inserted task
+      const insertedId = result.insertId;
 
-    res.send("creando tareas");
+      // Send a successful response to the client with the inserted ID
+      res.status(200).json({ message: "Tarea creada exitosamente", insertedId });
+    } else {
+      // Send an error response to the client
+      res.status(500).json({ message: "Error al crear la tarea" });
+    }
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error("Error al crear la tarea:", error);
+    // Send an error response to the client
+    res.status(500).json({ message: "Error al crear la tarea" });
   }
 };
+
 
 //!EDITAR PACIENTE PARA CORRECCIONES
 
@@ -139,7 +167,7 @@ export const editarTarea = async (req, res) => {
 //   try {
 //     const { usadas } = req.body;  
 //     const [result] = await pool.query(
-//       "UPDATE turnos SET usadas = 0 WHERE pacienteid = ?",
+//       "UPDATE turnos SET usadas = 0 WHERE idpaciente = ?",
 //       [req.params.idpaciente]  
 //     );
 //     res.send(result);
@@ -194,7 +222,34 @@ export const eliminarUnRegistro = async (req, res) => {
 export const getTurnos = async (req, res) => {
   try {
     const [result] = await pool.query(
-      "SELECT * FROM pacientes  INNER JOIN turnos ON pacientes.idpaciente=turnos.pacienteid"
+      "SELECT * FROM pacientes  INNER JOIN turnos ON pacientes.idpaciente=turnos.idpaciente"
+    );
+    res.json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+////!dar permiso para atender sin turno
+
+export const getPermiso = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "UPDATE turnos SET estado = 1 WHERE idturnos = ?",
+      [req.params.idturnos]
+    );
+    res.send(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+////!listado de turnos de UN paciente
+
+export const turnosPaciente = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM pacientes  INNER JOIN turnos ON pacientes.idpaciente=turnos.idpaciente WHERE pacientes.idpaciente = ?", [req.params.idpaciente]
     );
     res.json(result);
   } catch (error) {
@@ -206,10 +261,10 @@ export const getTurnos = async (req, res) => {
 
 export const crearTurno = async (req, res) => {
   try {
-    const { fecha, pacienteid, fechafin, observac, cantidad, tanda, usadas } = req.body;
+    const { fecha, idpaciente, fechafin, observac, cantidad, tanda, usadas, estado } = req.body;
     const result = await pool.query(
-      "INSERT INTO turnos  (fecha, pacienteid, fechafin, observac, cantidad, tanda, usadas) VALUES (?,?,?,?,?,?,?)",
-      [fecha, pacienteid, fechafin, observac,cantidad, tanda, usadas]
+      "INSERT INTO turnos  (fecha, idpaciente, fechafin, observac, cantidad, tanda, usadas, estado) VALUES (?,?,?,?,?,?,?,?)",
+      [fecha, idpaciente, fechafin, observac,cantidad, tanda, usadas, estado]
     );
     res.send("creando turno");
   } catch (error) {
@@ -235,8 +290,8 @@ export const borrarTurno = async (req, res) => {
 // export const maxTurno = async (req, res) => {
 //   try {
 //     const [result] = await pool.query(
-//       "SELECT MAX(usadas) AS maximoUsadas FROM turnos WHERE pacienteid= ?", [
-//         req.params.pacienteid,
+//       "SELECT MAX(usadas) AS maximoUsadas FROM turnos WHERE idpaciente= ?", [
+//         req.params.idpaciente,
 //       ]
 //     );
 //     res.json(result);
@@ -281,8 +336,8 @@ export const crearActividad = async (req, res) => {
 export const historialTurnos = async (req, res) => {
   try {
     const [result] = await pool.query(
-      "SELECT turnos.fecha, pacientes.nombre, pacientes.apellido FROM turnos JOIN pacientes ON turnos.pacienteid = pacientes.idpaciente WHERE turnos.pacienteid = ?",
-      [req.params.pacienteid]
+      "SELECT turnos.fecha, pacientes.nombre, pacientes.apellido FROM turnos JOIN pacientes ON turnos.idpaciente = pacientes.idpaciente WHERE turnos.idpaciente = ?",
+      [req.params.idpaciente]
     );
     res.json(result)
   } catch (error) {
@@ -388,7 +443,7 @@ export const borrarMutual= async (req, res) => {
 export const getImagenes = async (req, res) => {
   try {
     const [results] = await pool.query(
-      "SELECT pacientes.*, imagenes.imagen, imagenes.descripcion FROM pacientes JOIN imagenes ON pacientes.idpaciente = imagenes.pacienteid WHERE imagenes.pacienteid = ?;",
+      "SELECT pacientes.*, imagenes.imagen, imagenes.descripcion FROM pacientes JOIN imagenes ON pacientes.idpaciente = imagenes.idpaciente WHERE imagenes.idpaciente = ?;",
       [req.params.idpaciente]
     );
 
@@ -408,7 +463,7 @@ export const getImagenes = async (req, res) => {
 export const crearHistoria = async (req, res) => {
   try {
     const {
-      pacienteid,
+      idpaciente,
       imagen,
       descripcion,
       comentario
@@ -419,9 +474,9 @@ export const crearHistoria = async (req, res) => {
 
     } = req.body;
     const result = await pool.query(
-      "INSERT INTO imagenes  (pacienteid, imagen, descripcion, comentario) VALUES (?,?,?,?)",
+      "INSERT INTO imagenes  (idpaciente, imagen, descripcion, comentario) VALUES (?,?,?,?)",
       [
-        pacienteid,
+        idpaciente,
         imagen,
         descripcion,
         comentario
@@ -439,7 +494,7 @@ export const crearHistoria = async (req, res) => {
 export const getSesiones = async (req, res) => {
   try {
     const [results] = await pool.query(
-     "SELECT turnos.pacienteid, MAX(tanda) AS maxTanda, MAX(usadas) AS maxUsadas, turnos.cantidad FROM turnos WHERE usadas = (SELECT MAX(usadas) FROM turnos WHERE turnos.pacienteid = ?)", [req.params.idpaciente]
+     "SELECT turnos.idpaciente, MAX(tanda) AS maxTanda, MAX(usadas) AS maxUsadas, turnos.cantidad FROM turnos WHERE usadas = (SELECT MAX(usadas) FROM turnos WHERE turnos.idpaciente = ?)", [req.params.idpaciente]
        
     );
 
@@ -459,15 +514,17 @@ export const getSesiones = async (req, res) => {
 export const getTareaSesion = async (req, res) => {
   try {
     const [result] = await pool.query(
-      "SELECT pacientes.*, MAX(turnos.usadas) AS maxUsadas, MAX(turnos.tanda) AS maxTanda FROM pacientes JOIN turnos ON pacientes.idpaciente = turnos.pacienteid WHERE pacientes.idpaciente = ?GROUP BY pacientes.idpaciente",
+      " SELECT turnos.*, pacientes.* FROM turnos JOIN pacientes ON turnos.idpaciente = pacientes.idpaciente WHERE turnos.idpaciente = ? ORDER BY turnos.fecha DESC LIMIT 1;",
       [req.params.idpaciente]
     );
 
     if (result.length === 0) {
       return res.status(404).json("No hay el id");
     }
+
     res.json(result[0]);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error(error);
+    return res.status(500).json({ message: "Error en el servidor" });
   }
 };
