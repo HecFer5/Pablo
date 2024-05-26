@@ -86,8 +86,14 @@ export default function TurnoNuevoDirecto() {
     valores.idpaciente = params.idpaciente
     valores.observac = valor
     valores.tanda = taskData.tanda
-    valores.usadas = taskData.usadas + 1
+    if (taskData.estado===0){
+      valores.usadas = taskData.usadas + 1
+    }else{
+      valores.usadas = 0
+    }
+    
     valores.cantidad = taskData.cantidad
+    valores.estado = 0
 
     const response = await axios.post("http://localhost:4000/turno/", valores);
 

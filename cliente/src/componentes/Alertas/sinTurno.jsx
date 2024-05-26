@@ -16,15 +16,35 @@ export default function SinTurno({ values }) {
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleAsignarSesiones = () => {
+
+  const handleAsignarSesiones = async () => {
     setShowCantidad(true);
   };
+
   const handleCantidadChange = (event) => setCantidad(event.target.value);
 
 
-  const handleAsignarCantidad = () => {
+  const handleAsignarCantidad = async () => {
 
     console.log(cantidad);
+    valores.idpaciente = taskData.idpaciente
+    valores.tanda = taskData.tanda + 1
+    valores.usadas = 0
+    valores.cantidad = cantidad
+    valores.estado = 0
+
+    const response = await axios.post("http://localhost:4000/turno/", valores);
+
+    if (response.status === 200) {
+      console.log('Los datos se enviaron correctamente');
+      navigate('/turno')
+    } else {
+      console.log('Hubo un error al enviar los datos');
+    }
+
+
+
+
     handleClose();
   };
 
@@ -46,8 +66,8 @@ export default function SinTurno({ values }) {
 
 
     valores.idpaciente = taskData.idpaciente
-    valores.tanda = taskData.tanda
-    valores.usadas = taskData.usadas + 1
+    valores.tanda = 0
+    valores.usadas = 0
     valores.cantidad = 0
     valores.estado = 1
 
@@ -80,8 +100,14 @@ export default function SinTurno({ values }) {
           {showCantidad && (
             <>
               <div className="flex justify-center mt-12">
-
-                <input className="w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5 bg-gray-100 border border-gray-300 rounded-md py-2 px-4" type="text" placeholder="Cantidad" />
+                <TextField
+                  className="w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                  label="Cantidad"
+                  variant="outlined"
+                  value={cantidad}
+                  onChange={handleCantidadChange}
+                />
+            
                 <Button onClick={handleAsignarCantidad}>Confirmar</Button>
               </div>
             </>

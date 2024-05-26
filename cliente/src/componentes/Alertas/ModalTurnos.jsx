@@ -46,31 +46,35 @@ export default function ModalTurnos({ values }) {
   }, [])
 
   const [task, setTask] = useState([])
+ 
 
-  const verificaTurnos = async (idpaciente) => {
-    // console.log('verificaTurnos')
-    const respuesta = await axios.get("http://localhost:4000/sesiones/" + idpaciente);
-    const taskData = respuesta.data;
-    // console.log(respuesta.data)
-    setTask((prevState) => ({
-      ...prevState,
-      nombre: taskData.nombre,
-      apellido: taskData.apellido,
-      telefono: taskData.telefono,
-      imagen: taskData.imagen,
-      calle: taskData.calle,
-      numero: taskData.numero,
-      patologia: taskData.patologia,
-      patasoc: taskData.patasoc,
-      fechacirugia: taskData.fechacirugia,
-      mutualid: taskData.mutualid,
-      afiliado: taskData.afiliado,
-      idpaciente: taskData.idpaciente,
-      cantidad: taskData.cantidad,
-      usadas: taskData.usadas,
-      tanda: taskData.tanda ?? defaultValue,
-      estado: taskData.estado,
-    }));
+    const verificaTurnos = async (idpaciente) => {
+      // console.log('verificaTurnos')
+      
+      const respuesta = await axios.get("http://localhost:4000/sesiones/" + idpaciente);
+      const taskData = respuesta.data;
+      // console.log(respuesta.data)
+      setTask(() => ({
+      
+        nombre: taskData.nombre,
+        apellido: taskData.apellido,
+        telefono: taskData.telefono,
+        imagen: taskData.imagen,
+        calle: taskData.calle,
+        numero: taskData.numero,
+        patologia: taskData.patologia,
+        patasoc: taskData.patasoc,
+        fechacirugia: taskData.fechacirugia,
+        mutualid: taskData.mutualid,
+        afiliado: taskData.afiliado,
+        idpaciente: taskData.idpaciente,
+        cantidad: taskData.cantidad,
+        usadas: taskData.usadas,
+        tanda: taskData.tanda ?? defaultValue,
+        estado: taskData.estado,
+      
+      }));
+    
     // console.log(taskData.nombre, taskData.tanda)
 
     // if (taskData){
@@ -80,17 +84,25 @@ export default function ModalTurnos({ values }) {
     //   navigate('/sinturno/' + idpaciente);
 
     // }
-
-
-
-    if (taskData.tanda === 0 || taskData.usadas === taskData.cantidad && taskData.estado === 0) {
+    console.log('taskData', taskData)
+    if (taskData.tanda === 0 && taskData.estado === 0) {
       navigate('/sinturno/' + idpaciente, { state: taskData });
-    } else if (taskData.estado === 1) {
+    }
 
-      navigate('/turno/' + idpaciente, { state: taskData })
-    } else {
+
+    if (taskData.usadas === taskData.cantidad && taskData.estado === 0) {
+      navigate('/sinturno/' + idpaciente, { state: taskData });
+
+    }
+    if (taskData.estado === 1 && taskData.usadas === taskData.cantidad) {
       navigate('/turno/' + idpaciente, { state: taskData })
     }
+
+    if (taskData.estado === 0 && taskData.usadas != taskData.cantidad) {
+      navigate('/turno/' + idpaciente, { state: taskData })
+    }
+
+
 
   }
 

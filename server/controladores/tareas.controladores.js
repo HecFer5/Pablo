@@ -514,7 +514,7 @@ export const getSesiones = async (req, res) => {
 export const getTareaSesion = async (req, res) => {
   try {
     const [result] = await pool.query(
-      " SELECT turnos.*, pacientes.* FROM turnos JOIN pacientes ON turnos.idpaciente = pacientes.idpaciente WHERE turnos.idpaciente = ? ORDER BY turnos.fecha DESC LIMIT 1;",
+      " SELECT turnos.*, pacientes.* FROM turnos JOIN pacientes ON turnos.idpaciente = pacientes.idpaciente WHERE turnos.idpaciente = ? ORDER BY turnos.idTurnos DESC LIMIT 1",
       [req.params.idpaciente]
     );
 
