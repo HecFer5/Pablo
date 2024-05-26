@@ -99,7 +99,7 @@ const Turno6 = (props) => {
         } else {
             if (params.idpaciente) {
                 // console.log(traer.nombre, 'ahora')
-                navigate(`/clickturno/${params.idpaciente}`, { state: { start,  ...taskData } });
+                navigate(`/clickturno/${params.idpaciente}`, { state: { start, ...taskData } });
 
             } else {
                 navigate(`/clickturno`, { state: { start } });
@@ -128,15 +128,40 @@ const Turno6 = (props) => {
         try {
             const response = await axios.get('http://localhost:4000/turno');
             const data = response.data;
-            const formattedEvents = data.map((turno) => ({
-                title: `${turno.nombre ? turno.nombre : 'ACTIVIDAD'} ${turno.apellido}  ${turno.usadas != null ? turno.usadas + '/' : ''}${turno.usadas != null ? turno.cantidad : ''} 
-                ${turno.observac ? ` (${turno.observac}) ` : ''}`,
-                start: dayjs(turno.fecha).toDate(),
-                end: dayjs(turno.fechafin).toDate(),
-                id: turno.idturnos,
-                color: `${turno.nombre != 'ACTIVIDAD' ? 'bg-blue-300 text-black font-semibold' : 'bg-green-300 text-black font-semibold'}`
+            const formattedEvents = data.map((turno) => {
+                let title;
+                if (turno.nombre != 'ACTIVIDAD') {
+                    title = `${turno.nombre} ${turno.apellido}`;
+                } else {
+                    title = 'ACTIVIDAD';
+                }
 
-            }));
+                if (turno.observac === "") {
+                    title = title
+                } else {
+                    title = title + ' (' + turno.observac + ')'
+                }
+
+                if (turno.cantidad === 0 && turno.usadas > 0 && turno.tanda === 0 && turno.estado > 0) {
+                    title = title + ` (particular/${turno.usadas})`
+                }
+
+                if (turno.cantidad > 0 && turno.usadas > 0 && turno.tanda > 0 && turno.estado === 0) {
+                    title = title + ` (${turno.usadas}/${turno.cantidad})`
+                }
+
+                if (turno.cantidad === 0 && turno.usadas === 0 && turno.tanda === 0 && turno.estado === 0) {
+                    title = title + ` (se atiende sin sesión asignada)`
+                }
+
+                return {
+                    title: title,
+                    start: dayjs(turno.fecha).toDate(),
+                    end: dayjs(turno.fechafin).toDate(),
+                    id: turno.idturnos,
+                    color: `${turno.nombre != 'ACTIVIDAD' ? 'bg-blue-300 text-black font-semibold' : 'bg-green-300 text-black font-semibold'}`
+                };
+            });
 
             setEvents(formattedEvents);
         } catch (error) {

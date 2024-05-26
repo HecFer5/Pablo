@@ -28,13 +28,10 @@ export default function ModalTurnos({ values }) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const location = useLocation();
-  const irFuncion = location.state;
   const navigate = useNavigate()
 
-  //////////////traer la tabla
   const [registros, setRegistros] = useState([])
 
-  /////////////////////////////
   const ListarTareas = async () =>
     await axios.get('http://localhost:4000/tarea').then((response) => {
       const data = response.data
@@ -49,11 +46,9 @@ export default function ModalTurnos({ values }) {
  
 
     const verificaTurnos = async (idpaciente) => {
-      // console.log('verificaTurnos')
       
       const respuesta = await axios.get("http://localhost:4000/sesiones/" + idpaciente);
       const taskData = respuesta.data;
-      // console.log(respuesta.data)
       setTask(() => ({
       
         nombre: taskData.nombre,
@@ -75,32 +70,32 @@ export default function ModalTurnos({ values }) {
       
       }));
     
-    // console.log(taskData.nombre, taskData.tanda)
-
-    // if (taskData){
-    //   navigate('/turno/' + idpaciente, { state: taskData })
-    // }else{
-    //   // console.log('sin datos')
-    //   navigate('/sinturno/' + idpaciente);
-
-    // }
+    
     console.log('taskData', taskData)
-    if (taskData.tanda === 0 && taskData.estado === 0) {
-      navigate('/sinturno/' + idpaciente, { state: taskData });
-    }
 
-
-    if (taskData.usadas === taskData.cantidad && taskData.estado === 0) {
-      navigate('/sinturno/' + idpaciente, { state: taskData });
-
-    }
-    if (taskData.estado === 1 && taskData.usadas === taskData.cantidad) {
+    if (taskData.mutualid != 2){
+      console.log('con mutual')
+      if (taskData.tanda === 0 && taskData.estado === 0) {
+        navigate('/sinturno/' + idpaciente, { state: taskData });
+      }
+  
+  
+      if (taskData.usadas === taskData.cantidad && taskData.estado === 0) {
+        navigate('/sinturno/' + idpaciente, { state: taskData });
+  
+      }
+      if (taskData.estado === 1 && taskData.usadas === taskData.cantidad) {
+        navigate('/turno/' + idpaciente, { state: taskData })
+      }
+  
+      if (taskData.estado === 0 && taskData.usadas != taskData.cantidad) {
+        navigate('/turno/' + idpaciente, { state: taskData })
+      }
+    }else{
+      console.log('privado')
       navigate('/turno/' + idpaciente, { state: taskData })
     }
-
-    if (taskData.estado === 0 && taskData.usadas != taskData.cantidad) {
-      navigate('/turno/' + idpaciente, { state: taskData })
-    }
+   
 
 
 

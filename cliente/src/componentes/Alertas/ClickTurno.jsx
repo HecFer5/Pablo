@@ -93,7 +93,12 @@ export default function TurnoNuevoDirecto() {
     }
     
     valores.cantidad = taskData.cantidad
-    valores.estado = 0
+    if (taskData.mutualid != 2){
+      valores.estado = 0
+    }else{
+      valores.estado = 1
+    }
+    
 
     const response = await axios.post("http://localhost:4000/turno/", valores);
 
