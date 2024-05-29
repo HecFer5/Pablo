@@ -336,7 +336,7 @@ export const crearActividad = async (req, res) => {
 export const historialTurnos = async (req, res) => {
   try {
     const [result] = await pool.query(
-      "SELECT turnos.fecha, pacientes.nombre, pacientes.apellido FROM turnos JOIN pacientes ON turnos.idpaciente = pacientes.idpaciente WHERE turnos.idpaciente = ?",
+      "SELECT * FROM turnos JOIN pacientes ON turnos.idpaciente = pacientes.idpaciente WHERE turnos.idpaciente = ?",
       [req.params.idpaciente]
     );
     res.json(result)

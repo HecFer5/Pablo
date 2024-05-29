@@ -35,36 +35,38 @@ export default function NuevoReg({ values }) {
   const { TraerUltimoPaciente } = useTareas()
   const [cantidad, setCantidad] = useState('');
   const navigate = useNavigate()
-
-
-
   const [valores, setValores] = useState({
     idpaciente: 0,
     cantidad: 0,
     tanda: 0,
-    usadas: 0
+    usadas: 0,
+    estado: 0
   });
   const [data, setData] = useState(null);
 
   const handleSubmit = async (isTurnoDirecto) => {
     event.preventDefault();
 
-    // console.log('DA UN TURNO', data.idpaciente)
     valores.idpaciente = data.idpaciente
-    if (cantidad > 0) {
-      valores.cantidad = cantidad
-      valores.tanda = 1
-      valores.usadas = 0
-      valores.estado = 0
+    if (data.mutualid != 2) {
+      if (cantidad > 0) {
+        valores.cantidad = cantidad
+        valores.usadas = 0
+        valores.tanda = 1
+        valores.estado = 0
+      } else {
+        valores.cantidad = 0
+        valores.usadas = 0
+        valores.tanda = 0
+        valores.estado = 0
+      }
     } else {
       valores.cantidad = 0
-      valores.tanda = 0
       valores.usadas = 0
-      valores.estado = 0
-
+      valores.tanda = 0
+      valores.estado = 2
     }
-
-
+    
     const response = await axios.post("http://localhost:4000/turno/", valores);
 
     if (response.status === 200) {
@@ -74,9 +76,8 @@ export default function NuevoReg({ values }) {
       console.log('Hubo un error al enviar los datos');
     }
 
-    // console.log('Cantidad:', data);
     if (isTurnoDirecto === true) {
-      navigate('/turnoDirecto/');
+      navigate('/turno/' + data.idpaciente);
     } else {
       navigate('/turno');
     }
@@ -88,8 +89,6 @@ export default function NuevoReg({ values }) {
   const atenderAhora = async (event) => {
     event.preventDefault();
 
-    // console.log('DA UN TURNO', params.idpaciente, task)
-
     const originalDate = dayjs();
     const newDate = originalDate.add(30, 'minute');
 
@@ -97,17 +96,24 @@ export default function NuevoReg({ values }) {
     valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
     valores.idpaciente = data.idpaciente
 
-    if (cantidad > 0) {
-      valores.cantidad = cantidad
-      valores.tanda = 1
-      valores.usadas = 1
+    if (data.mutualid != 2) {
+      if (cantidad > 0) {
+        valores.cantidad = cantidad
+        valores.usadas = 1
+        valores.tanda = 1
+        valores.estado = 0
+      } else {
+        valores.cantidad = 0
+        valores.usadas = 1
+        valores.tanda = 0
+        valores.estado = 1
+      }
     } else {
       valores.cantidad = 0
-      valores.tanda = 0
       valores.usadas = 1
+      valores.tanda = 0
+      valores.estado = 2
     }
-
-
     const response = await axios.post("http://localhost:4000/turno/", valores);
 
     if (response.status === 200) {
@@ -116,11 +122,7 @@ export default function NuevoReg({ values }) {
     } else {
       console.log('Hubo un error al enviar los datos');
     }
-
-    // console.log('Cantidad:', data);
-
     navigate(`/turno`)
-
   };
 
   useEffect(() => {
@@ -135,9 +137,6 @@ export default function NuevoReg({ values }) {
 
     fetchData();
   }, []);
-
-  // console.log('ddd', valores.idpaciente)
-
 
 
   return (

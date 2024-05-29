@@ -24,13 +24,13 @@ dayjs.extend(updateLocale);
 dayjs.locale(esLocale);
 
 dayjs.updateLocale('es', {
-    weekStart: 0,
+  weekStart: 0,
 });
 
 const TablaHisotiralTurnos = () => {
-    
+
   const [registros, setRegistros] = useState([]);
-  const [selectedPaciente, setSelectedPaciente] = useState({ nombre: '', apellido: '', nombremutual:" " });
+  const [selectedPaciente, setSelectedPaciente] = useState({ nombre: '', apellido: '', nombremutual: " " });
   const params = useParams();
   const [open, setOpen] = useState(true);
   const handleClose = () => setOpen(false);
@@ -45,6 +45,7 @@ const TablaHisotiralTurnos = () => {
 
       const data = response.data;
       setRegistros(data);
+      console.log(data)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -56,7 +57,8 @@ const TablaHisotiralTurnos = () => {
 
   }, [params.idpaciente]);
 
- const registrosFiltrados = registros.filter(registro => registro.idpaciente !== 33);
+  const registrosFiltrados = registros.filter(registro => registro.idpaciente !== 33);
+
 
   return (
 
@@ -70,23 +72,48 @@ const TablaHisotiralTurnos = () => {
 
       <Box sx={style}>
         <table className="min-w-full text-left text-sm font-light">
-  <caption className="text-xl font-bold mb-4 uppercase">{registrosFiltrados.length > 0 ? `TURNOS DE ${registrosFiltrados[0].nombre} ${registrosFiltrados[0].apellido}` : 'AUN NO TIENE TURNOS ASIGNADOS'}</caption>
+          <caption className={`text-xl font-bold mb-4 uppercase ${registrosFiltrados.length > 0 && registrosFiltrados[0].mutualid == 2 ? 'bg-yellow-200' : ''}`}>
+            {registrosFiltrados.length > 0 ?
+              `TURNOS DE ${registrosFiltrados[0].nombre} ${registrosFiltrados[0].apellido} ${registrosFiltrados[0].mutualid != 2 ? '' : 'particular'}`
+              :
+              ''}
+          </caption>
 
-  <thead className="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
-    <tr>
-      <th scope="col" className="px-6 py-4"></th>
-    </tr>
-  </thead>
-  <tbody className="table-group-divider">
-    {registros.map(registro => (
-      <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
-  
-        <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
-        <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{`${registro.usadas !== null ? registro.usadas : 0}/${registro.cantidad !== null ? registro.cantidad : 0}`}</td>
-      </tr>
-    ))}
-  </tbody>
-</table>
+
+          <tbody className="table-group-divider">
+            {registros.map(registro => (
+              <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
+                {
+                  registro.fecha != null && (
+                    registro.mutualid != 2 ? (
+                      <>
+                        {registro.cantidad > 0 && registro.estado === 0 ?
+                          <>
+                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.usadas}/{registro.cantidad}</td>
+                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg"></td>   <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
+                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.tanda}</td>
+                          </> :
+                          <>
+                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">s/sesiones</td>
+                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg"></td>   <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
+                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.tanda}</td>
+                          </>
+                        }
+                      </>
+                    ) :
+
+                      <>
+                        <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.usadas}</td>
+                        <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
+
+                      </>)}
+
+              </tr>
+            ))
+            }
+          </tbody>
+
+        </table>
 
         <div className='mt-5 flex justify-center'>
           <button className="block bg-blue-700 px-2 py-1 text-white w-min rounded-md" onClick={() => Navigate('/tabla')}>CERRAR</button>

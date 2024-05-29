@@ -3,8 +3,10 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import TextField from '@mui/material/TextField';
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
 import axios from 'axios';
+import dayjs from 'dayjs';
+
 
 export default function SinTurno({ values }) {
   const [open, setOpen] = useState(false);
@@ -42,11 +44,46 @@ export default function SinTurno({ values }) {
       console.log('Hubo un error al enviar los datos');
     }
 
-
-
-
     handleClose();
   };
+
+
+  const AsignarAtender = async () => {
+    const originalDate = dayjs();
+    const newDate = originalDate.add(30, 'minute');
+
+    valores.fecha = dayjs().format('YYYY-MM-DD HH:mm:ss');
+    valores.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
+    valores.idpaciente = taskData.idpaciente
+
+    if (taskData.mutualid != 2) {
+      if (cantidad > 0) {
+        valores.cantidad = cantidad
+        valores.usadas = 1
+        valores.tanda = 1
+        valores.estado = 0
+      } else {
+        valores.cantidad = 0
+        valores.usadas = 1
+        valores.tanda = 0
+        valores.estado = 1
+      }
+    } else {
+      valores.cantidad = 0
+      valores.usadas = 1
+      valores.tanda = 0
+      valores.estado = 2
+    }
+    const response = await axios.post("http://localhost:4000/turno/", valores);
+
+    if (response.status === 200) {
+      console.log('Los datos se enviaron correctamente');
+      navigate('/turno')
+    } else {
+      console.log('Hubo un error al enviar los datos');
+    }
+    navigate(`/turno`)
+  }
 
   useEffect(() => {
     handleOpen();
@@ -61,7 +98,6 @@ export default function SinTurno({ values }) {
 
   });
   const atenderIgual = async () => {
-    console.log(taskData, ' atender igual')
     console.log('taskdata', taskData, 'valores', valores)
 
 
@@ -75,12 +111,12 @@ export default function SinTurno({ values }) {
 
     if (response.status === 200) {
       console.log('Los datos se enviaron correctamente');
-      navigate('/turno')
+      navigate('/turno/' + taskData.idpaciente)
     } else {
       console.log('Hubo un error al enviar los datos');
     }
 
-    navigate('/turnodirecto/')
+    navigate('/turno/' + taskData.idpaciente)
   }
 
 
@@ -99,16 +135,20 @@ export default function SinTurno({ values }) {
           </div>
           {showCantidad && (
             <>
-              <div className="flex justify-center mt-12">
-                <TextField
-                  className="w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
-                  label="Cantidad"
-                  variant="outlined"
-                  value={cantidad}
-                  onChange={handleCantidadChange}
-                />
-            
-                <Button onClick={handleAsignarCantidad}>Confirmar</Button>
+<div className='flex justify-center mt-5'>
+              <TextField
+                className="w-1/2 md:w-1/3 lg:w-1/4 xl:w-1/5"
+                label="Cantidad"
+                variant="outlined"
+                value={cantidad}
+                onChange={handleCantidadChange}
+                
+              />
+              </div>
+              <div className="flex justify-center mt-5">
+                <Button onClick={AsignarAtender}>Atender</Button>
+                <Button onClick={handleAsignarCantidad}>Guardar</Button>
+
               </div>
             </>
 

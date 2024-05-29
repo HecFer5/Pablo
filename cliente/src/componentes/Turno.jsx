@@ -150,8 +150,8 @@ const Turno6 = (props) => {
                     title = title + ` (${turno.usadas}/${turno.cantidad})`
                 }
 
-                if (turno.cantidad === 0 && turno.usadas === 0 && turno.tanda === 0 && turno.estado === 0) {
-                    title = title + ` (se atiende sin sesión asignada)`
+                if ((turno.cantidad === 0 || turno.cantidad === null) && (turno.usadas === 0  || turno.usadas === null) && (turno.tanda === 0 || turno.tanda === null) && turno.estado === 0) {
+                    title = title + ` (sin sesión asignada)`
                 }
 
                 return {

@@ -86,7 +86,7 @@ export default function TurnoNuevoDirecto() {
     valores.idpaciente = params.idpaciente
     valores.observac = valor
     valores.tanda = taskData.tanda
-    if (taskData.estado===0){
+    if (taskData.estado !=1){
       valores.usadas = taskData.usadas + 1
     }else{
       valores.usadas = 0
@@ -96,7 +96,7 @@ export default function TurnoNuevoDirecto() {
     if (taskData.mutualid != 2){
       valores.estado = 0
     }else{
-      valores.estado = 1
+      valores.estado = 2
     }
     
 

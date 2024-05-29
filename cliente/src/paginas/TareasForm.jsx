@@ -119,11 +119,12 @@ const TareasForm = () => {
             await modificaRegistro(params.idpaciente, values)
             navigate('/tabla')
           } else {
-            if (values.mutualid != 2){
-              navigate(`/otroReg`)
-            }else{
-              navigate('/turno')
-            }           
+            // if (values.mutualid != 2){
+            //   navigate(`/otroReg`)
+            // }else{
+            //   navigate('/turno')
+            // }           
+            navigate(`/otroReg`)
             await crearRegistro(values)
             console.log(values)
           }
