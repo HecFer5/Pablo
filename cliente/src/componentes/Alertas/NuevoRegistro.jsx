@@ -44,7 +44,7 @@ export default function NuevoReg({ values }) {
   });
   const [data, setData] = useState(null);
 
-  const handleSubmit = async (isTurnoDirecto) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     valores.idpaciente = data.idpaciente
@@ -71,24 +71,62 @@ export default function NuevoReg({ values }) {
 
     if (response.status === 200) {
       console.log('Los datos se enviaron correctamente');
-      navigate('/turno')
+      navigate(`/turno/${data.idpaciente}`);
     } else {
       console.log('Hubo un error al enviar los datos');
     }
 
-    if (isTurnoDirecto === true) {
-      navigate('/turno/' + data.idpaciente);
-    } else {
-      navigate('/turno');
-    }
+    // if (isTurnoDirecto === true) {
+    //   navigate('/turno/' + data.idpaciente);
+    // } else {
+    //   navigate('/turno');
+    // }
 
   };
 
+const soloIngreso = async (event)=>{
+  event.preventDefault();
 
+  valores.idpaciente = data.idpaciente
+
+  if (data.mutualid != 2) {
+    if (cantidad > 0) {
+      valores.cantidad = cantidad
+      valores.usadas = 0
+      valores.tanda = 1
+      valores.estado = 0
+      valores.observac = ''
+
+    } else {
+      valores.cantidad = 0
+      valores.usadas = 0
+      valores.tanda = 0
+      valores.estado = 0
+      valores.observac = ''
+
+    }
+  } else {
+    valores.cantidad = 0
+    valores.usadas = 0
+    valores.tanda = 0
+    valores.estado = 2
+    valores.observac = ''
+
+  }
+  const response = await axios.post("http://localhost:4000/turno/", valores);
+
+  if (response.status === 200) {
+    console.log('Los datos se enviaron correctamente');
+    navigate('/turno')
+  } else {
+    console.log('Hubo un error al enviar los datos');
+  }
+  
+}
 
   const atenderAhora = async (event) => {
     event.preventDefault();
-
+console.log(data)
     const originalDate = dayjs();
     const newDate = originalDate.add(30, 'minute');
 
@@ -102,17 +140,22 @@ export default function NuevoReg({ values }) {
         valores.usadas = 1
         valores.tanda = 1
         valores.estado = 0
+        valores.observac = ''
       } else {
         valores.cantidad = 0
         valores.usadas = 1
         valores.tanda = 0
         valores.estado = 1
+        valores.observac = ''
+
       }
     } else {
       valores.cantidad = 0
       valores.usadas = 1
       valores.tanda = 0
       valores.estado = 2
+      valores.observac = ''
+
     }
     const response = await axios.post("http://localhost:4000/turno/", valores);
 
@@ -169,8 +212,8 @@ export default function NuevoReg({ values }) {
 
 
               <button className="block bg-blue-500 px-2 py-1 text-white w-full rounded-md mt-8 ml-22" onClick={atenderAhora}>Atender ahora</button>
-              <button className="block bg-green-500 px-2 py-1 text-white w-full rounded-md mt-8 ml-22" onClick={() => handleSubmit(true)}>Dar un turno</button>
-              <button className="block bg-red-500 px-2 py-1 text-white w-full rounded-md mt-8 ml-22" onClick={() => handleSubmit(false)}>Sólo ingreso</button>
+              <button className="block bg-green-500 px-2 py-1 text-white w-full rounded-md mt-8 ml-22" onClick={handleSubmit}>Dar un turno</button>
+              <button className="block bg-red-500 px-2 py-1 text-white w-full rounded-md mt-8 ml-22" onClick={soloIngreso}>Sólo ingreso</button>
             </form>
           </div>
         </Box>

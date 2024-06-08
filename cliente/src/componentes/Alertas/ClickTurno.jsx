@@ -31,6 +31,7 @@ export default function TurnoNuevoDirecto() {
   const location = useLocation();
   const taskData = location.state;
   const start = location.state.start;
+  const datosTabla = location.state.datosTabla
 
   // console.log(location.state, 'comienzo')
 

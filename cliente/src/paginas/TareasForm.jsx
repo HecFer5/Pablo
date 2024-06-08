@@ -124,8 +124,9 @@ const TareasForm = () => {
             // }else{
             //   navigate('/turno')
             // }           
-            navigate(`/otroReg`)
+            
             await crearRegistro(values)
+            navigate(`/otroReg`)
             console.log(values)
           }
           setTask({

@@ -41,7 +41,7 @@ export const EditaTarea = async (idpaciente, nuevosCampos) =>
 //   await axios.get("http://localhost:4000/sesiones/" + idpaciente);
 
 export const EditaTareaSesion = async (idpaciente) =>
-  await axios.get("http://localhost:4000/sesiones/82" + idpaciente);
+  await axios.get("http://localhost:4000/sesiones/" + idpaciente);
 //! TURNOS
 
 export const ListarTurnos = async () =>

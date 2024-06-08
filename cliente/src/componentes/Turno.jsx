@@ -99,7 +99,7 @@ const Turno6 = (props) => {
         } else {
             if (params.idpaciente) {
                 // console.log(traer.nombre, 'ahora')
-                navigate(`/clickturno/${params.idpaciente}`, { state: { start, ...taskData } });
+                navigate(`/clickturno/${params.idpaciente}`, { state: { start, ...taskData, ...datosTabla } });
 
             } else {
                 navigate(`/clickturno`, { state: { start } });
@@ -150,17 +150,19 @@ const Turno6 = (props) => {
                     title = title + ` (${turno.usadas}/${turno.cantidad})`
                 }
 
-                if ((turno.cantidad === 0 || turno.cantidad === null) && (turno.usadas === 0  || turno.usadas === null) && (turno.tanda === 0 || turno.tanda === null) && turno.estado === 0) {
+                if ((turno.cantidad === 0 || turno.cantidad === null) && (turno.usadas === 0 || turno.usadas === null) && (turno.tanda === 0 || turno.tanda === null) && turno.estado === 0) {
                     title = title + ` (sin sesión asignada)`
                 }
 
                 return {
-                    title: title,
+                    title: <div className=" text-sm sm:text-xs md:text-base lg:text-lg xl:text-lg">{title}</div>,
                     start: dayjs(turno.fecha).toDate(),
                     end: dayjs(turno.fechafin).toDate(),
                     id: turno.idturnos,
-                    color: `${turno.nombre != 'ACTIVIDAD' ? 'bg-blue-300 text-black font-semibold' : 'bg-green-300 text-black font-semibold'}`
+                    color: `${turno.nombre !== 'ACTIVIDAD' ? 'bg-blue-300 text-black font-semibold' : 'bg-green-300 text-black font-semibold'}`,
                 };
+
+
             });
 
             setEvents(formattedEvents);
@@ -194,6 +196,7 @@ const Turno6 = (props) => {
         const traerLaTarea = async () => {
             if (params.idpaciente) {
                 const datosTabla = await traerTareaSesion(params.idpaciente);
+                console.log(datosTabla, 'ajjd')
                 setDatosTabla({
                     nombre: datosTabla.nombre,
                     apellido: datosTabla.apellido,
@@ -208,8 +211,8 @@ const Turno6 = (props) => {
                     afiliado: datosTabla.afiliado,
                     idpaciente: datosTabla.idepaciente,
                     cantidad: datosTabla.cantidad,
-                    maxUsadas: datosTabla.maxUsadas,
-                    maxTanda: datosTabla.maxTanda,
+                    usadas: datosTabla.usadas,
+                    tanda: datosTabla.tanda,
                     estado: datosTabla.estado,
                 })
             }
@@ -227,13 +230,15 @@ const Turno6 = (props) => {
     }, [params.idpaciente]);
 
     const darElTurno = async (values, actions) => {
+
+        console.log('en dar turno', taskData)
         // console.log(taskData, taskData.maxUsadas, 'dando el turno')
         const originalDate = dayjs(selectedDate);
         const newDate = originalDate.add(30, 'minute');
         values.fecha = dayjs(selectedDate).format('YYYY-MM-DD HH:mm:ss');
         values.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
         values.idpaciente = params.idpaciente
-        values.usadas = taskData.maxUsadas + 1
+        values.usadas = taskData.usadas + 1
         navigate('/otroturno')
         await darTurno(values)
 
@@ -246,9 +251,24 @@ const Turno6 = (props) => {
 
     const irPaciente = () => {
         const irFuncion = 2
-        navigate('/turnodirecto')
+        navigate('/turnodirecto', { state: { taskData } })
         // console.log(irFuncion)
     }
+
+
+    let muestra = 'week'
+    const handleDoubleClick = (event) => {
+navigate('/turnodirecto')
+        defaultView="day"
+        // // Obtén la fecha y hora del evento en el que se hizo doble clic
+        // const { start } = event;
+
+        // // Navega a la pantalla de "día" o "agenda" con la fecha seleccionada
+        // history.push(`/calendario/dia/${start}`);
+
+        
+    };
+
 
     return (
         <>
@@ -269,7 +289,8 @@ const Turno6 = (props) => {
                 localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
                 startAccessor="start"
                 endAccessor="end"
-                defaultView='week'
+                defaultView="week"
+                onDoubleClickEvent={handleDoubleClick}
                 min={dayjs('2024-01-22T08:00:00').toDate()}
                 max={dayjs('2024-01-22T18:00:00').toDate()}
                 components={{
