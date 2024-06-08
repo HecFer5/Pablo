@@ -27,7 +27,8 @@ import {
   getPacientes,
   turnosPaciente,
   ultimoPaciente,
-  getPermiso
+  getPermiso,
+  verTurno
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
@@ -61,6 +62,8 @@ router.get("/inac", getPacInac);
 router.get("/turno", getTurnos);
 
 router.get("/turno/:idpaciente", turnosPaciente);
+
+router.get("/turno/:idturnos", verTurno);
 
 router.post("/turno", crearTurno);
 

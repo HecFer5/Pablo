@@ -528,3 +528,22 @@ export const getTareaSesion = async (req, res) => {
     return res.status(500).json({ message: "Error en el servidor" });
   }
 };
+
+
+export const verTurno = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "SELECT * FROM turnos WHERE idturnos = ?'",
+      [req.event.id]
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json("No hay el id");
+    }
+
+    res.json(result[0]);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error en el servidor" });
+  }
+};

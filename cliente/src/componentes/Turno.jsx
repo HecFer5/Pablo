@@ -136,23 +136,23 @@ const Turno6 = (props) => {
                     title = 'ACTIVIDAD';
                 }
 
-                if (turno.observac === "") {
-                    title = title
-                } else {
-                    title = title + ' (' + turno.observac + ')'
-                }
+                // if (turno.observac === "") {
+                //     title = title
+                // } else {
+                //     title = title + ' (' + turno.observac + ')'
+                // }
 
-                if (turno.cantidad === 0 && turno.usadas > 0 && turno.tanda === 0 && turno.estado > 0) {
-                    title = title + ` (particular/${turno.usadas})`
-                }
+                // if (turno.cantidad === 0 && turno.usadas > 0 && turno.tanda === 0 && turno.estado > 0) {
+                //     title = title + ` (particular/${turno.usadas})`
+                // }
 
-                if (turno.cantidad > 0 && turno.usadas > 0 && turno.tanda > 0 && turno.estado === 0) {
-                    title = title + ` (${turno.usadas}/${turno.cantidad})`
-                }
+                // if (turno.cantidad > 0 && turno.usadas > 0 && turno.tanda > 0 && turno.estado === 0) {
+                //     title = title + ` (${turno.usadas}/${turno.cantidad})`
+                // }
 
-                if ((turno.cantidad === 0 || turno.cantidad === null) && (turno.usadas === 0 || turno.usadas === null) && (turno.tanda === 0 || turno.tanda === null) && turno.estado === 0) {
-                    title = title + ` (sin sesión asignada)`
-                }
+                // if ((turno.cantidad === 0 || turno.cantidad === null) && (turno.usadas === 0 || turno.usadas === null) && (turno.tanda === 0 || turno.tanda === null) && turno.estado === 0) {
+                //     title = title + ` (sin sesión asignada)`
+                // }
 
                 return {
                     title: <div className=" text-sm sm:text-xs md:text-base lg:text-lg xl:text-lg">{title}</div>,
@@ -170,7 +170,8 @@ const Turno6 = (props) => {
             console.error('Error al obtener los eventos del calendario:', error);
         }
 
-
+      
+    
     };
 
 
@@ -256,18 +257,26 @@ const Turno6 = (props) => {
     }
 
 
-    let muestra = 'week'
-    const handleDoubleClick = (event) => {
-navigate('/turnodirecto')
-        defaultView="day"
-        // // Obtén la fecha y hora del evento en el que se hizo doble clic
-        // const { start } = event;
+    const [eventData, setEventData] = useState(null);
+    const [turnoData, setTurnoData] = useState(null);
 
-        // // Navega a la pantalla de "día" o "agenda" con la fecha seleccionada
-        // history.push(`/calendario/dia/${start}`);
-
+    const handleDoubleClick = async (event) => {
+        // console.log('Datos del evento:', event.id);
+        setEventData(event);
+      
+        try {
+            const response = await axios.get("http://localhost:4000/turno?idpaciente=" + event.id);
+            const turnos = response.data;
         
-    };
+            const turnoEspecifico = turnos.find(turno => turno.idturnos === event.id);
+        
+            setTurnoData(turnoEspecifico);
+          console.log(turnoEspecifico)
+          navigate('/verturno', { state: { turnoEspecifico } });
+        } catch (error) {
+          console.log(error);
+        }
+      };
 
 
     return (

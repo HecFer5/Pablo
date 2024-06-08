@@ -47,6 +47,8 @@ export const EditaTareaSesion = async (idpaciente) =>
 export const ListarTurnos = async () =>
   await axios.get("http://localhost:4000/turno");
 
+  export const VerTurnos = async (idturnos) =>
+  await axios.get("http://localhost:4000/turno/" + idturnos);
 
   export const darPermiso = async (idturnos) =>
   await axios.put("http://localhost:4000/permiso/" + idturnos);
