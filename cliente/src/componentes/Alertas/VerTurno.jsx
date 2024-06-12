@@ -89,7 +89,7 @@ export default function Alerta() {
         title = title + ' (' + turnoEspecifico.observac + ')'
     }
 
-    if (turnoEspecifico.cantidad === 0 && turnoEspecifico.usadas > 0 && turnoEspecifico.tanda === 0 && turnoEspecifico.estado > 0) {
+    if (turnoEspecifico.cantidad === 0 && turnoEspecifico.usadas > 0 && turnoEspecifico.tanda === 0 && turnoEspecifico.estado === 2) {
         title = title + ` (particular ${turnoEspecifico.usadas}º VISITA)`
     }
 

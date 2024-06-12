@@ -85,25 +85,23 @@ const Turno6 = (props) => {
 
     );
 
+    
 
 
 
 
     // //!  para seleccionar desde el calendario
-    const Selector = (slotInfo) => {
+    const Selector = async (slotInfo) => {
+
+
         const { start } = slotInfo;
-
         if (start < dayjs(Date()).toDate()) {
-
             navigate(`/turnopasado/${params.idpaciente}`)
         } else {
             if (params.idpaciente) {
-                // console.log(traer.nombre, 'ahora')
                 navigate(`/clickturno/${params.idpaciente}`, { state: { start, ...taskData, ...datosTabla } });
-
             } else {
                 navigate(`/clickturno`, { state: { start } });
-                // console.log(start, 'entrantdo')
             }
         }
     };
@@ -113,15 +111,15 @@ const Turno6 = (props) => {
 
 
     const handleDeleteEvent = async (idturnos) => {
+navigate('/borrarturnos/' + idturnos)
+        // const response = await axios.delete("http://localhost:4000/turno/" + idturnos);
 
-        const response = await axios.delete("http://localhost:4000/turno/" + idturnos);
-
-        if (response.status === 200) {
-            navigate('/confirmacion')
-            console.log('Los datos se enviaron correctamente');
-        } else {
-            console.log('Hubo un error al enviar los datos');
-        }
+        // if (response.status === 200) {
+        //     navigate('/confirmacion')
+        //     console.log('Los datos se enviaron correctamente');
+        // } else {
+        //     console.log('Hubo un error al enviar los datos');
+        // }
     };
 
     const fetchEvents = async () => {
@@ -170,8 +168,8 @@ const Turno6 = (props) => {
             console.error('Error al obtener los eventos del calendario:', error);
         }
 
-      
-    
+
+
     };
 
 
@@ -245,15 +243,18 @@ const Turno6 = (props) => {
 
     }
 
+    let irFuncion = 0
+
     const irActividad = () => {
-        const irFuncion = 1
-        // console.log(irFuncion)
+        console.log(activo)
+        navigate('/haceractividad', { state: { taskData } })
+        let irFuncion = 1
     }
 
     const irPaciente = () => {
         const irFuncion = 2
-        navigate('/turnodirecto', { state: { taskData } })
-        // console.log(irFuncion)
+        console.log(activo, 'aqui')
+        navigate('/tabla', { state: { taskData } })
     }
 
 
@@ -261,23 +262,24 @@ const Turno6 = (props) => {
     const [turnoData, setTurnoData] = useState(null);
 
     const handleDoubleClick = async (event) => {
-        // console.log('Datos del evento:', event.id);
         setEventData(event);
-      
+
         try {
             const response = await axios.get("http://localhost:4000/turno?idpaciente=" + event.id);
             const turnos = response.data;
-        
-            const turnoEspecifico = turnos.find(turno => turno.idturnos === event.id);
-        
-            setTurnoData(turnoEspecifico);
-          console.log(turnoEspecifico)
-          navigate('/verturno', { state: { turnoEspecifico } });
-        } catch (error) {
-          console.log(error);
-        }
-      };
 
+            const turnoEspecifico = turnos.find(turno => turno.idturnos === event.id);
+
+            setTurnoData(turnoEspecifico);
+            console.log(turnoEspecifico)
+            navigate('/verturno', { state: { turnoEspecifico } });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+ const [activo, setActivo] = useState(false);
+    // let activo = false
 
     return (
         <>
@@ -291,7 +293,7 @@ const Turno6 = (props) => {
 
                 }}
                 messages={messages}
-                selectable={true}
+                selectable={activo || params.idpaciente}
                 onSelectSlot={Selector}
                 step={15}
                 timeslots={1}
@@ -338,10 +340,21 @@ const Turno6 = (props) => {
                                         <div className="flex flex-col sm:items-center sm:flex-row justify-around items-center p-5 gap-4">
 
                                             {/* TITULO */}
-                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 hover:bg-red-900 px-3 py-1 font-semibold rounded-xl h-full " onClick={irPaciente}>¿PACIENTE?</button>}
+                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 hover:bg-red-900 px-3 py-1 font-semibold rounded-xl h-full " onClick={() => {
+                                                irPaciente();
+
+                                            }}>¿PACIENTE?</button>}
 
 
-                                            <button className="text-black bg-green-500 hover:bg-blue-700 px-3 py-1 font-semibold rounded-xl h-full " onClick={irActividad}><Link to={'/haceractividad'}>ACTIVIDAD</Link></button>
+                                            <button
+                                                className="text-black bg-green-500 hover:bg-blue-700 px-3 py-1 font-semibold rounded-xl h-full"
+                                                onClick={() => {
+                                                    setActivo(!activo);
+                                                }}
+                                            >
+                                                ACTIVIDAD
+                                            </button>
+
                                             {/* SELECTOR DE FECHA */}
                                             <DateTimePicker
 
@@ -354,7 +367,7 @@ const Turno6 = (props) => {
                                             />
                                             {/* BOTON INGRESAR */}
 
-                                            {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md  ">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>}
+                                            {/* {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md  ">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>} */}
                                             {/* BOTON CANCELAR */}
 
                                             <button className="bg-red-700 px-2 py-1 text-white rounded-md"><Link to={'/'}>Cancelar</Link></button>

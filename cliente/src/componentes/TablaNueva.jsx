@@ -32,26 +32,79 @@ const TablaNueva = () => {
     }
 
     const registrosFiltrados = registros
-    .filter(registro => registro.idpaciente !== 33)
-    .filter(registro =>
-        `${registro.nombre} ${registro.apellido}`.toLowerCase().includes(busqueda.toLowerCase())
-    ); // <-- filtrar por búsqueda
+        .filter(registro => registro.idpaciente !== 33)
+        .filter(registro =>
+            `${registro.nombre} ${registro.apellido}`.toLowerCase().includes(busqueda.toLowerCase())
+        ); // <-- filtrar por búsqueda
+    const [task, setTask] = useState([])
+
+    const verificaTurnos = async (idpaciente) => {
+
+        const respuesta = await axios.get("http://localhost:4000/sesiones/" + idpaciente);
+        const taskData = respuesta.data;
+        setTask(() => ({
+
+            nombre: taskData.nombre,
+            apellido: taskData.apellido,
+            telefono: taskData.telefono,
+            imagen: taskData.imagen,
+            calle: taskData.calle,
+            numero: taskData.numero,
+            patologia: taskData.patologia,
+            patasoc: taskData.patasoc,
+            fechacirugia: taskData.fechacirugia,
+            mutualid: taskData.mutualid,
+            afiliado: taskData.afiliado,
+            idpaciente: taskData.idpaciente,
+            cantidad: taskData.cantidad,
+            usadas: taskData.usadas,
+            tanda: taskData.tanda ?? defaultValue,
+            estado: taskData.estado,
+
+        }));
 
 
+        console.log('taskData', taskData)
+
+        if (taskData.mutualid != 2) {
+            console.log('con mutual')
+            if (taskData.tanda === 0 && taskData.estado === 0) {
+                navigate('/sinturno/' + idpaciente, { state: taskData });
+            }
+
+
+            if (taskData.usadas === taskData.cantidad && taskData.estado === 0) {
+                navigate('/sinturno/' + idpaciente, { state: taskData });
+
+            }
+            if (taskData.estado === 1 && taskData.usadas === taskData.cantidad) {
+                navigate('/turno/' + idpaciente, { state: taskData })
+            }
+
+            if (taskData.estado === 0 && taskData.usadas != taskData.cantidad) {
+                navigate('/turno/' + idpaciente, { state: taskData })
+            }
+        } else {
+            console.log('privado')
+            navigate('/turno/' + idpaciente, { state: taskData })
+        }
+    }
 
 
     return (
         <>
-         <input  // <-- campo de entrada para búsqueda
+
+            <input  // <-- campo de entrada para búsqueda
                 type="text"
                 value={busqueda}
                 onChange={e => setBusqueda(e.target.value)}
                 placeholder="Buscar..."
-            />
+                className='block mx-auto mt-10 mb-14 border border-black pl-5' />
 
-<div className="mb-4">
- 
-</div>
+
+            <div className="mb-4">
+
+            </div>
             <div className='text-sm text-black text-center bg-blue-100 mt-2'>LISTADO DE PACIENTES EN ACTIVIDAD</div>
 
 
@@ -62,6 +115,8 @@ const TablaNueva = () => {
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                         <div className="overflow-hidden">
+                        <div className="overflow-x-auto overflow-y-auto">
+
                             <table className="min-w-full text-left text-sm font-light">
                                 <thead
                                     className="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
@@ -85,7 +140,7 @@ const TablaNueva = () => {
                                                 <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/ficha/' + registro.idpaciente} >{registro.idpaciente}</Link></li>
                                             </td>
                                             <td >
-                                                <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/turno/' + registro.idpaciente} >Turno</Link></li>
+                                                <button className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md" onClick={() => verificaTurnos(registro.idpaciente)}>Turno</button>
                                             </td>
                                             <td className="whitespace-nowrap px-6 py-4">{`${registro.apellido}, ${registro.nombre}`}</td>
 
@@ -123,6 +178,7 @@ const TablaNueva = () => {
 
                                 </tbody>
                             </table>
+                            </div>
                         </div>
 
                     </div>

@@ -66,7 +66,7 @@ export default function NuevoReg({ values }) {
       valores.tanda = 0
       valores.estado = 2
     }
-    
+
     const response = await axios.post("http://localhost:4000/turno/", valores);
 
     if (response.status === 200) {
@@ -84,49 +84,49 @@ export default function NuevoReg({ values }) {
 
   };
 
-const soloIngreso = async (event)=>{
-  event.preventDefault();
+  const soloIngreso = async (event) => {
+    event.preventDefault();
 
-  valores.idpaciente = data.idpaciente
+    valores.idpaciente = data.idpaciente
 
-  if (data.mutualid != 2) {
-    if (cantidad > 0) {
-      valores.cantidad = cantidad
-      valores.usadas = 0
-      valores.tanda = 1
-      valores.estado = 0
-      valores.observac = ''
+    if (data.mutualid != 2) {
+      if (cantidad > 0) {
+        valores.cantidad = cantidad
+        valores.usadas = 0
+        valores.tanda = 1
+        valores.estado = 0
+        valores.observac = ''
 
+      } else {
+        valores.cantidad = 0
+        valores.usadas = 0
+        valores.tanda = 0
+        valores.estado = 0
+        valores.observac = ''
+
+      }
     } else {
       valores.cantidad = 0
       valores.usadas = 0
       valores.tanda = 0
-      valores.estado = 0
+      valores.estado = 2
       valores.observac = ''
 
     }
-  } else {
-    valores.cantidad = 0
-    valores.usadas = 0
-    valores.tanda = 0
-    valores.estado = 2
-    valores.observac = ''
+    const response = await axios.post("http://localhost:4000/turno/", valores);
+
+    if (response.status === 200) {
+      console.log('Los datos se enviaron correctamente');
+      navigate('/turno')
+    } else {
+      console.log('Hubo un error al enviar los datos');
+    }
 
   }
-  const response = await axios.post("http://localhost:4000/turno/", valores);
-
-  if (response.status === 200) {
-    console.log('Los datos se enviaron correctamente');
-    navigate('/turno')
-  } else {
-    console.log('Hubo un error al enviar los datos');
-  }
-  
-}
 
   const atenderAhora = async (event) => {
     event.preventDefault();
-console.log(data)
+    console.log(data, 'atender')
     const originalDate = dayjs();
     const newDate = originalDate.add(30, 'minute');
 
@@ -143,9 +143,9 @@ console.log(data)
         valores.observac = ''
       } else {
         valores.cantidad = 0
-        valores.usadas = 1
+        valores.usadas = 0
         valores.tanda = 0
-        valores.estado = 1
+        valores.estado = 0
         valores.observac = ''
 
       }

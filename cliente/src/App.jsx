@@ -28,6 +28,7 @@ import IngresoHistorias  from './componentes/IngresoHistoria.jsx'
 import sinTurno from './componentes/Alertas/sinTurno.jsx'
 //  import AsignarCantidad from './componentes/Alertas/AsignarCantidad.jsx'
 import verTurno from './componentes/Alertas/VerTurno.jsx'
+import AlertaTurnos from './componentes/Alertas/AlertaTurnos.jsx'
 
 
 function App() {
@@ -59,6 +60,7 @@ function App() {
           <Route path='/turnopasado/:idpaciente' Component={TurnoPasado} />
           <Route path='/eliminarregistro/:idpaciente' Component={Alerta} />
           <Route path='/borrar/:idpaciente' Component={Alerta} />
+          <Route path='/borrarturnos/:idturnos' Component={AlertaTurnos} />
           <Route path='/haceractividad' Component={HacerActividad} />
           <Route path='/tablamutuales' Component={TablaMutuales} />
           <Route path='/mutualespacientes/:idmutual' Component={TablaMutualesPacientes} />

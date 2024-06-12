@@ -53,7 +53,7 @@ const TablaMutuales = () => {
             <div className='text-sm text-white text-center  bg-red-400 mt-2'>LISTADO DE MUTUALES</div>
 
             <div className='text-sm text-orange-700 text-center bg-orange-100'>Haga click sobre el número para ver la ficha completa y click en "Editar" para correcciones</div>
-
+<div className='flex'>
             <div className="flex flex-col">
                 <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
                     <div className="ml-20 inline-block  py-2 sm:px-6 lg:px-8">
@@ -95,9 +95,10 @@ const TablaMutuales = () => {
                 </div>
 
             </div>
-            <div class="flex justify-center items-center">
-                <button className="block bg-blue-700 px-2 py-1 text-white w-min rounded-md  min-w-64 mt-5 m-" >Ingresar nueva Obra Social o Prepaga</button>
-            </div>
+            <div class=" justify-center items-center ml-40">
+            <h2 className="block bg-blue-700 px-20 py-1 text-white w-min rounded-md min-w-64 mt-5 whitespace-nowrap ">Ingresar nueva Obra Social o Prepaga</h2>
+
+            
 
             <Formik
                 initialValues={task}
@@ -135,7 +136,8 @@ const TablaMutuales = () => {
                     </Form>
                 )}
             </Formik>
-
+            </div>
+            </div>
         </>
     )
 }
