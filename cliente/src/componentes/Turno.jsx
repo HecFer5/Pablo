@@ -337,23 +337,24 @@ navigate('/borrarturnos/' + idturnos)
                                     ]}>
                                     <DemoItem >
                                         {/* CAJA PARA LOS ELEMENTOS */}
-                                        <div className="flex flex-col sm:items-center sm:flex-row justify-around items-center p-5 gap-4">
+                                        <div className="flex flex-col sm:items-center sm:flex-row justify-between items-center p-5 gap-4">
 
                                             {/* TITULO */}
-                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 hover:bg-red-900 px-3 py-1 font-semibold rounded-xl h-full " onClick={() => {
+                                            {params.idpaciente ? <div className="text-white bg-blue-400 hover:bg-blue-500 px-10 py-1 font-bold rounded-md h-full hover:italic ">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-blue-400 hover:bg-blue-500 px-10 py-1 font-bold rounded-md h-full hover:italic " onClick={() => {
                                                 irPaciente();
 
                                             }}>¿PACIENTE?</button>}
 
 
                                             <button
-                                                className="text-black bg-green-500 hover:bg-blue-700 px-3 py-1 font-semibold rounded-xl h-full"
+                                               className="text-black bg-blue-400 hover:bg-blue-500 px-10 py-1 font-bold rounded-md h-full hover:italic "
                                                 onClick={() => {
                                                     setActivo(!activo);
                                                 }}
                                             >
                                                 ACTIVIDAD
                                             </button>
+                                            <button className="text-black bg-red-400 hover:bg-red-500 px-10 py-1 font-bold rounded-md h-full hover:italic "><Link to={'/'}>Cancelar</Link></button>
 
                                             {/* SELECTOR DE FECHA */}
                                             <DateTimePicker
@@ -370,7 +371,7 @@ navigate('/borrarturnos/' + idturnos)
                                             {/* {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md  ">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>} */}
                                             {/* BOTON CANCELAR */}
 
-                                            <button className="bg-red-700 px-2 py-1 text-white rounded-md"><Link to={'/'}>Cancelar</Link></button>
+                                         
                                         </div>
 
                                         {/* OBSERVACIONES */}
