@@ -28,7 +28,8 @@ import {
   turnosPaciente,
   ultimoPaciente,
   getPermiso,
-  verTurno
+  verTurno,
+  editarMutual,
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
@@ -87,7 +88,8 @@ router.delete("/mutual/:idmutual", borrarMutual);
 router.get("/tarea/:mutualid", getPacientesMutuales);
 router.get("/pacientesmutuales/:mutualid", getPacientesMutuales);
 router.get("/imagenes/:idpaciente", getImagenes);
-
+router.put("/mutual/:idmutual", editarMutual);
 router.post("/historias", crearHistoria);
+
 
 export default router;

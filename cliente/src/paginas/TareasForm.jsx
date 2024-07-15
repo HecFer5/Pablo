@@ -119,12 +119,6 @@ const TareasForm = () => {
             await modificaRegistro(params.idpaciente, values)
             navigate('/tabla')
           } else {
-            // if (values.mutualid != 2){
-            //   navigate(`/otroReg`)
-            // }else{
-            //   navigate('/turno')
-            // }           
-            
             await crearRegistro(values)
             navigate(`/otroReg`)
             console.log(values)
@@ -140,7 +134,7 @@ const TareasForm = () => {
             fechacirugia: "",
             mutualid: 0,
             afiliado: "",
-            imagen:"",
+            imagen: "",
           })
         }}
       >
@@ -189,8 +183,6 @@ const TareasForm = () => {
               name='patasoc'
               onChange={handleChange}
               value={values.patasoc} placeholder='Opcional' />
-
-
             <label className="block">Fecha de cirugía</label>
             <input className="px-2 py-1 rounded-sm w-full" type="date"
               name='fechacirugia'
@@ -200,9 +192,7 @@ const TareasForm = () => {
               <div className='flex mt-4' style={{ justifyContent: 'space-between' }}>
                 <label className="block">Mutual</label>
                 <label className={` ${values.mutualid !== '2' && values.mutualid !== 0 ? '' : 'hidden'}`}>Nº afiliado: </label>
-              
               </div>
-
               <div className='flex mt-1' style={{ justifyContent: 'space-between' }}>
                 <select
                   name='mutualid'
@@ -217,13 +207,13 @@ const TareasForm = () => {
                   ))}
                 </select>
                 <input
-  className={`px-2 py-1 rounded-sm w-full ${values.mutualid !== '2' && values.mutualid !== 0 ? '' : 'hidden'}`}
-  style={{ maxWidth: '250px' }}
-  type="text"
-  name="afiliado"
-  onChange={handleChange}
-  value={values.afiliado}
-/>
+                  className={`px-2 py-1 rounded-sm w-full ${values.mutualid !== '2' && values.mutualid !== 0 ? '' : 'hidden'}`}
+                  style={{ maxWidth: '250px' }}
+                  type="text"
+                  name="afiliado"
+                  onChange={handleChange}
+                  value={values.afiliado}
+                />
               </div>
             </div>
             <div className='flex'>

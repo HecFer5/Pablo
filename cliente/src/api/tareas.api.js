@@ -14,13 +14,12 @@ export const ListarPacientes = async () =>
 //    await axios.post("http://localhost:4000/tarea", registro)
 
 export const CrearTareas = async (registro, turno) => {
-   await axios.post("http://localhost:4000/tarea", registro);
-}
- 
+  await axios.post("http://localhost:4000/tarea", registro);
+};
 
 export const ListarUltimoPaciente = async (registro, turno) => {
   await axios.get("http://localhost:4000/ultimo");
-}
+};
 
 export const BorrarTareas = async (idpaciente) =>
   await axios.delete("http://localhost:4000/tarea/" + idpaciente);
@@ -47,16 +46,14 @@ export const EditaTareaSesion = async (idpaciente) =>
 export const ListarTurnos = async () =>
   await axios.get("http://localhost:4000/turno");
 
-  export const VerTurnos = async (idturnos) =>
+export const VerTurnos = async (idturnos) =>
   await axios.get("http://localhost:4000/turno/" + idturnos);
 
-  export const darPermiso = async (idturnos) =>
+export const darPermiso = async (idturnos) =>
   await axios.put("http://localhost:4000/permiso/" + idturnos);
 
 export const ListarTurnosPaciente = async (idpaciente) =>
   await axios.get("http://localhost:4000/turno/" + idpaciente);
-
-
 
 export const BorrarUnTurno = async (idturnos) =>
   await axios.delete("http://localhost:4000/turno" + idturnos);
@@ -82,6 +79,9 @@ export const ListarUnaMutual = async (idmutual) =>
 
 export const CrearMutuales = async (mutual) =>
   await axios.post("http://localhost:4000/mutual", mutual);
+
+export const EditaMutual = async (idmutual, values) =>
+  await axios.put(`http://localhost:4000/mutual/${idmutual}`, values);
 
 export const BorrarUnaMutual = async (idmutual) =>
   await axios.delete("http://localhost:4000/mutual/" + idmutual);

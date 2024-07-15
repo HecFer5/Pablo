@@ -1,8 +1,9 @@
 import { createContext, useContext, useState, useReducer } from 'react'
 import {
-    ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, ListarMutuales, CrearMutuales, ListarPacientesMutual, CrearHistorialTurnos, ListarImagenes, CrearHistorias, EditaTareaSesion, ListarPacientes, ListarTurnosPaciente, ListarUltimoPaciente
+    ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, ListarMutuales, CrearMutuales, ListarPacientesMutual, CrearHistorialTurnos, ListarImagenes, CrearHistorias, EditaTareaSesion, ListarPacientes, ListarTurnosPaciente, ListarUltimoPaciente, ListarUnaMutual, EditaMutual
 } from '../../api/tareas.api'
 import UserReducer from './UserReducer'
+// import { editarMutual } from '../../../../server/controladores/tareas.controladores'
 export const TareasContext = createContext()
 
 
@@ -15,7 +16,7 @@ export const TareasContextProv = ({ children }) => {
     }
 
     const [tareas, setTareas] = useState([])
-    const [turnosPaciente, setTurnosPaciente] =useState([])
+    const [turnosPaciente, setTurnosPaciente] = useState([])
     const [varPac, setVarPac] = useState([])
     const [turnos, setTurnos] = useState([])
     const [mutuales, setMutuales] = useState([])
@@ -47,7 +48,7 @@ export const TareasContextProv = ({ children }) => {
         const respuesta = await ListarMutuales()
         setMutuales(respuesta.data)
     }
-  
+
 
     const crearRegistro = async (tarea) => {
         try {
@@ -112,6 +113,9 @@ export const TareasContextProv = ({ children }) => {
         }
     }
 
+
+
+
     const TraerTurnosPaciente = async (idpaciente) => {
         try {
             const respuesta = await ListarTurnosPaciente(idpaciente)
@@ -173,6 +177,30 @@ export const TareasContextProv = ({ children }) => {
     }
 
 
+    const CambiaMutual = async (idmutual, values) => {
+        try {
+            const respuesta = await EditaMutual(idmutual, values)
+            // setMutuales(respuesta.data)
+            // return respuesta.data
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const editaUnaMutual = async (idmutual) => {
+        try {
+            const respuesta = await ListarUnaMutual(idmutual)
+            setMutuales(respuesta.data)
+            return respuesta.data
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const TraerHistorialTurnos = async (tarea) => {
         try {
             const response = await CrearHistorialTurnos(tarea)
@@ -210,7 +238,7 @@ export const TareasContextProv = ({ children }) => {
         registroSelec: state.registroSelec,
         datosTabla: state.datosTabla,
         tareas, TraerTareas, borrarTarea, crearRegistro, editarRegisto, modificaRegistro, listarBorrados, darTurno, TraerTurnos, EliminarDelTodo, TraerMutuales, nuevaMutual
-        , TraerPacientesMutual, TraerHistorialTurnos, TraerImagenes, CreandoHistoria, traerTareaSesion, TraerPacientes, TraerUltimoPaciente
+        , TraerPacientesMutual, TraerHistorialTurnos, TraerImagenes, CreandoHistoria, traerTareaSesion, TraerPacientes, TraerUltimoPaciente, CambiaMutual, editaUnaMutual
     }}>
         {children}
     </TareasContext.Provider>

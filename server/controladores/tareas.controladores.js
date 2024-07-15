@@ -133,32 +133,6 @@ export const crearTarea = async (req, res) => {
 };
 
 
-//!EDITAR PACIENTE PARA CORRECCIONES
-
-export const editarTarea = async (req, res) => {
-  try {
-    const {
-      nombre,
-      apellido,
-      telefono,
-      calle,
-      numero,
-      patologia,
-      patasosc,
-      fechacirugia,
-      mutualid,
-      afiliado,
-      cantidad
-    } = req.body;
-    const [result] = await pool.query(
-      "UPDATE pacientes SET ? WHERE idpaciente= ?",
-      [req.body, req.params.idpaciente]
-    );
-    res.send(result);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
 
 
 // //! MODIFICA LA CANTIDAD DE SESIONES USADAS
@@ -364,7 +338,7 @@ export const getMutuales = async (req, res) => {
   try {
     const [result] = await pool.query(
       // `SELECT * FROM mutual  ORDER BY  nombremutual`
-      "SELECT mutual.idmutual, mutual.nombremutual, COUNT(pacientes.idpaciente) AS cantidadpacientes FROM  mutual LEFT JOIN  pacientes ON mutual.idmutual = pacientes.mutualid GROUP BY mutual.idmutual, mutual.nombremutual"
+      "SELECT mutual.idmutual, mutual.nombremutual, COUNT(pacientes.idpaciente) AS cantidadpacientes, mutual.valor FROM  mutual LEFT JOIN  pacientes ON mutual.idmutual = pacientes.mutualid GROUP BY mutual.idmutual, mutual.nombremutual ORDER BY mutual.nombremutual"
     );
     res.json(result);
   } catch (error) {
@@ -410,14 +384,60 @@ export const getMutual = async (req, res) => {
   }
 };
 
+//!EDITAR PACIENTE PARA CORRECCIONES
+
+export const editarTarea = async (req, res) => {
+  try {
+    const {
+      nombre,
+      apellido,
+      telefono,
+      calle,
+      numero,
+      patologia,
+      patasosc,
+      fechacirugia,
+      mutualid,
+      afiliado,
+      cantidad
+    } = req.body;
+    const [result] = await pool.query(
+      "UPDATE pacientes SET ? WHERE idpaciente= ?",
+      [req.body, req.params.idpaciente]
+    );
+    res.send(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+//!EDITAR MUTUAL PARA CORRECCIONES
+
+export const editarMutual = async (req, res) => {
+  try {
+    const {
+      nombremutual,
+      valor,
+    } = req.body;
+    const [result] = await pool.query(
+      "UPDATE mutual SET ? WHERE idmutual= ?",
+      [req.body, req.params.idmutual]
+    );
+    res.send(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
 // ! crear una mutal
 
 export const crearMutual = async (req, res) => {
   try {
-    const { nombremutual } = req.body;
+    const { nombremutual, valor } = req.body;
     const result = await pool.query(
-      "INSERT INTO mutual  (nombremutual) VALUES (?)",
-      [nombremutual]
+      "INSERT INTO mutual  (nombremutual, valor) VALUES (?,?)",
+      [nombremutual, valor]
     );
     res.send("creando mutual");
   } catch (error) {

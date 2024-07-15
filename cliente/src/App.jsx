@@ -29,7 +29,7 @@ import sinTurno from './componentes/Alertas/sinTurno.jsx'
 //  import AsignarCantidad from './componentes/Alertas/AsignarCantidad.jsx'
 import verTurno from './componentes/Alertas/VerTurno.jsx'
 import AlertaTurnos from './componentes/Alertas/AlertaTurnos.jsx'
-
+// import EditaMutales from './componentes/Alertas/EditaMutuales.jsx'
 
 function App() {
 
@@ -48,6 +48,7 @@ function App() {
           <Route path='/ficha/:idpaciente' Component={Ficha} />
           <Route path='/new' element={<TareasForm />} />
           <Route path='/edit/:idpaciente' element={<TareasForm />} />
+          {/* <Route path='/editamutual/:idmutual' element={<EditaMutales />} /> */}
           <Route path='/otroReg' Component={NuevoRegistro} />
           <Route path='/otroturno' Component={NuevoTurno} />
           <Route path='/confirmacion' Component={confirmacion} />
