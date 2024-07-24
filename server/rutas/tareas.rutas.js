@@ -20,13 +20,27 @@ import {
   borrarMutual,
   getPacientesMutuales,
   historialTurnos,
-  getImagenes
+  getImagenes,
+  crearHistoria,
+  getSesiones,
+  getTareaSesion,
+  getPacientes,
+  turnosPaciente,
+  ultimoPaciente,
+  getPermiso,
+  verTurno,
+  editarMutual,
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
 
 //! PACIENTES
 router.get("/tarea", getTareas);
+
+router.get("/pacientes", getPacientes);
+
+
+router.get("/ultimo", ultimoPaciente);
 
 // router.get("/actividad", getActividades)
 
@@ -38,9 +52,9 @@ router.put("/tarea/:idpaciente", editarTarea);
 
 router.delete("/tarea/:idpaciente", borrarRegistro);
 
-router.delete("/inac/:idpaciente", eliminarUnRegistro)
+router.delete("/inac/:idpaciente", eliminarUnRegistro);
 
-router.put("/inac/:idpaciente", volverRegistro)
+router.put("/inac/:idpaciente", volverRegistro);
 
 router.get("/inac", getPacInac);
 
@@ -48,38 +62,34 @@ router.get("/inac", getPacInac);
 
 router.get("/turno", getTurnos);
 
-router.post("/turno", crearTurno)
+router.get("/turno/:idpaciente", turnosPaciente);
 
-router.delete("/turno/:idturnos", borrarTurno)
+router.get("/turno/:idturnos", verTurno);
 
-router.get("/historialturnos/:pacienteid", historialTurnos);
+router.post("/turno", crearTurno);
 
+router.delete("/turno/:idturnos", borrarTurno);
 
+router.get("/historialturnos/:idpaciente", historialTurnos);
 
+ router.put("/permiso/:idturnos", getPermiso);
 
+router.get("/sesiones/:idpaciente", getTareaSesion);
 // router.post("/actividad", crearActividad)
 
-
-
-
 // router.delete("/actividad/:idactividad", borrarActividad)
-
 
 //! MUTUALES
 
 router.get("/mutual", getMutuales);
 router.get("/mutual/:idmutual", getMutual);
-router.post("/mutual", crearMutual)
-router.delete("/mutual/:idmutual", borrarMutual)
+router.post("/mutual", crearMutual);
+router.delete("/mutual/:idmutual", borrarMutual);
 router.get("/tarea/:mutualid", getPacientesMutuales);
-router.get('/pacientesmutuales/:mutualid', getPacientesMutuales);
-router.get('/imagenes/:idpaciente', getImagenes);
-
-
-
-
-
-
+router.get("/pacientesmutuales/:mutualid", getPacientesMutuales);
+router.get("/imagenes/:idpaciente", getImagenes);
+router.put("/mutual/:idmutual", editarMutual);
+router.post("/historias", crearHistoria);
 
 
 export default router;

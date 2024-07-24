@@ -1,19 +1,25 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTareas } from "../componentes/context/hooks"
 import { Formik, Form } from 'formik'
 
 
 
 const TablaMutuales = () => {
-
     const [mutuales, setMutuales] = useState([])
-    const { nuevaMutual } = useTareas()
+    const { nuevaMutual, CambiaMutual } = useTareas()
     const [task, setTask] = useState({
         nombremutual: "",
         idmutual: 0,
-        cantidadpacientes:0
+        cantidadpacientes: 0,
+        valor: 0
+
+    })
+
+    const [values, setValues] = useState({
+        nombremutual: "",
+        valor: 0
 
     })
 
@@ -21,7 +27,7 @@ const TablaMutuales = () => {
     const navigate = useNavigate()
 
     const ListarMutuales = async () =>
-        await axios.get('http://localhost:4001/mutual').then((response) => {
+        await axios.get('http://localhost:4000/mutual').then((response) => {
             const data = response.data
             setMutuales(data)
         })
@@ -30,120 +36,172 @@ const TablaMutuales = () => {
         ListarMutuales()
     }, [])
 
+    const [editar, setEditar] = useState(false)
+    console.log(editar, 'entrando')
 
+ const editarLaMutual = async (idmutual) => {
+    try {
+        const response = await axios.get('http://localhost:4000/mutual/' + idmutual);
+        const data = response.data;
+        setValues(data);
+        console.log(values, editar, idmutual);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-
-    // const irAlerta = (idmutual) => {
-    //     const refEstatus = 0
-    //     navigate('/borrar/' + idmutual)
-    // }
-
-
-
+  
     const borrarMutual = async (idmutual) => {
         const response = await axios.delete("http://localhost:4000/mutual/" + idmutual);
 
-        // Verificar la respuesta de la API
         if (response.status === 200) {
-            // Los datonis se enviaron correctamente
             navigate('/confirmacion')
 
 
         } else {
-            // Hubo un error al enviar los datos
             console.log('Hubo un error al enviar los datos');
         }
     };
 
-    
+
     return (
         <>
-            <div className='text-sm text-white text-center  bg-red-400 mt-2'>LISTADO DE MUTUALES</div>
+            <div className=" flex justify-between">
+            </div>
+            <div className='flex justify-center'>
+                <div className="flex flex-col">
+                    <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div className="ml-20 inline-block  py-2 sm:px-6 lg:px-8">
+                            <div className="overflow-hidden">
+                                <div className='text-2xl text-white text-center font-bold bg-blue-500
+                 mb-10  max-w-md px-4 py-2 mt-5 ml-5'>LISTADO MUTUALES</div>
+                                <table className="min-w-full text-left text-sm font-light">
+                                    <thead
+                                        className="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
+                                        <tr>
+                                            <th scope="col" className="px-6 py-4">Nº</th>
+                                            <th scope="col" className="px-6 py-4">NOMBRE</th>
+                                            <th scope="col" className="px-6 py-4">AFILIADOS</th>
+                                            <th scope="col" className="px-6 py-4">VALOR BONO</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="table-group-divider">
+                                        {mutuales.map(mutual => (
+                                            mutual.idmutual !== 33 && (
+                                                <tr key={mutual.idmutual} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
+                                                    <td >
+                                                        <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/mutualespacientes/' + mutual.idmutual} > {mutual.idmutual}</Link></li>
+                                                    </td>
 
-            <div className='text-sm text-orange-700 text-center bg-orange-100'>Haga click sobre el número para ver la ficha completa y click en "Editar" para correcciones</div>
+                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.nombremutual}`}</td>
+                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.cantidadpacientes}`}</td>
+                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{mutual.valor === null ? '' : mutual.valor}</td>
+                                                    {/* <td>
+                                                        <button className="block bg-green-700 px-5 py-1 text-white w-min rounded-md" onClick={() => {
+                                                            navigate(`/editamutual/${mutual.idmutual}`);
+                                                        }}>Editar</button>
 
-            <div className="flex flex-col">
-                <div className="overflow-x-auto sm:-mx-6 lg:-mx-8">
-                    <div className="ml-20 inline-block  py-2 sm:px-6 lg:px-8">
-                        <div className="overflow-hidden">
-                            <table className="min-w-full text-left text-sm font-light">
-                                <thead
-                                    className="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
-                                    <tr>
-                                        <th scope="col" className="px-6 py-4">Nº</th>
-                                        <th scope="col" className="px-6 py-4">NOMBRE</th>
-                                        <th scope="col" className="px-6 py-4">CANTIDAD DE AFILIADOS</th>
+                                                    </td> */}
+                                                    <td>
+                                                        <button className="block bg-green-700 px-5 py-1 text-white w-min rounded-md" onClick={() => {setEditar(true)
+                                                            editarLaMutual(mutual.idmutual);
+                                                            
+                                                        }}>Editar</button>
 
-                                    </tr>
-                                </thead>
-                                <tbody className="table-group-divider">
-                                    {mutuales.map(mutual => (
-                                        mutual.idmutual !== 33 && (
-                                            <tr key={mutual.idmutual} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
-                                                <td >
-                                                    <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/mutualespacientes/' + mutual.idmutual } > {mutual.idmutual}</Link></li>
-                                                </td>
+                                                    </td>
 
-                                                <td className="whitespace-nowrap px-6 py-4">{`${mutual.nombremutual}`}</td>
-                                                <td className="whitespace-nowrap px-6 py-4">{`${mutual.cantidadpacientes}`}</td>
-                                                <td>
-                                                    
-                                                    
-                                                    <button className="block bg-red-700 px-2 py-1 text-white w-min rounded-md" onClick={() => borrarMutual(mutual.idmutual)}>Borrar</button>
-                                                </td>
-                                            </tr>
-                                        )
-                                    ))}
+                                                </tr>
+                                            )
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                </tbody>
-                            </table>
                         </div>
-
                     </div>
                 </div>
 
-            </div>
-            <div class="flex justify-center items-center">
-                <button className="block bg-blue-700 px-2 py-1 text-white w-min rounded-md  min-w-64 mt-5 m-" >Ingresar nueva Obra Social o Prepaga</button>
-            </div>
 
-            <Formik
-                initialValues={task}
-                enableReinitialize={true}
-                onSubmit={async (values, actions) => {
-                    console.log(values)
-                    navigate('/otroReg')
+                <div class=" justify-center items-center ml-40">
+                    <div className='text-2xl text-white text-center font-bold bg-blue-500
+                 mb-10  max-w-md px-14 py-2 mt-8'>Ingreso nuevas mutuales</div>
+                    <Formik
+                        initialValues={values}
+                        enableReinitialize={true}
+                        onSubmit={async (values, actions) => {
+                            console.log(values);
+                            if (editar === true) {
+                                console.log('editar', values);
 
-                    await nuevaMutual(values)
-                    setTask({
-                        nombremutual: "",
+                                await CambiaMutual(values.idmutual, values);
+                                window.location.reload();
 
-                    })
-                }}
-            >
+                            } else {
+                                await nuevaMutual(values);
+                                console.log(values);
+                                window.location.reload();
+                            }
 
-                {({ handleChange, handleSubmit, values, isSubmitting }) => (
-                    <Form onSubmit={handleSubmit} className="bg-slate-300 max-w-xl rounded-md p-4 mx-auto  mt-10 opacity-100">
-                        <div className="flex">
-                            <label className="block">Mutual</label>
-                            <input className="px-2 py-1 rounded-sm w-full ml-5" required type="text"
-                                name='nombremutual'
-                                onChange={handleChange}
-                                placeholder='Campo obligatorio'
-                                value={values.nombremutual} />
+                            setTask({
+                                nombremutual: "",
+                                valor: 0
+                            });
+                        }}
+                    >
+                        {({ handleChange, handleSubmit, values, isSubmitting }) => (
+                            <Form
+                                onSubmit={handleSubmit}
+                                className="bg-slate-300 max-w-xl rounded-md p-4 mx-auto mt-10 opacity-100"
+                            >
+                                <div>
+                                    <label className="block">Mutual</label>
+                                    <input
+                                        className="px-2 py-1 rounded-sm w-80 ml-5"
+                                        required
+                                        type="text"
+                                        name="nombremutual"
+                                        onChange={handleChange}
+                                        placeholder="Campo obligatorio"
+                                        value={values.nombremutual.toUpperCase()}
 
-                        </div>
-                        <div className='flex'>
+                                    />
+                                    <label className="block mt-5">Valor del bono</label>
+                                    <input
+                                        className="px-2 py-1 rounded-sm ml-5 w-20"
+                                        required
+                                        type="number"
+                                        name="valor"
+                                        onChange={handleChange}
+                                        value={values.valor}
+                                    />
+                                </div>
+                                <div className="flex">
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="block bg-indigo-500 px-2 py-1 text-white w-full rounded-md mt-4"
+                                    >
+                                        {isSubmitting ? "Guardando" : "Guardar"}
+                                    </button>
+                                    <button
+                                        className="block bg-red-500 px-2 py-1 text-white w-full rounded-md mt-4 ml-6"
+                                        onClick={() => {
+                                            setTask({
+                                                nombremutual: "",
+                                                valor: 0
+                                            });
+                                            setEditar(false);
+                                        }}
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
+                            </Form>
+                        )}
+                    </Formik>
 
-                            <button type='submit' disabled={isSubmitting} className="block bg-indigo-500 px-2 py-1 text-white w-full rounded-md mt-4">
-                                {isSubmitting ? "Guardando" : "Guardar"}</button>
-                            <button className="block bg-red-500 px-2 py-1 text-white w-full rounded-md mt-4 ml-6" onClick={() => navigate('/turno')}>Cancelar</button>
-
-                        </div>
-                    </Form>
-                )}
-            </Formik>
-
+                </div>
+            </div >
         </>
     )
 }

@@ -3,6 +3,8 @@ import { Formik, Form } from 'formik'
 import { useTareas } from '../componentes/context/hooks'
 import { useParams, useNavigate } from 'react-router-dom'
 
+
+
 const TareasForm = () => {
 
   const { crearRegistro, editarRegisto, modificaRegistro } = useTareas()
@@ -15,7 +17,9 @@ const TareasForm = () => {
     patologia: "",
     patasoc: "",
     fechacirugia: "",
-    mutualid: 0
+    mutualid: 0,
+    afiliado: "",
+    imagen: "",
   })
 
 
@@ -41,21 +45,22 @@ const TareasForm = () => {
           patologia: task.patologia,
           patasoc: task.patasoc,
           fechacirugia: task.fechacirugia,
-          mutualid: task.mutualid
+          mutualid: task.mutualid,
+          afiliado: task.afiliado,
+          idpaciente: task.idepaciente,
         })
       }
     }
     traerTarea()
+    console.log('viendo', params.idpaciente)
   }, [])
 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Make a request to the backend API to fetch the data from the MySQL database
-        const response = await fetch('http://localhost:4001/mutual/');
+        const response = await fetch('http://localhost:4000/mutual/');
         const data = await response.json();
-        // Update the state with the fetched data
         setDropdownOptions(data);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -68,13 +73,43 @@ const TareasForm = () => {
   const [dropdownOptions, setDropdownOptions] = useState([]);
 
 
+
   const Salir = () => {
     navigate('/tabla')
   }
+
+
+  const validate = (values) => {
+
+    const errors = {};
+
+    if (!values.nombre) {
+      errors.nombre = "El nombre es obligatorio";
+    }
+
+    if (!values.apellido) {
+      errors.apellido = "El apellido es obligatorio";
+    }
+
+    if (!values.mutualid) {
+      console.log('no funciona')
+      errors.mutualid = "Tiene que elegir una mutual";
+      alert(errors[error]);
+
+    }
+
+    // for (var error in errors) {
+    // }
+    // return errors;
+  };
+
+  // document.getElementById('yourFormId').addEventListener('submit', handleSubmit);
+
+
   return (
     <div>
 
-      <h1 className="text-xl font-bold uppercase text-center">{params.idpaciente ? 'Editar un Registro' : 'Ingresar un nuevo registro'}</h1>
+      <h1 className="text-xl font-bold uppercase text-center mt-5">{params.idpaciente ? 'Editar datos de un paciente' : 'Ingresar un nuevo paciente'}</h1>
       <Formik
         initialValues={task}
         enableReinitialize={true}
@@ -84,8 +119,9 @@ const TareasForm = () => {
             await modificaRegistro(params.idpaciente, values)
             navigate('/tabla')
           } else {
-            navigate('/otroReg')
             await crearRegistro(values)
+            navigate(`/otroReg`)
+            console.log(values)
           }
           setTask({
             nombre: "",
@@ -96,13 +132,15 @@ const TareasForm = () => {
             patologia: "",
             patasoc: "",
             fechacirugia: "",
-            mutualid: 0
+            mutualid: 0,
+            afiliado: "",
+            imagen: "",
           })
         }}
       >
 
         {({ handleChange, handleSubmit, values, isSubmitting }) => (
-          <Form onSubmit={handleSubmit} className="bg-slate-300 max-w-xl rounded-md p-4 mx-auto  mt-10">
+          <Form onSubmit={handleSubmit} className="bg-slate-300 max-w-2xl rounded-md p-8 mx-auto  mt-10 ">
             <div className='flex'>
               <label className="block">Nombre</label>
               <input className="px-2 py-1 rounded-sm w-full ml-5" required type="text"
@@ -145,34 +183,38 @@ const TareasForm = () => {
               name='patasoc'
               onChange={handleChange}
               value={values.patasoc} placeholder='Opcional' />
-
-
             <label className="block">Fecha de cirugía</label>
             <input className="px-2 py-1 rounded-sm w-full" type="date"
               name='fechacirugia'
               onChange={handleChange}
               value={values.fechacirugia} placeholder='Opcional' />
+            <div className='border-black'>
+              <div className='flex mt-4' style={{ justifyContent: 'space-between' }}>
+                <label className="block">Mutual</label>
+                <label className={` ${values.mutualid !== '2' && values.mutualid !== 0 ? '' : 'hidden'}`}>Nº afiliado: </label>
+              </div>
+              <div className='flex mt-1' style={{ justifyContent: 'space-between' }}>
+                <select
+                  name='mutualid'
+                  onChange={handleChange}
+                  value={values.mutualid}
+                  required
+                >
+                  <option value=''>Selecciona una opción</option>
 
-
-            <div className='flex mt-4' style={{ justifyContent: 'space-between' }}>
-              <label className="block">Mutual</label>
-
-              <input className="px-2 py-1 rounded-sm w-full" style={{ maxWidth: '50px' }} type="text"
-                name='mutualid'
-                onChange={handleChange}
-                value={values.mutualid} />
-
-              <label className="block">Elija el nombre de la mutual</label>
-              <select
-                name='mutualid'
-                onChange={handleChange}
-                value={values.mutualid}
-              >
-                {dropdownOptions.map(option => (
-                  <option key={option.idmutual} value={option.idmutual}>{option.nombremutual}</option>
-                ))}
-              </select>
-
+                  {dropdownOptions.map(option => (
+                    <option key={option.idmutual} value={option.idmutual}>{option.nombremutual}</option>
+                  ))}
+                </select>
+                <input
+                  className={`px-2 py-1 rounded-sm w-full ${values.mutualid !== '2' && values.mutualid !== 0 ? '' : 'hidden'}`}
+                  style={{ maxWidth: '250px' }}
+                  type="text"
+                  name="afiliado"
+                  onChange={handleChange}
+                  value={values.afiliado}
+                />
+              </div>
             </div>
             <div className='flex'>
 

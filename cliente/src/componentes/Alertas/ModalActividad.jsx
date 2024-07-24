@@ -33,7 +33,7 @@ export default function ModalTurnos({ values }) {
 
     /////////////////////////////
     const ListarTareas = async () =>
-        await axios.get('http://localhost:4001/tarea').then((response) => {
+        await axios.get('http://localhost:4000/tarea').then((response) => {
             const data = response.data
             setRegistros(data)
         })

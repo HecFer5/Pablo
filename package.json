@@ -5,14 +5,14 @@
   "scripts": {
     "dev": "node server/server.js",
     "start": "cd cliente/server && npm run dev",
-
     "build": "npm run dev:frontend && npm run dev:backend"
-   
-
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@vitejs/plugin-react-swc": "^3.7.0",
+    "browserslist": "^4.23.2",
+    "caniuse-lite": "^1.0.30001643",
     "dotenv": "^16.4.2",
     "esbuild": "^0.19.12",
     "nanoid": "^3.3.7",

@@ -1,10 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { Formik, Form } from 'formik'
 import { useTareas } from './context/hooks'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom'
 import dayjs from 'dayjs';
-// import 'dayjs/locale/es';
-import esLocale from 'dayjs/locale/es'; // Importar el archivo de localización para español
+import esLocale from 'dayjs/locale/es';
 import updateLocale from 'dayjs/plugin/updateLocale'
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -13,10 +12,11 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import axios from 'axios'
 import { Calendar, dayjsLocalizer } from 'react-big-calendar'
 import "react-big-calendar/lib/css/react-big-calendar.css"
-// import 'react-big-calendar/lib/sass/styles';
-
 import { AiTwotoneDelete } from "react-icons/ai";
 import './Turno.css'
+import { TareasContext } from './context/TareasContext';
+
+
 
 
 dayjs.extend(updateLocale);
@@ -27,7 +27,6 @@ dayjs.updateLocale('es', {
 });
 
 
-const localizer = dayjsLocalizer(dayjs, { weekStart: 0 });
 const messages = {
     allDay: 'Dia Entero',
     previous: 'Atrás',
@@ -44,115 +43,140 @@ const messages = {
 }
 
 
-const Turno6 = () => {
+const Turno6 = (props) => {
     const [events, setEvents] = useState([]);
     const [datos, setDatos] = useState([])
-    const localizer = dayjsLocalizer(dayjs)
+    const localizer = dayjsLocalizer(dayjs, { weekStart: 0 });
     const [selectedDate, setSelectedDate] = useState(dayjs(Date()).toDate());
-
+    const { TraerPacientes, TraerTareas, traerTareaSesion } = useTareas();
+    const [datosTabla, setDatosTabla] = useState([])
+    const location = useLocation();
+    const taskData = location.state;
     const params = useParams()
+
+
 
     const { darTurno } = useTareas()
     const [task, setTask] = useState({
         "fecha": dayjs(Date()).toString(),
-        "pacienteid": 0,
+        "idpaciente": 0,
         "fechafin": dayjs(Date()).toString(),
         "observac": "",
+        "usadas": "",
+        "cantidad": ""
+    })
+
+
+
+    const [traer, setTraer] = useState({
+        nombre: "",
+        apellido: "",
+        telefono: "",
 
     })
     const navigate = useNavigate()
 
- const xTitulo = event.xTitulo
     const EventComponent = ({ event }) => (
-        <div  className={event.color}>
+        <div className={event.color}>
             <span className=' block ml-5 -mt-2 pt-3 pb-3' >{event.title} <button className=" bg-transparent  ml-1  mt-1 text-red-500 w-min rounded-md " onClick={() => handleDeleteEvent(event.id)}><AiTwotoneDelete />
             </button></span>
-            {/* <span style={{ textAlign: 'center' }}>{event.nombre}</span> Muestra el parámetro 'nombre' */}
-
-
-           
 
         </div>
-    
+
     );
 
- 
+    
+
 
 
 
     // //!  para seleccionar desde el calendario
-    const Selector = (slotInfo) => {
+    const Selector = async (slotInfo) => {
+
+
         const { start } = slotInfo;
-        // console.log(start, 'en selector')
-
-        console.log(start, dayjs(Date()).toDate())
-
         if (start < dayjs(Date()).toDate()) {
-
             navigate(`/turnopasado/${params.idpaciente}`)
         } else {
             if (params.idpaciente) {
-                navigate(`/clickturno/${params.idpaciente}`, { state: { start } });
-                console.log(params.idpaciente, 'entrantdo')
-
-            }else{
+                navigate(`/clickturno/${params.idpaciente}`, { state: { start, ...taskData, ...datosTabla } });
+            } else {
                 navigate(`/clickturno`, { state: { start } });
-                console.log(start, 'entrantdo')
-
-
             }
         }
-
-
-
-
     };
+
+
     //     //! fin 
 
 
     const handleDeleteEvent = async (idturnos) => {
+navigate('/borrarturnos/' + idturnos)
+        // const response = await axios.delete("http://localhost:4000/turno/" + idturnos);
 
-        const response = await axios.delete("http://localhost:4000/turno/" + idturnos);
-
-        // Verificar la respuesta de la API
-        if (response.status === 200) {
-            // Los datonis se enviaron correctamente
-            navigate('/confirmacion')
-            console.log('Los datos se enviaron correctamente', idpaciente);
-        } else {
-            // Hubo un error al enviar los datos
-            console.log('Hubo un error al enviar los datos');
-        }
+        // if (response.status === 200) {
+        //     navigate('/confirmacion')
+        //     console.log('Los datos se enviaron correctamente');
+        // } else {
+        //     console.log('Hubo un error al enviar los datos');
+        // }
     };
 
-    ////////////////////////////contesto you
     const fetchEvents = async () => {
         try {
-            const response = await axios.get('http://localhost:4001/turno');
+            const response = await axios.get('http://localhost:4000/turno');
             const data = response.data;
-            const formattedEvents = data.map((turno) => ({
-                title: `${turno.nombre ? turno.nombre : 'ACTIVIDAD'} ${turno.apellido}${turno.observac ? ` (${turno.observac})` : ''}`,
-                start: dayjs(turno.fecha).toDate(),
-                end: dayjs(turno.fechafin).toDate(),
-                id: turno.idturnos,
-                color:`${turno.nombre != 'ACTIVIDAD' ? 'bg-blue-300 text-black font-semibold':  'bg-green-300 text-black font-semibold'}`
-                
-            }));
+            const formattedEvents = data.map((turno) => {
+                let title;
+                if (turno.nombre != 'ACTIVIDAD') {
+                    title = `${turno.nombre} ${turno.apellido}`;
+                } else {
+                    title = 'ACTIVIDAD';
+                }
+
+                // if (turno.observac === "") {
+                //     title = title
+                // } else {
+                //     title = title + ' (' + turno.observac + ')'
+                // }
+
+                // if (turno.cantidad === 0 && turno.usadas > 0 && turno.tanda === 0 && turno.estado > 0) {
+                //     title = title + ` (particular/${turno.usadas})`
+                // }
+
+                // if (turno.cantidad > 0 && turno.usadas > 0 && turno.tanda > 0 && turno.estado === 0) {
+                //     title = title + ` (${turno.usadas}/${turno.cantidad})`
+                // }
+
+                // if ((turno.cantidad === 0 || turno.cantidad === null) && (turno.usadas === 0 || turno.usadas === null) && (turno.tanda === 0 || turno.tanda === null) && turno.estado === 0) {
+                //     title = title + ` (sin sesión asignada)`
+                // }
+
+                return {
+                    title: <div className=" text-sm sm:text-xs md:text-base lg:text-lg xl:text-lg">{title}</div>,
+                    start: dayjs(turno.fecha).toDate(),
+                    end: dayjs(turno.fechafin).toDate(),
+                    id: turno.idturnos,
+                    color: `${turno.nombre !== 'ACTIVIDAD' ? 'bg-blue-300 text-black font-semibold' : 'bg-green-300 text-black font-semibold'}`,
+                };
+
+
+            });
 
             setEvents(formattedEvents);
         } catch (error) {
             console.error('Error al obtener los eventos del calendario:', error);
         }
 
-       
+
+
     };
 
 
     const traerDatos = async () => {
         try {
-            const response = await axios.get("http://localhost:4001/tarea/" + params.idpaciente);
+            const response = await axios.get("http://localhost:4000/tarea/" + params.idpaciente);
             const data = response.data;
-
             const datosPacientes = ({
                 nombre: data.nombre,
                 apellido: data.apellido
@@ -168,6 +192,36 @@ const Turno6 = () => {
 
 
     useEffect(() => {
+        const traerLaTarea = async () => {
+            if (params.idpaciente) {
+                const datosTabla = await traerTareaSesion(params.idpaciente);
+                console.log(datosTabla, 'ajjd')
+                setDatosTabla({
+                    nombre: datosTabla.nombre,
+                    apellido: datosTabla.apellido,
+                    telefono: datosTabla.telefono,
+                    imagen: datosTabla.imagen,
+                    calle: datosTabla.calle,
+                    numero: datosTabla.numero,
+                    patologia: datosTabla.patologia,
+                    patasoc: datosTabla.patasoc,
+                    fechacirugia: datosTabla.fechacirugia,
+                    mutualid: datosTabla.mutualid,
+                    afiliado: datosTabla.afiliado,
+                    idpaciente: datosTabla.idepaciente,
+                    cantidad: datosTabla.cantidad,
+                    usadas: datosTabla.usadas,
+                    tanda: datosTabla.tanda,
+                    estado: datosTabla.estado,
+                })
+            }
+        }
+        traerLaTarea()
+
+
+    }, [params.idepaciente])
+
+    useEffect(() => {
         fetchEvents();
         if (params.idpaciente) {
             traerDatos()
@@ -175,33 +229,57 @@ const Turno6 = () => {
     }, [params.idpaciente]);
 
     const darElTurno = async (values, actions) => {
+
+        console.log('en dar turno', taskData)
+        // console.log(taskData, taskData.maxUsadas, 'dando el turno')
         const originalDate = dayjs(selectedDate);
         const newDate = originalDate.add(30, 'minute');
-
-
         values.fecha = dayjs(selectedDate).format('YYYY-MM-DD HH:mm:ss');
         values.fechafin = newDate.format('YYYY-MM-DD HH:mm:ss');
-        values.pacienteid = params.idpaciente
+        values.idpaciente = params.idpaciente
+        values.usadas = taskData.usadas + 1
         navigate('/otroturno')
         await darTurno(values)
 
     }
 
+    let irFuncion = 0
+
     const irActividad = () => {
-        const irFuncion = 1
-        console.log(irFuncion)
-        // Selector()
+        console.log(activo)
+        navigate('/haceractividad', { state: { taskData } })
+        let irFuncion = 1
     }
 
     const irPaciente = () => {
         const irFuncion = 2
-        console.log(irFuncion)
+        console.log(activo, 'aqui')
+        navigate('/tabla', { state: { taskData } })
     }
 
-    ////////////////////////////////////////////
 
-   
-    
+    const [eventData, setEventData] = useState(null);
+    const [turnoData, setTurnoData] = useState(null);
+
+    const handleDoubleClick = async (event) => {
+        setEventData(event);
+
+        try {
+            const response = await axios.get("http://localhost:4000/turno?idpaciente=" + event.id);
+            const turnos = response.data;
+
+            const turnoEspecifico = turnos.find(turno => turno.idturnos === event.id);
+
+            setTurnoData(turnoEspecifico);
+            console.log(turnoEspecifico)
+            navigate('/verturno', { state: { turnoEspecifico } });
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+ const [activo, setActivo] = useState(false);
+    // let activo = false
 
     return (
         <>
@@ -212,22 +290,20 @@ const Turno6 = () => {
                     marginTop: '5vh',
                     marginLeft: '3vw',
                     marginRight: '3vw',
-                    
-                }}
 
+                }}
                 messages={messages}
-                selectable={true} // Establecer selectable en true
+                selectable={activo || params.idpaciente}
                 onSelectSlot={Selector}
                 step={15}
                 timeslots={1}
                 localizer={dayjsLocalizer(dayjs, { weekStart: 0 })} events={events}
                 startAccessor="start"
                 endAccessor="end"
-                defaultView='week'
+                defaultView="week"
+                onDoubleClickEvent={handleDoubleClick}
                 min={dayjs('2024-01-22T08:00:00').toDate()}
                 max={dayjs('2024-01-22T18:00:00').toDate()}
-
-
                 components={{
                     event: EventComponent,
                 }}
@@ -261,13 +337,25 @@ const Turno6 = () => {
                                     ]}>
                                     <DemoItem >
                                         {/* CAJA PARA LOS ELEMENTOS */}
-                                        <div className="flex flex-col sm:items-center sm:flex-row justify-around items-center p-5 gap-4">
+                                        <div className="flex flex-col sm:items-center sm:flex-row justify-between items-center p-5 gap-4">
 
                                             {/* TITULO */}
-                                            {params.idpaciente ? <div className="text-white bg-blue-500 px-3 py-1 font-semibold rounded-xl h-full">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-red-500 hover:bg-red-900 px-3 py-1 font-semibold rounded-xl h-full " onClick={irPaciente}><Link to={'/turnoDirecto/'}>¿PACIENTE?</Link></button>}
+                                            {params.idpaciente ? <div className="text-white bg-blue-400 hover:bg-blue-500 px-10 py-1 font-bold rounded-md h-full hover:italic ">{datos.nombre} {datos.apellido}</div> : <button className="text-black bg-blue-400 hover:bg-blue-500 px-10 py-1 font-bold rounded-md h-full hover:italic " onClick={() => {
+                                                irPaciente();
+
+                                            }}>¿PACIENTE?</button>}
 
 
-                                            <button className="text-black bg-green-500 hover:bg-blue-700 px-3 py-1 font-semibold rounded-xl h-full " onClick={irActividad}><Link to={'/haceractividad'}>ACTIVIDAD</Link></button>
+                                            <button
+                                               className="text-black bg-blue-400 hover:bg-blue-500 px-10 py-1 font-bold rounded-md h-full hover:italic "
+                                                onClick={() => {
+                                                    setActivo(!activo);
+                                                }}
+                                            >
+                                                ACTIVIDAD
+                                            </button>
+                                            <button className="text-black bg-red-400 hover:bg-red-500 px-10 py-1 font-bold rounded-md h-full hover:italic "><Link to={'/'}>Cancelar</Link></button>
+
                                             {/* SELECTOR DE FECHA */}
                                             <DateTimePicker
 
@@ -280,16 +368,10 @@ const Turno6 = () => {
                                             />
                                             {/* BOTON INGRESAR */}
 
-                                            {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md  ">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>}
-
-
+                                            {/* {params.idpaciente ? <button type='submit' className="bg-lime-700 px-2 py-1 text-white rounded-md  ">Ingresar</button> : <button disabled type='submit' className="bg-green-300 px-2 py-1 text-white rounded-md">Ingresar</button>} */}
                                             {/* BOTON CANCELAR */}
 
-                                            <button className="bg-red-700 px-2 py-1 text-white rounded-md"><Link to={'/'}>Cancelar</Link></button>
-
-
-
-
+                                         
                                         </div>
 
                                         {/* OBSERVACIONES */}
@@ -308,9 +390,6 @@ const Turno6 = () => {
                         </Form>
                     )}
                 </Formik>
-
-
-
             </div>
         </>
     )

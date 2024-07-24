@@ -29,7 +29,7 @@ const PacientesPorMutual = () => {
 
   const TraerPacientesMutual = async () => {
     try {
-      const response = await axios.get("http://localhost:4001/pacientesmutuales/" + mutualid);
+      const response = await axios.get("http://localhost:4000/pacientesmutuales/" + mutualid);
 
       const data = response.data;
       setRegistros(data);

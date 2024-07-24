@@ -17,19 +17,22 @@
     "@mui/material": "^5.15.1",
     "@mui/x-date-pickers": "^6.18.6",
     "axios": "^1.6.2",
+    "browserslist": "^4.23.2",
+    "caniuse-lite": "^1.0.30001643",
     "dayjs": "^1.11.10",
     "formik": "^2.4.5",
     "react": "^18.2.0",
     "react-big-calendar": "^1.8.5",
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
+    "react-image-gallery": "^1.3.0",
     "react-router-dom": "^6.21.0",
     "react-scripts": "^5.0.1",
     "react-search-autocomplete": "^8.5.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",
-    "@vitejs/plugin-react-swc": "^3.5.0",
+    "@vitejs/plugin-react-swc": "^3.7.0",
     "eslint": "^8.55.0",
     "vite": "^5.0.8"
   },
