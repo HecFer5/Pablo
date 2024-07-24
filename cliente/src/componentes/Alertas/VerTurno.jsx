@@ -35,7 +35,7 @@ const volver = async (idpaciente) => {
 
 };
 
-export default function Alerta() {
+export default function verTurno() {
     const [open, setOpen] = useState(true);
     const handleClose = () => setOpen(false);
     const navigate = useNavigate()
