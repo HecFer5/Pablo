@@ -590,19 +590,19 @@ export const actualizaTurno = async (req, res) => {
 //! calcula cuantos turnos pendientes tiene cada paciente
 
 
-export const turnoPendiente = async (req, res) => {
-  try {
-    const [result] = await pool.query(
-      "SELECT pacientes.idpaciente AS NombrePaciente, mutual.idmutual AS IdMutual, SUM(turnos.bono) AS TotalBono, mutual.valor AS ValorMutual, SUM(turnos.bono) * mutual.valor AS Resultado, total.TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente JOIN (SELECT mutual.idmutual, SUM(turnos.bono * mutual.valor) AS TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente WHERE turnos.bono = 1 GROUP BY mutual.idmutual) AS total ON total.idmutual = mutual.idmutual WHERE turnos.bono = 1 GROUP BY pacientes.idpaciente, mutual.idmutual, mutual.valor"
-    );
+// export const turnoPendiente = async (req, res) => {
+//   try {
+//     const [result] = await pool.query(
+//       "SELECT pacientes.idpaciente AS NombrePaciente, mutual.idmutual AS IdMutual, SUM(turnos.bono) AS TotalBono, mutual.valor AS ValorMutual, SUM(turnos.bono) * mutual.valor AS Resultado, total.TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente JOIN (SELECT mutual.idmutual, SUM(turnos.bono * mutual.valor) AS TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente WHERE turnos.bono = 1 GROUP BY mutual.idmutual) AS total ON total.idmutual = mutual.idmutual WHERE turnos.bono = 1 GROUP BY pacientes.idpaciente, mutual.idmutual, mutual.valor"
+//     );
 
-    if (result.length === 0) {
-      return res.status(404).json("No hay el id");
-    }
+//     if (result.length === 0) {
+//       return res.status(404).json("No hay el id");
+//     }
 
-    return res.json(result);
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json("Error en la consulta");
-  }
-};
+//     return res.json(result);
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json("Error en la consulta");
+//   }
+// };

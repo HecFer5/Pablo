@@ -99,5 +99,5 @@ export const ActualizarTrunos = async (historia) =>
   await axios.post("http://localhost:4000/turno", historia);
 
 
- export const VerTrunosPendientes = async () =>
-   await axios.post("http://localhost:4000/turnopendiente");
+//  export const VerTrunosPendientes = async () =>
+//    await axios.post("http://localhost:4000/turnopendiente");

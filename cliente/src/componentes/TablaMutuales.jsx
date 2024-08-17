@@ -8,7 +8,7 @@ import { Formik, Form } from 'formik'
 
 const TablaMutuales = () => {
     const [mutuales, setMutuales] = useState([])
-    const [pendientes, setPendientes] = useState([])
+    // const [pendientes, setPendientes] = useState([])
     const { nuevaMutual, CambiaMutual } = useTareas()
     const [task, setTask] = useState({
         nombremutual: "",
@@ -37,16 +37,16 @@ const TablaMutuales = () => {
     }, [])
 
 
-    const ViendoTurnosPendientes = async () =>
-        await axios.get('http://localhost:4000/turnopendiente').then((response) => {
-            const data = response.data
-            setPendientes(data)
-            console.log(data)
+    // const ViendoTurnosPendientes = async () =>
+    //     await axios.get('http://localhost:4000/turnopendiente').then((response) => {
+    //         const data = response.data
+    //         setPendientes(data)
+    //         console.log(data)
 
-        })
-    useEffect(() => {
-        ViendoTurnosPendientes()
-    }, [])
+    //     })
+    // useEffect(() => {
+    //     ViendoTurnosPendientes()
+    // }, [])
 
 
 

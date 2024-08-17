@@ -31,7 +31,7 @@ import {
   verTurno,
   editarMutual,
   actualizaTurno,
-  turnoPendiente
+  
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
@@ -65,7 +65,6 @@ router.get("/inac", getPacInac);
 //! TURNOS Y ACTIVIDADES
 
 
-router.get("/turnopendiente", turnoPendiente);
 
 router.get("/turno", getTurnos);
 
