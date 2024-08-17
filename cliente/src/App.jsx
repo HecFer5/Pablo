@@ -29,8 +29,30 @@ import sinTurno from './componentes/Alertas/sinTurno.jsx'
 import verTurno from './componentes/Alertas/VerTurno.jsx'
 import AlertaTurnos from './componentes/Alertas/AlertaTurnos.jsx'
 // import EditaMutales from './componentes/Alertas/EditaMutuales.jsx'
+import { ActualizarTrunos } from './api/tareas.api.js'; 
+
+import { useEffect, useState } from 'react';
+import axios from "axios";
+
 
 function App() {
+
+  const [data, setData] = useState(null); 
+
+  useEffect(() => {
+      const obtenerDatos = async () => {
+          try {
+              const response = await axios.put("http://localhost:4000/turno");
+              setData(response.data); 
+              console.log(response.data); 
+          } catch (error) {
+              console.error('Error al obtener los datos:', error);
+          }
+      };
+
+      obtenerDatos(); 
+  }, []); 
+
 
 
   return (

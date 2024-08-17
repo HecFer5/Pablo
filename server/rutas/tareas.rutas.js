@@ -30,9 +30,13 @@ import {
   getPermiso,
   verTurno,
   editarMutual,
+  actualizaTurno,
+  turnoPendiente
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
+router.put("/turno", actualizaTurno);
+
 
 //! PACIENTES
 router.get("/tarea", getTareas);
@@ -59,6 +63,9 @@ router.put("/inac/:idpaciente", volverRegistro);
 router.get("/inac", getPacInac);
 
 //! TURNOS Y ACTIVIDADES
+
+
+router.get("/turnopendiente", turnoPendiente);
 
 router.get("/turno", getTurnos);
 

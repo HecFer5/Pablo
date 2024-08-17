@@ -93,3 +93,11 @@ export const ListarImagenes = async (idpaciente) =>
 
 export const CrearHistorias = async (historia) =>
   await axios.post("http://localhost:4000/historias", historia);
+
+
+export const ActualizarTrunos = async (historia) =>
+  await axios.post("http://localhost:4000/turno", historia);
+
+
+ export const VerTrunosPendientes = async () =>
+   await axios.post("http://localhost:4000/turnopendiente");

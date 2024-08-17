@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useReducer } from 'react'
 import {
-    ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, ListarMutuales, CrearMutuales, ListarPacientesMutual, CrearHistorialTurnos, ListarImagenes, CrearHistorias, EditaTareaSesion, ListarPacientes, ListarTurnosPaciente, ListarUltimoPaciente, ListarUnaMutual, EditaMutual
-} from '../../api/tareas.api'
+    ListarTareas, BorrarTareas, CrearTareas, ListarUnaTarea, EditaTarea, ListarInactivos, CrearTurnos, ListarTurnos, EliminarRegistro, ListarMutuales, CrearMutuales, ListarPacientesMutual, CrearHistorialTurnos, ListarImagenes, CrearHistorias, EditaTareaSesion, ListarPacientes, ListarTurnosPaciente, ListarUltimoPaciente, ListarUnaMutual, EditaMutual} from '../../api/tareas.api'
 import UserReducer from './UserReducer'
 // import { editarMutual } from '../../../../server/controladores/tareas.controladores'
 export const TareasContext = createContext()
@@ -232,6 +231,8 @@ export const TareasContextProv = ({ children }) => {
             console.error(error)
         }
     }
+
+
 
     return <TareasContext.Provider value={{
         registro: state.registro,

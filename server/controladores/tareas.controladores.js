@@ -338,7 +338,7 @@ export const getMutuales = async (req, res) => {
   try {
     const [result] = await pool.query(
       // `SELECT * FROM mutual  ORDER BY  nombremutual`
-      "SELECT mutual.idmutual, mutual.nombremutual, COUNT(pacientes.idpaciente) AS cantidadpacientes, mutual.valor FROM  mutual LEFT JOIN  pacientes ON mutual.idmutual = pacientes.mutualid GROUP BY mutual.idmutual, mutual.nombremutual ORDER BY mutual.nombremutual"
+      "SELECT mutual.idmutual, mutual.nombremutual, COUNT(DISTINCT pacientes.idpaciente) AS cantidadpacientes, SUM(mutual.valor * (CASE WHEN turnos.bono = 1 THEN 1 ELSE 0 END)) AS totalValor, mutual.valor FROM mutual LEFT JOIN pacientes ON mutual.idmutual = pacientes.mutualid LEFT JOIN turnos ON turnos.idpaciente = pacientes.idpaciente GROUP BY mutual.idmutual, mutual.nombremutual, mutual.valor ORDER BY mutual.nombremutual"
     );
     res.json(result);
   } catch (error) {
@@ -565,5 +565,44 @@ export const verTurno = async (req, res) => {
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+
+//! actualiza las fecha de los turnos
+
+export const actualizaTurno = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "UPDATE turnos SET bono = CASE WHEN fecha <= NOW() THEN 0 WHEN fecha IS NULL THEN 0 ELSE bono END");
+
+    if (result.length === 0) {
+      return res.status(404).json("No hay el id");
+    }
+
+    res.json(result[0]);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+//! calcula cuantos turnos pendientes tiene cada paciente
+
+
+export const turnoPendiente = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "SELECT pacientes.idpaciente AS NombrePaciente, mutual.idmutual AS IdMutual, SUM(turnos.bono) AS TotalBono, mutual.valor AS ValorMutual, SUM(turnos.bono) * mutual.valor AS Resultado, total.TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente JOIN (SELECT mutual.idmutual, SUM(turnos.bono * mutual.valor) AS TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente WHERE turnos.bono = 1 GROUP BY mutual.idmutual) AS total ON total.idmutual = mutual.idmutual WHERE turnos.bono = 1 GROUP BY pacientes.idpaciente, mutual.idmutual, mutual.valor"
+    );
+
+    if (result.length === 0) {
+      return res.status(404).json("No hay el id");
+    }
+
+    return res.json(result);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json("Error en la consulta");
   }
 };

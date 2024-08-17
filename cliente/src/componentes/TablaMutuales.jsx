@@ -8,6 +8,7 @@ import { Formik, Form } from 'formik'
 
 const TablaMutuales = () => {
     const [mutuales, setMutuales] = useState([])
+    const [pendientes, setPendientes] = useState([])
     const { nuevaMutual, CambiaMutual } = useTareas()
     const [task, setTask] = useState({
         nombremutual: "",
@@ -31,11 +32,25 @@ const TablaMutuales = () => {
             const data = response.data
             setMutuales(data)
         })
-
     useEffect(() => {
         ListarMutuales()
     }, [])
 
+
+    const ViendoTurnosPendientes = async () =>
+        await axios.get('http://localhost:4000/turnopendiente').then((response) => {
+            const data = response.data
+            setPendientes(data)
+            console.log(data)
+
+        })
+    useEffect(() => {
+        ViendoTurnosPendientes()
+    }, [])
+
+
+
+   
     const [editar, setEditar] = useState(false)
     console.log(editar, 'entrando')
 
@@ -83,6 +98,7 @@ const TablaMutuales = () => {
                                             <th scope="col" className="px-6 py-4">NOMBRE</th>
                                             <th scope="col" className="px-6 py-4">AFILIADOS</th>
                                             <th scope="col" className="px-6 py-4">VALOR BONO</th>
+                                            <th scope="col" className="px-6 py-4">A COBRAR</th>
                                         </tr>
                                     </thead>
                                     <tbody className="table-group-divider">
@@ -96,6 +112,7 @@ const TablaMutuales = () => {
                                                     <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.nombremutual}`}</td>
                                                     <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.cantidadpacientes}`}</td>
                                                     <td className="whitespace-nowrap px-6 py-4 font-bold">{mutual.valor === null ? '' : mutual.valor}</td>
+                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{mutual.totalValor}</td>
                                                     {/* <td>
                                                         <button className="block bg-green-700 px-5 py-1 text-white w-min rounded-md" onClick={() => {
                                                             navigate(`/editamutual/${mutual.idmutual}`);
@@ -114,6 +131,7 @@ const TablaMutuales = () => {
                                             )
                                         ))}
                                     </tbody>
+                                    <tfoot> <tr className="border-t bg-gray-200"> <td colSpan="2" className="px-6 py-4 font-bold text-right" >Total de afiliados:</td> <td className="px-6 py-4 font-bold"> {mutuales.reduce((acc, mutual) => acc + (mutual.cantidadpacientes || 0), 0) } </td> <td className="px-6 py-4 font-bold text-right">Total A Cobrar:</td> <td className="px-6 py-4 font-bold"> {mutuales .reduce((acc, mutual) => acc + (parseFloat(mutual.totalValor) || 0), 0)} </td> </tr> </tfoot>
                                 </table>
                             </div>
 
