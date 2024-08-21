@@ -338,7 +338,7 @@ export const getMutuales = async (req, res) => {
   try {
     const [result] = await pool.query(
       // `SELECT * FROM mutual  ORDER BY  nombremutual`
-      "SELECT mutual.idmutual, mutual.nombremutual, COUNT(DISTINCT pacientes.idpaciente) AS cantidadpacientes, SUM(mutual.valor * (CASE WHEN turnos.bono = 1 THEN 1 ELSE 0 END)) AS totalValor, mutual.valor FROM mutual LEFT JOIN pacientes ON mutual.idmutual = pacientes.mutualid LEFT JOIN turnos ON turnos.idpaciente = pacientes.idpaciente GROUP BY mutual.idmutual, mutual.nombremutual, mutual.valor ORDER BY mutual.nombremutual"
+      "SELECT m.idmutual AS 'IdMutual', m.nombremutual AS 'NombreMutual', COUNT(p.idpaciente) AS 'CantidadPacientes', m.valor AS 'ValorBono', SUM((t.quedan + CASE WHEN t.bono = 1 THEN 1 ELSE 0 END) * m.valor) AS 'ValorTotal' FROM mutual m LEFT JOIN pacientes p ON m.idmutual = p.mutualid AND p.estatus = 1 LEFT JOIN (SELECT idpaciente, MAX(fecha) AS ultima_fecha FROM turnos GROUP BY idpaciente) t_ultima ON p.idpaciente = t_ultima.idpaciente LEFT JOIN turnos t ON t.idpaciente = p.idpaciente AND t.fecha = t_ultima.ultima_fecha GROUP BY m.idmutual, m.nombremutual, m.valor;"
     );
     res.json(result);
   } catch (error) {
@@ -347,6 +347,11 @@ export const getMutuales = async (req, res) => {
   }
 };
 
+
+// SELECT p.idpaciente, p.nombre, p.apellido, t.idturnos, t.cantidad, t.usadas, t.quedan, m.valor, (m.valor * (t.quedan + CASE WHEN t.bono = 1 THEN 1 ELSE 0 END)) AS resultado_multiplicacion FROM pacientes p JOIN turnos t ON p.idpaciente = t.idpaciente JOIN mutual m ON p.mutualid = m.idmutual WHERE t.idturnos = (SELECT MAX(t2.idturnos) FROM turnos t2 WHERE t2.idpaciente = p.idpaciente);
+
+
+// 
 //! LISTADO COMPLETO DE pacientes por mutual
 
 export const getPacientesMutuales = async (req, res) => {
@@ -593,7 +598,7 @@ export const actualizaTurno = async (req, res) => {
 // export const turnoPendiente = async (req, res) => {
 //   try {
 //     const [result] = await pool.query(
-//       "SELECT pacientes.idpaciente AS NombrePaciente, mutual.idmutual AS IdMutual, SUM(turnos.bono) AS TotalBono, mutual.valor AS ValorMutual, SUM(turnos.bono) * mutual.valor AS Resultado, total.TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente JOIN (SELECT mutual.idmutual, SUM(turnos.bono * mutual.valor) AS TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente WHERE turnos.bono = 1 GROUP BY mutual.idmutual) AS total ON total.idmutual = mutual.idmutual WHERE turnos.bono = 1 GROUP BY pacientes.idpaciente, mutual.idmutual, mutual.valor"
+//       "SELECT p.idpaciente AS NombrePaciente, m.idmutual AS IdMutual, m.valor AS ValorMutual, t.cantidad - COALESCE(t.usadas, 0) + CASE WHEN t.bono = 1 THEN 1 ELSE 0 END AS Quedan, m.valor * (t.cantidad - COALESCE(t.usadas, 0) + CASE WHEN t.bono = 1 THEN 1 ELSE 0 END) AS ValorPorQuedan FROM pacientes p JOIN mutual m ON p.mutualid = m.idmutual JOIN (SELECT idpaciente, cantidad, usadas, bono, ROW_NUMBER() OVER (PARTITION BY idpaciente ORDER BY fecha DESC) AS rn FROM turnos) t ON p.idpaciente = t.idpaciente AND t.rn = 1;"
 //     );
 
 //     if (result.length === 0) {
@@ -606,3 +611,9 @@ export const actualizaTurno = async (req, res) => {
 //     return res.status(500).json("Error en la consulta");
 //   }
 // };
+
+
+
+
+
+// SELECT pacientes.idpaciente AS NombrePaciente, mutual.idmutual AS IdMutual, SUM(turnos.bono) AS TotalBono, mutual.valor AS ValorMutual, SUM(turnos.bono) * mutual.valor AS Resultado, total.TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente JOIN (SELECT mutual.idmutual, SUM(turnos.bono * mutual.valor) AS TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente WHERE turnos.bono = 1 GROUP BY mutual.idmutual) AS total ON total.idmutual = mutual.idmutual WHERE turnos.bono = 1 GROUP BY pacientes.idpaciente, mutual.idmutual, mutual.valor

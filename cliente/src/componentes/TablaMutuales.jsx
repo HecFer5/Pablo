@@ -90,7 +90,9 @@ const TablaMutuales = () => {
                             <div className="overflow-hidden">
                                 <div className='text-2xl text-white text-center font-bold bg-blue-500
                  mb-10  max-w-md px-4 py-2 mt-5 ml-5'>LISTADO MUTUALES</div>
-                                <table className="min-w-full text-left text-sm font-light">
+                              <div className='text-1xl text-black text-center bg-blue-200
+                 mb-10  max-w-md px-4 py-2 mt-5 ml-5'>Click sobre Nº para ver pacientes de cada mutual</div>
+                                                 <table className="min-w-full text-left text-sm font-light">
                                     <thead
                                         className="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
                                         <tr>
@@ -106,13 +108,13 @@ const TablaMutuales = () => {
                                             mutual.idmutual !== 33 && (
                                                 <tr key={mutual.idmutual} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
                                                     <td >
-                                                        <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/mutualespacientes/' + mutual.idmutual} > {mutual.idmutual}</Link></li>
+                                                        <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/mutualespacientes/' + mutual.IdMutual} > {mutual.IdMutual}</Link></li>
                                                     </td>
 
-                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.nombremutual}`}</td>
-                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.cantidadpacientes}`}</td>
-                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{mutual.valor === null ? '' : mutual.valor}</td>
-                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{mutual.totalValor}</td>
+                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.NombreMutual}`}</td>
+                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.CantidadPacientes}`}</td>
+                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{mutual.ValorBono === null ? '' : mutual.ValorBono}</td>
+                                                    <td className="whitespace-nowrap px-6 py-4 font-bold">{mutual.ValorTotal}</td>
                                                     {/* <td>
                                                         <button className="block bg-green-700 px-5 py-1 text-white w-min rounded-md" onClick={() => {
                                                             navigate(`/editamutual/${mutual.idmutual}`);
@@ -131,7 +133,7 @@ const TablaMutuales = () => {
                                             )
                                         ))}
                                     </tbody>
-                                    <tfoot> <tr className="border-t bg-gray-200"> <td colSpan="2" className="px-6 py-4 font-bold text-right" >Total de afiliados:</td> <td className="px-6 py-4 font-bold"> {mutuales.reduce((acc, mutual) => acc + (mutual.cantidadpacientes || 0), 0) } </td> <td className="px-6 py-4 font-bold text-right">Total A Cobrar:</td> <td className="px-6 py-4 font-bold"> {mutuales .reduce((acc, mutual) => acc + (parseFloat(mutual.totalValor) || 0), 0)} </td> </tr> </tfoot>
+                                    <tfoot> <tr className="border-t bg-gray-200"> <td colSpan="2" className="px-6 py-4 font-bold text-right" >Total de afiliados:</td> <td className="px-6 py-4 font-bold"> {mutuales.reduce((acc, mutual) => acc + (mutual.CantidadPacientes || 0), 0) } </td> <td className="px-6 py-4 font-bold text-right">Total A Cobrar:</td> <td className="px-6 py-4 font-bold"> {mutuales .reduce((acc, mutual) => acc + (parseFloat(mutual.ValorTotal) || 0), 0)} </td> </tr> </tfoot>
                                 </table>
                             </div>
 

@@ -90,6 +90,12 @@ const TablaNueva = () => {
         }
     }
 
+    const enviarMensajeWhatsApp = (numero, mensaje) => {
+        const url = `https://web.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensaje)}`;
+        window.open(url, 'whatsappWindow'); // 'whatsappWindow' es el nombre de la ventana
+    };
+    
+    
 
     return (
         <>
@@ -134,39 +140,54 @@ const TablaNueva = () => {
 
 
                                     <tbody className="table-group-divider">
-                                        {registrosFiltrados.map(registro => (
-                                            <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
-                                                <td >
-                                                    <button className="block bg-blue-300 font-semibold ml-4 px-2 py-1 text-black w-min rounded-md" onClick={() => verificaTurnos(registro.idpaciente)}>Turno</button>
-                                                </td>
-                                                <td >
-                                                    <li className="block bg-white  font-bold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/ficha/' + registro.idpaciente} >{registro.idpaciente}</Link></li>
-                                                </td>
+    {registrosFiltrados.map(registro => (
+        <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
+            <td>
+                <button className="block bg-blue-300 font-semibold ml-4 px-2 py-1 text-black w-min rounded-md" onClick={() => verificaTurnos(registro.idpaciente)}>Turno</button>
+            </td>
+            <td>
+                <li className="block bg-white font-bold ml-4 px-2 py-1 text-black w-min rounded-md">
+                    <Link to={'/ficha/' + registro.idpaciente}>{registro.idpaciente}</Link>
+                </li>
+            </td>
+            <td className="whitespace-nowrap px-6 py-4 text-l font-bold">{`${registro.apellido}, ${registro.nombre}`}</td>
+            <td className="whitespace-nowrap px-6 py-4 font-bold">{registro.telefono}</td>
+            <td>
+                <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md">
+                    <Link to={{
+                        pathname: `/vistahistoria/${registro.idpaciente}`,
+                        state: {
+                            nombre: registro.nombre,
+                            apellido: registro.apellido
+                        }
+                    }}>HISTORIA CLINICA</Link>
+                </li>
+            </td>
+            <td>
+                <li className="block bg-blue-300 font-semibold ml-4 px-2 py-1 text-black w-min rounded-md">
+                    <Link to={'/tablahistorialturnos/' + registro.idpaciente}>HISTORIAL</Link>
+                </li>
+            </td>
+            <td>
+                <li className="block bg-lime-700 px-5 py-1 text-white w-min rounded-md">
+                    <Link to={'/edit/' + registro.idpaciente}>Editar</Link>
+                </li>
+            </td>
+            <td>
+                <button className="block bg-red-700 px-5 py-1 text-white w-min rounded-md" onClick={() => irAlerta(registro.idpaciente)}>Borrar</button>
+            </td>
+            <td>
+                <button 
+                    className="block bg-green-500 px-5 py-1 text-white w-min rounded-md" 
+                    onClick={() => enviarMensajeWhatsApp(registro.telefono, 'Estoy probando la app de Pablo para mandar mensajes')}
+                >
+                    Enviar WhatsApp
+                </button>
+            </td>
+        </tr>
+    ))}
+</tbody>
 
-                                                <td className="whitespace-nowrap px-6 py-4 text-l font-bold">{`${registro.apellido}, ${registro.nombre}`}</td>
-                                                <td className="whitespace-nowrap px-6 py-4 font-bold">{registro.telefono}</td>
-                                                <td >
-                                                    <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={{
-                                                        pathname: `/vistahistoria/${registro.idpaciente}`,
-                                                        state: {
-                                                            nombre: registro.nombre,
-                                                            apellido: registro.apellido
-                                                        }
-                                                    }} >HISTORIA CLINICA</Link></li>
-                                                </td>
-                                                <td >
-                                                    <li className="block bg-blue-300 font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/tablahistorialturnos/' + registro.idpaciente} > HISTORIAL</Link></li>
-                                                </td>
-                                                <td>
-                                                    <li className="block bg-lime-700 px-5 py-1 text-white w-min rounded-md"><Link to={'/edit/' + registro.idpaciente} >Editar</Link></li>
-                                                </td>
-                                                <td>
-                                                    <button className="block bg-red-700 px-5 py-1 text-white w-min rounded-md" onClick={() => irAlerta(registro.idpaciente)}>Borrar</button>
-                                                </td>
-                                            </tr>
-                                        ))}
-
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
