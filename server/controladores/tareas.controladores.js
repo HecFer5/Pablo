@@ -338,7 +338,10 @@ export const getMutuales = async (req, res) => {
   try {
     const [result] = await pool.query(
       // `SELECT * FROM mutual  ORDER BY  nombremutual`
-      "SELECT m.idmutual AS 'IdMutual', m.nombremutual AS 'NombreMutual', COUNT(p.idpaciente) AS 'CantidadPacientes', m.valor AS 'ValorBono', SUM((t.quedan + CASE WHEN t.bono = 1 THEN 1 ELSE 0 END) * m.valor) AS 'ValorTotal' FROM mutual m LEFT JOIN pacientes p ON m.idmutual = p.mutualid AND p.estatus = 1 LEFT JOIN (SELECT idpaciente, MAX(fecha) AS ultima_fecha FROM turnos GROUP BY idpaciente) t_ultima ON p.idpaciente = t_ultima.idpaciente LEFT JOIN turnos t ON t.idpaciente = p.idpaciente AND t.fecha = t_ultima.ultima_fecha GROUP BY m.idmutual, m.nombremutual, m.valor;"
+      // "SELECT m.idmutual AS 'IdMutual', m.nombremutual AS 'NombreMutual', COUNT(p.idpaciente) AS 'CantidadPacientes', m.valor AS 'ValorBono', SUM((t.quedan + CASE WHEN t.bono = 1 THEN 1 ELSE 0 END) * m.valor) AS 'ValorTotal' FROM mutual m LEFT JOIN pacientes p ON m.idmutual = p.mutualid AND p.estatus = 1 LEFT JOIN (SELECT idpaciente, MAX(fecha) AS ultima_fecha FROM turnos GROUP BY idpaciente) t_ultima ON p.idpaciente = t_ultima.idpaciente LEFT JOIN turnos t ON t.idpaciente = p.idpaciente AND t.fecha = t_ultima.ultima_fecha GROUP BY m.idmutual, m.nombremutual, m.valor;"
+
+      // "SELECT idpaciente, SUM(cantidad) AS total_cantidad, (SELECT SUM(listo) FROM turnos t2 WHERE t2.idpaciente = t1.idpaciente) AS total_listo, SUM(cantidad) - (SELECT SUM(listo) FROM turnos t2 WHERE t2.idpaciente = t1.idpaciente) AS total_final FROM turnos t1 WHERE usadas = 0 GROUP BY idpaciente;"
+      "SELECT m.idmutual AS idmutual, m.nombremutual AS nombremutual, COUNT(DISTINCT p.idpaciente) AS cantidad_pacientes, m.valor AS valor, SUM(CASE WHEN t.listo = 1 THEN 1 ELSE 0 END) AS total_listo, SUM(CASE WHEN t.usadas = 0 THEN t.cantidad ELSE 0 END) AS total_cantidad, (SUM(CASE WHEN t.usadas = 0 THEN t.cantidad ELSE 0 END) - SUM(CASE WHEN t.listo = 1 THEN 1 ELSE 0 END)) AS diferencia, ((SUM(CASE WHEN t.usadas = 0 THEN t.cantidad ELSE 0 END) - SUM(CASE WHEN t.listo = 1 THEN 1 ELSE 0 END)) * m.valor) AS valordiferencia FROM mutual m LEFT JOIN pacientes p ON m.idmutual = p.mutualid LEFT JOIN turnos t ON p.idpaciente = t.idpaciente GROUP BY m.idmutual, m.nombremutual, m.valor;"
     );
     res.json(result);
   } catch (error) {
@@ -357,11 +360,14 @@ export const getMutuales = async (req, res) => {
 export const getPacientesMutuales = async (req, res) => {
   try {
     const [result] = await pool.query(
-      "SELECT  pacientes.*, mutual.nombremutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual WHERE mutual.idmutual = ?", [
+     "SELECT p.*, m.nombremutual, t.cantidad, t.usadas FROM pacientes p JOIN mutual m ON p.mutualid = m.idmutual LEFT JOIN (SELECT idpaciente, cantidad, usadas FROM turnos WHERE (idturnos, idpaciente) IN (SELECT MAX(idturnos), idpaciente FROM turnos GROUP BY idpaciente)) t ON p.idpaciente = t.idpaciente WHERE m.idmutual = ?", [
         req.params.mutualid,
       ]
 
-        
+      // SELECT  pacientes.*, mutual.nombremutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual WHERE mutual.idmutual = ?"
+
+      
+
     //  " SELECT pacientes.*, mutual.nombremutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual WHERE pacientes.idpaciente = ?",
     );
     res.json(result);
@@ -617,3 +623,32 @@ export const actualizaTurno = async (req, res) => {
 
 
 // SELECT pacientes.idpaciente AS NombrePaciente, mutual.idmutual AS IdMutual, SUM(turnos.bono) AS TotalBono, mutual.valor AS ValorMutual, SUM(turnos.bono) * mutual.valor AS Resultado, total.TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente JOIN (SELECT mutual.idmutual, SUM(turnos.bono * mutual.valor) AS TotalValorMutual FROM pacientes JOIN mutual ON pacientes.mutualid = mutual.idmutual JOIN turnos ON pacientes.idpaciente = turnos.idpaciente WHERE turnos.bono = 1 GROUP BY mutual.idmutual) AS total ON total.idmutual = mutual.idmutual WHERE turnos.bono = 1 GROUP BY pacientes.idpaciente, mutual.idmutual, mutual.valor
+
+
+///! TURNO CUMPLIDO
+export const listoTurno = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      "UPDATE turnos SET listo=1 WHERE idturnos= ?",
+      [req.params.idturnos]
+    );
+    res.send(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+//! LLAMAR A UN PACIENTE POR EL TURNO
+
+export const llamarTurno = async (req, res) => {
+  try {
+    const [result] = await pool.query(
+      `SELECT p.*, t.fecha FROM pacientes p LEFT JOIN turnos t ON p.idpaciente = t.idpaciente WHERE p.estatus = 1 AND t.fecha > NOW() AND t.idturnos = ? ORDER BY t.fecha ASC LIMIT 1;`,[req.params.idturnos]
+    );
+    res.json(result);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+    23;
+  }
+};

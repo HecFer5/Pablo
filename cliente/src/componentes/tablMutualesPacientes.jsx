@@ -64,6 +64,8 @@ const PacientesPorMutual = () => {
     <tr>
       <th scope="col" className="px-6 py-4">Nº</th>
       <th scope="col" className="px-6 py-4">NOMBRE</th>
+      <th scope="col" className="px-6 py-4">BONOS</th>
+      <th scope="col" className="px-6 py-4">TURNOS</th>
     </tr>
   </thead>
   <tbody className="table-group-divider">
@@ -73,6 +75,8 @@ const PacientesPorMutual = () => {
           <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md"><Link to={'/ficha/' + registro.idpaciente}>{registro.idpaciente}</Link></li>
         </td>
         <td className="whitespace-nowrap px-6 py-4">{`${registro.nombre} ${registro.apellido}`}</td>
+        <td className="whitespace-nowrap px-6 py-4">{`${registro.cantidad}`}</td>
+        <td className="whitespace-nowrap px-6 py-4">{`${registro.usadas}`}</td>
       
       </tr>
     ))}

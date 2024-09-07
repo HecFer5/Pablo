@@ -65,12 +65,13 @@ const TablaHisotiralTurnos = () => {
 
 
     <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description" >
-
-      <Box sx={style}>
+    open={open}
+    onClose={handleClose}
+    aria-labelledby="modal-modal-title"
+    aria-describedby="modal-modal-description"
+  >
+  <Box sx={{ ...style, maxHeight: '80vh', overflowY: 'auto' }} className="max-w-180vh">  
+        <div className="overflow-x-auto">
         <table className="min-w-full text-left text-sm font-light">
           <caption className={`text-xl font-bold mb-4 uppercase ${registrosFiltrados.length > 0 && registrosFiltrados[0].mutualid == 2 ? 'bg-yellow-200' : ''}`}>
             {registrosFiltrados.length > 0 ?
@@ -78,48 +79,50 @@ const TablaHisotiralTurnos = () => {
               :
               ''}
           </caption>
-
-
+  
           <tbody className="table-group-divider">
-            {registros.map(registro => (
-              <tr key={registro.idpaciente} className="border-e-4 bg-neutral-100 dark:border-neutral-500 dark:bg-neutral-700">
-                {
-                  registro.fecha != null && (
-                    registro.mutualid != 2 ? (
-                      <>
-                        {registro.cantidad > 0 && registro.estado === 0 ?
-                          <>
-                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.usadas}/{registro.cantidad}</td>
-                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg"></td>   <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
-                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.tanda}</td>
-                          </> :
-                          <>
-                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">s/sesiones</td>
-                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg"></td>   <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
-                            <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.tanda}</td>
-                          </>
-                        }
-                      </>
-                    ) :
-
-                      <>
-                        <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.usadas}</td>
-                        <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
-
-                      </>)}
-
-              </tr>
-            ))
-            }
+            {registros.map(registro => {
+              const isPastDate = dayjs(registro.fecha).isBefore(dayjs()); // Verifica si la fecha es anterior a la fecha actual
+              return (
+                <tr key={registro.idpaciente} className={`border-e-4 ${isPastDate ? 'bg-red-200' : 'bg-neutral-100'} dark:border-neutral-500 dark:bg-neutral-700`}>
+                  {
+                    registro.fecha != null && (
+                      registro.mutualid != 2 ? (
+                        <>
+                          {registro.cantidad > 0 && registro.estado === 0 ?
+                            <>
+                              <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.usadas}/{registro.cantidad}</td>
+                              <td className="whitespace-nowrap px-1 py-4 font-bold text-lg"></td>
+                              <td className="whitespace-nowrap px-1 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
+                              <td className="whitespace-nowrap px-2 py-4 font-bold text-lg">{registro.tanda}</td>
+                            </> :
+                            <>
+                              <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">s/sesiones</td>
+                              <td className="whitespace-nowrap px-6 py-4 font-bold text-lg"></td>
+                              <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
+                              <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.tanda}</td>
+                            </>
+                          }
+                        </>
+                      ) :
+                        <>
+                          <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{registro.usadas}</td>
+                          <td className="whitespace-nowrap px-6 py-4 font-bold text-lg">{dayjs(registro.fecha).format('DD [de] MMMM [de] YYYY [a las] hh:mm ')}</td>
+                        </>
+                    )}
+                </tr>
+              );
+            })}
           </tbody>
-
         </table>
-
-        <div className='mt-5 flex justify-center'>
-          <button className="block bg-blue-700 px-2 py-1 text-white w-min rounded-md" onClick={() => Navigate('/tabla')}>CERRAR</button>
-        </div>
-      </Box>
-    </Modal>
+      </div>
+  
+      <div className='mt-5 flex justify-center'>
+        <button className="block bg-blue-700 px-2 py-1 text-white w-min rounded-md" onClick={() => Navigate('/tabla')}>CERRAR</button>
+      </div>
+    </Box>
+  </Modal>
+  
 
   );
 };

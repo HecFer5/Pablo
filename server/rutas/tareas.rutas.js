@@ -31,18 +31,20 @@ import {
   verTurno,
   editarMutual,
   actualizaTurno,
-  
+  listoTurno,
+  llamarTurno
 } from "../controladores/tareas.controladores.js";
 
 const router = Router();
 router.put("/turno", actualizaTurno);
 
-
 //! PACIENTES
 router.get("/tarea", getTareas);
 
-router.get("/pacientes", getPacientes);
 
+router.get("/llamaporturno/:idturnos", llamarTurno);
+
+router.get("/pacientes", getPacientes);
 
 router.get("/ultimo", ultimoPaciente);
 
@@ -64,8 +66,6 @@ router.get("/inac", getPacInac);
 
 //! TURNOS Y ACTIVIDADES
 
-
-
 router.get("/turno", getTurnos);
 
 router.get("/turno/:idpaciente", turnosPaciente);
@@ -78,7 +78,9 @@ router.delete("/turno/:idturnos", borrarTurno);
 
 router.get("/historialturnos/:idpaciente", historialTurnos);
 
- router.put("/permiso/:idturnos", getPermiso);
+router.put("/permiso/:idturnos", getPermiso);
+
+router.get("/listoturno/:idturnos", listoTurno);
 
 router.get("/sesiones/:idpaciente", getTareaSesion);
 // router.post("/actividad", crearActividad)
@@ -96,6 +98,5 @@ router.get("/pacientesmutuales/:mutualid", getPacientesMutuales);
 router.get("/imagenes/:idpaciente", getImagenes);
 router.put("/mutual/:idmutual", editarMutual);
 router.post("/historias", crearHistoria);
-
 
 export default router;

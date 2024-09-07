@@ -11,7 +11,7 @@ const TareasForm = () => {
   const [task, setTask] = useState({
     nombre: "",
     apellido: "",
-    telefono: "",
+    telefono: "54223",
     calle: "",
     numero: 0,
     patologia: "",

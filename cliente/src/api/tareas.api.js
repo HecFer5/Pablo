@@ -10,6 +10,9 @@ export const ListarInactivos = async () =>
 export const ListarPacientes = async () =>
   await axios.get("http://localhost:4000/pacientes");
 
+export const LlamadoPorTurno = async (idturnos) =>
+  await axios.get("http://localhost:4000/llamaporturno/" + idturnos);
+
 // export const CrearTareas = async (registro) =>
 //    await axios.post("http://localhost:4000/tarea", registro)
 
@@ -51,6 +54,9 @@ export const VerTurnos = async (idturnos) =>
 
 export const darPermiso = async (idturnos) =>
   await axios.put("http://localhost:4000/permiso/" + idturnos);
+
+export const vinoAlTurno = async (idturnos) =>
+  await axios.put("http://localhost:4000/listoturno/" + idturnos);
 
 export const ListarTurnosPaciente = async (idpaciente) =>
   await axios.get("http://localhost:4000/turno/" + idpaciente);
