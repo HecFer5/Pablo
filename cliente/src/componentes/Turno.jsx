@@ -14,6 +14,7 @@ import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { AiOutlineCheck } from "react-icons/ai";
+import { FcCalendar } from "react-icons/fc"
 import { AiFillPhone } from "react-icons/ai";
 
 import "./Turno.css";
@@ -149,7 +150,7 @@ const llamarPorTurno = async (idturnos) => {
           const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha);
           const horaFormateada = fecha.toLocaleTimeString('es-ES', opcionesHora);
 
-          const mensaje = `Buen día ${turno.nombre}. Te escribo para confirmar el turno de Kinesiología para el día ${fechaFormateada} a las ${horaFormateada}. Quedo a la espera de tu confirmación. Gracias`;
+          const mensaje = `Buen día ${turno.nombre}. Te escribo para confirmar el turno de Kinesiología para el día *${fechaFormateada}* a las *${horaFormateada}*. Quedo a la espera de tu confirmación. Gracias` ;
 
           enviarMensajeWhatsApp(turno.telefono, mensaje);
 

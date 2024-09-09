@@ -135,19 +135,11 @@ const TablaMutuales = () => {
                             <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.nombremutual}`}</td>
                             <td className="whitespace-nowrap px-6 py-4 font-bold">{`${mutual.cantidad_pacientes}`}</td>
                             <td className="whitespace-nowrap px-6 py-4 font-bold">
-                              {mutual.valor === null
-                                ? ""
-                                : mutual.valor}
+                              {mutual.valor === null ? "" : mutual.valor}
                             </td>
                             <td className="whitespace-nowrap px-6 py-4 font-bold">
                               {mutual.valordiferencia}
                             </td>
-                            {/* <td>
-                                                        <button className="block bg-green-700 px-5 py-1 text-white w-min rounded-md" onClick={() => {
-                                                            navigate(`/editamutual/${mutual.idmutual}`);
-                                                        }}>Editar</button>
-
-                                                    </td> */}
                             <td>
                               <button
                                 className="block bg-green-700 px-5 py-1 text-white w-min rounded-md"
@@ -159,17 +151,7 @@ const TablaMutuales = () => {
                                 Editar
                               </button>
                             </td>
-                            <td>
-                              {/* <button
-                                className="block bg-red-700 ml-2 px-5 py-1 text-white w-min rounded-md"
-                                onClick={() => {
-                                  setEditar(true);
-                                  borrarMutual(mutual.IdMutual);
-                                }}
-                              >
-                                Borrar
-                              </button> */}
-                            </td>
+                  
                           </tr>
                         )
                     )}
