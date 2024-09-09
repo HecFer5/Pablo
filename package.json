@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "node server/server.js",
     "start": "cd cliente/server && npm run dev",
-    "build": "npm run dev:frontend && npm run dev:backend"
+    "build": "npm run dev:frontend && npm run dev:backend",
+     "dev:frontend": "comando_para_iniciar_frontend",
+  "dev:backend": "comando_para_iniciar_backend"
   },
   "author": "",
   "license": "ISC",
