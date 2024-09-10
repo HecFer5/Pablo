@@ -130,9 +130,9 @@ const TablaNueva = () => {
                       <th scope="col" className="px-6 py-4">
                         NOMBRE
                       </th>
-                      <th scope="col" className="px-6 py-4">
+                      {/* <th scope="col" className="px-6 py-4">
                         TELEFONO
-                      </th>
+                      </th> */}
                   
                       <th scope="col" className="px-6 py-4"></th>
                       <th scope="col" className="px-6 py-4"></th>
@@ -163,9 +163,9 @@ const TablaNueva = () => {
                           </li>
                         </td>
                         <td className="whitespace-nowrap px-6 py-4 text-l font-bold">{`${registro.apellido}, ${registro.nombre}`}</td>
-                        <td className="whitespace-nowrap px-6 py-4 font-bold">
+                        {/* <td className="whitespace-nowrap px-6 py-4 font-bold">
                           {registro.telefono}
-                        </td>
+                        </td> */}
                     
                         <td>
                           <li className="block bg-white font-semibold ml-4 px-2 py-1 text-black w-min rounded-md">
