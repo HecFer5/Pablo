@@ -13,8 +13,6 @@ export const ListarPacientes = async () =>
 export const LlamadoPorTurno = async (idturnos) =>
   await axios.get("http://localhost:4000/llamaporturno/" + idturnos);
 
-// export const CrearTareas = async (registro) =>
-//    await axios.post("http://localhost:4000/tarea", registro)
 
 export const CrearTareas = async (registro, turno) => {
   await axios.post("http://localhost:4000/tarea", registro);
