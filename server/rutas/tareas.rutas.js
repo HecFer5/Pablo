@@ -48,7 +48,6 @@ router.get("/pacientes", getPacientes);
 
 router.get("/ultimo", ultimoPaciente);
 
-// router.get("/actividad", getActividades)
 
 router.get("/tarea/:idpaciente", getTarea);
 
@@ -64,7 +63,6 @@ router.put("/inac/:idpaciente", volverRegistro);
 
 router.get("/inac", getPacInac);
 
-//! TURNOS Y ACTIVIDADES
 
 router.get("/turno", getTurnos);
 
@@ -83,9 +81,7 @@ router.put("/permiso/:idturnos", getPermiso);
 router.get("/listoturno/:idturnos", listoTurno);
 
 router.get("/sesiones/:idpaciente", getTareaSesion);
-// router.post("/actividad", crearActividad)
 
-// router.delete("/actividad/:idactividad", borrarActividad)
 
 //! MUTUALES
 
