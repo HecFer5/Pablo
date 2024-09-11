@@ -10,12 +10,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
 import axios from "axios";
-import { Calendar, dayjsLocalizer } from "react-big-calendar";
+import { Calendar, dayjsLocalizer, Views, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { AiTwotoneDelete } from "react-icons/ai";
 import { AiOutlineCheck } from "react-icons/ai";
-import { FcCalendar } from "react-icons/fc"
+import { FcCalendar } from "react-icons/fc";
 import { AiFillPhone } from "react-icons/ai";
+import moment from 'moment';
 
 import "./Turno.css";
 import { TareasContext } from "./context/TareasContext";
@@ -45,7 +46,8 @@ const messages = {
 const Turno6 = (props) => {
   const [events, setEvents] = useState([]);
   const [datos, setDatos] = useState([]);
-  const localizer = dayjsLocalizer(dayjs, { weekStart: 1 });
+   const localizer = dayjsLocalizer(dayjs, { weekStart: 1 });
+
   const [selectedDate, setSelectedDate] = useState(dayjs(Date()).toDate());
   const { TraerPacientes, TraerTareas, traerTareaSesion } = useTareas();
   const [datosTabla, setDatosTabla] = useState([]);
@@ -71,10 +73,14 @@ const Turno6 = (props) => {
   const navigate = useNavigate();
 
   const EventComponent = ({ event }) => (
-    <div className={`${event.color} h-full w-full flex items-center justify-between p-2 `}>
+    <div
+      className={`${event.color} h-full w-full flex items-center justify-between p-2 `}
+    >
       <span className="flex-grow text-center">{event.title}</span>
-      <div className="flex" style={{ display: 'none' }}>
-        <span className="rbc-event-time">{event.start.toLocaleTimeString()}</span>
+      <div className="flex" style={{ display: "none" }}>
+        <span className="rbc-event-time">
+          {event.start.toLocaleTimeString()}
+        </span>
       </div>
       <div className="flex">
         <button
@@ -92,9 +98,6 @@ const Turno6 = (props) => {
       </div>
     </div>
   );
-  
-  
-  
 
   // //!  para seleccionar desde el calendario
   const Selector = async (slotInfo) => {
@@ -131,47 +134,56 @@ const Turno6 = (props) => {
   // };
 
   const enviarMensajeWhatsApp = (numero, mensaje) => {
-    const url = `https://web.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(mensaje)}`;
-    window.open(url, "whatsappWindow"); 
-};
+    const url = `https://web.whatsapp.com/send?phone=${numero}&text=${encodeURIComponent(
+      mensaje
+    )}`;
+    window.open(url, "whatsappWindow");
+  };
 
-
-
-
-const llamarPorTurno = async (idturnos) => {
-  try {
-      const response = await axios.get("http://localhost:4000/llamaporturno/" + idturnos);
+  const llamarPorTurno = async (idturnos) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/llamaporturno/" + idturnos
+      );
       const data = response.data;
 
       if (data.length > 0) {
-          const turno = data[0];
+        const turno = data[0];
 
-          const fecha = new Date(turno.fecha);
-          const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
-          const opcionesHora = { hour: '2-digit', minute: '2-digit', hour12: false };
+        const fecha = new Date(turno.fecha);
+        const opcionesFecha = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        };
+        const opcionesHora = {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        };
 
-          const fechaFormateada = fecha.toLocaleDateString('es-ES', opcionesFecha);
-          const horaFormateada = fecha.toLocaleTimeString('es-ES', opcionesHora);
+        const fechaFormateada = fecha.toLocaleDateString(
+          "es-ES",
+          opcionesFecha
+        );
+        const horaFormateada = fecha.toLocaleTimeString("es-ES", opcionesHora);
 
-          const mensaje = `Buen día ${turno.nombre}. Te escribo para confirmar el turno de Kinesiología para el día *${fechaFormateada}* a las *${horaFormateada}*. Quedo a la espera de tu confirmación. Gracias` ;
+        const mensaje = `Buen día ${turno.nombre}. Te escribo para confirmar el turno de Kinesiología para el día *${fechaFormateada}* a las *${horaFormateada}*. Quedo a la espera de tu confirmación. Gracias`;
 
-          enviarMensajeWhatsApp(turno.telefono, mensaje);
+        enviarMensajeWhatsApp(turno.telefono, mensaje);
 
-          if (response.status === 200) {
-              console.log("Los datos se enviaron correctamente", turno.telefono);
-          } else {
-              console.log("Hubo un error al enviar los datos");
-          }
+        if (response.status === 200) {
+          console.log("Los datos se enviaron correctamente", turno.telefono);
+        } else {
+          console.log("Hubo un error al enviar los datos");
+        }
       } else {
-          console.log("No se encontraron datos para el turno.");
+        console.log("No se encontraron datos para el turno.");
       }
-  } catch (error) {
+    } catch (error) {
       console.error("Error al llamar a la API:", error);
-  }
-};
-
-
-
+    }
+  };
 
   const fetchEvents = async () => {
     try {
@@ -203,6 +215,8 @@ const llamarPorTurno = async (idturnos) => {
         //     title = title + ` (sin sesión asignada)`
         // }
 
+
+        
         return {
           title: (
             <div className=" text-sm sm:text-xs md:text-base lg:text-lg xl:text-sm">
@@ -332,6 +346,7 @@ const llamarPorTurno = async (idturnos) => {
   const [activo, setActivo] = useState(false);
   // let activo = false
 
+  
   return (
     <>
       <Calendar
@@ -346,12 +361,13 @@ const llamarPorTurno = async (idturnos) => {
         selectable={activo || params.idpaciente}
         onSelectSlot={Selector}
         step={30}
-        timeslots={1  }
+        timeslots={1}
         localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
-        defaultView="week"
+        defaultView={Views.WORK_WEEK} // Usa la vista de semana laboral
+        views={["month", "work_week", "day", "agenda"]}
         onDoubleClickEvent={handleDoubleClick}
         min={dayjs("2024-01-22T08:00:00").toDate()}
         max={dayjs("2024-01-22T18:00:00").toDate()}
