@@ -347,7 +347,7 @@ const llamarPorTurno = async (idturnos) => {
         onSelectSlot={Selector}
         step={30}
         timeslots={1  }
-        localizer={dayjsLocalizer(dayjs, { weekStart: 1 })}
+        localizer={localizer}
         events={events}
         startAccessor="start"
         endAccessor="end"
