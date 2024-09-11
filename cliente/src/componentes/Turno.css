@@ -1,6 +1,6 @@
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Cambia el número "3" por el número de columnas que desees */
+    grid-template-columns: repeat(3, 1fr); 
   }
 
   .grid-container {
@@ -30,7 +30,7 @@
   
   .selector {
     width: 300px; /* Define el ancho deseado */
-    height: 100px; /* Define la altura deseada */
+    height: 200px; /* Define la altura deseada */
     justify-content: center;
     justify-items: end;
 }
@@ -43,4 +43,9 @@
 
 .icon-large {
   font-size: 1.3em;
+}
+
+.rbc-event .rbc-event-time,
+.rbc-event .rbc-event-label {
+  display: none; /* Oculta la hora y la etiqueta del evento */
 }
