@@ -24,7 +24,7 @@ dayjs.extend(updateLocale);
 dayjs.locale(esLocale);
 
 dayjs.updateLocale("es", {
-  weekStart: 0,
+  weekStart: 1,
 });
 
 const messages = {
@@ -45,7 +45,7 @@ const messages = {
 const Turno6 = (props) => {
   const [events, setEvents] = useState([]);
   const [datos, setDatos] = useState([]);
-  const localizer = dayjsLocalizer(dayjs, { weekStart: 0 });
+  const localizer = dayjsLocalizer(dayjs, { weekStart: 1 });
   const [selectedDate, setSelectedDate] = useState(dayjs(Date()).toDate());
   const { TraerPacientes, TraerTareas, traerTareaSesion } = useTareas();
   const [datosTabla, setDatosTabla] = useState([]);
@@ -71,27 +71,30 @@ const Turno6 = (props) => {
   const navigate = useNavigate();
 
   const EventComponent = ({ event }) => (
-    <div className={event.color}>
-      <span className=" block ml-5 -mt-2 pt-3 pb-3">
-        <div className="flex justify-evenly">
-          {event.title}
-          <button
-            className=" bg-transparent  ml-1  mt-1 text-black w-min rounded-md "
-            onClick={() => llamarPorTurno(event.id)}
-          >
-            <AiFillPhone />
-          </button>
-          <button
-            className=" bg-transparent  ml-1  mt-1 text-red-500 w-min rounded-md "
-            onClick={() => handleDeleteEvent(event.id)}
-          >
-            <AiTwotoneDelete />
-          </button>
-        </div>
-        <div className=" flex jsutify-end"></div>
-      </span>
+    <div className={`${event.color} h-full w-full flex items-center justify-between p-2 `}>
+      <span className="flex-grow text-center">{event.title}</span>
+      <div className="flex" style={{ display: 'none' }}>
+        <span className="rbc-event-time">{event.start.toLocaleTimeString()}</span>
+      </div>
+      <div className="flex">
+        <button
+          className="bg-transparent text-black w-min rounded-md"
+          onClick={() => llamarPorTurno(event.id)}
+        >
+          <AiFillPhone />
+        </button>
+        <button
+          className="bg-transparent text-red-500 w-min rounded-md"
+          onClick={() => handleDeleteEvent(event.id)}
+        >
+          <AiTwotoneDelete />
+        </button>
+      </div>
     </div>
   );
+  
+  
+  
 
   // //!  para seleccionar desde el calendario
   const Selector = async (slotInfo) => {
@@ -202,7 +205,7 @@ const llamarPorTurno = async (idturnos) => {
 
         return {
           title: (
-            <div className=" text-sm sm:text-xs md:text-base lg:text-lg xl:text-lg">
+            <div className=" text-sm sm:text-xs md:text-base lg:text-lg xl:text-sm">
               {title}
             </div>
           ),
@@ -342,9 +345,9 @@ const llamarPorTurno = async (idturnos) => {
         messages={messages}
         selectable={activo || params.idpaciente}
         onSelectSlot={Selector}
-        step={15}
-        timeslots={1}
-        localizer={dayjsLocalizer(dayjs, { weekStart: 0 })}
+        step={30}
+        timeslots={1  }
+        localizer={dayjsLocalizer(dayjs, { weekStart: 1 })}
         events={events}
         startAccessor="start"
         endAccessor="end"
